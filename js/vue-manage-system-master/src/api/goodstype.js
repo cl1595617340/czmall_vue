@@ -24,6 +24,14 @@ export const upload02 = (params) => {
     return http.fetchPost('/admin/type/goodstype/upload02', params)
 }
 
+/*测试文件上传03*/
+export const upload03Totarget = (params) => {
+    return http.fetchPost('/admin/type/goodstype/upload03Totarget', params)
+}
+/*测试文件上传04*/
+export const upload04Tofront = (params) => {
+    return http.fetchPost('/admin/type/goodstype/upload04Tofront', params)
+}
 /*根据1级分类动态加载2级分类*/
 export const addType = (params) => {
     return http.fetchPost('/admin/type/goodstype/addType', params)
@@ -43,6 +51,6 @@ export const updateType = (params) => {
 }
 
 
-export const updatesb = (params) => {
-    return http.fetchPost('/admin/type/goodstype/updatesb', params)
+export const deletesb = (params) => {
+    return http.fetchPost('/admin/type/goodstype/delete', params)
 }

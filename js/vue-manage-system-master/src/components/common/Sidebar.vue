@@ -59,17 +59,17 @@ export default {
                     title: '系统首页'
                 },
                 {
-                    icon: 'el-icon-lx-cascades',
+                    icon: 'el-icon-shopping-bag-1',
                     index: '',
                     title: '商品管理',
                     subs: [
                         {
                             index: 'goodstype',
-                            title: '-----分类管理'
+                            title: '-----分类管理-----'
                         },
                         {
                             index: 'allgoods',
-                            title: '-----商品列表'
+                            title: '-----商品列表-----'
                         }
                     ]
                 },

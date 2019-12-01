@@ -13,4 +13,7 @@
     @import "./assets/css/main.css";
     /*@import "./assets/css/color-dark.css";     !*深色主题*!*/
     @import "./assets/css/theme-green/color-green.css";
+    body{
+        overflow-x: hidden;
+    }
 </style>

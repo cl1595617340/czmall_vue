@@ -159,7 +159,9 @@
     import { getGoodstypeBy2 } from '../../../api/goodstype'
     import { getGoodstype2By3 } from '../../../api/goodstype'
     import { updateType } from '../../../api/goodstype'
-    import { updatesb } from '../../../api/goodstype'
+    import { upload03Totarget } from '../../../api/goodstype'
+    import { upload04Tofront } from '../../../api/goodstype'
+    import { deletesb } from '../../../api/goodstype'
     export default {
         data() {
             return {
@@ -207,7 +209,7 @@
                 updateGoodstype2IdTo3:"",
                 //判断修改时有没有换图片(默认是false，如果跟更换了就是true)
                 changeImg:false,
-
+                deleteImgUrl:'',
             }
         },
         created() {
@@ -229,14 +231,15 @@
             changeSwitch(data){
 
                 let type02List = [];
-                type02List = data.childrensb
-                let type02Listid = new Array();//装2级分类的id数组，给后台的3级分类批量修改状态用
+                let type02Listid = [];
+                if (data.childrensb!=null){
+                    type02List = data.childrensb;
+                    type02Listid = new Array();//装2级分类的id数组，给后台的3级分类批量修改状态用
+                    for (const any of data.childrensb) {
+                        type02Listid.push(any.id)
+                    }
+                } ;
 
-                for (const any of data.childrensb) {
-                    type02Listid.push(any.id)
-                }
-                console.log(type02Listid)
-                console.log(data.childrensb)
 
                /* let formDatas = new FormData()
                 formDatas.append("idss", type02Listid);
@@ -258,6 +261,7 @@
                     typeToAamin = 1;
                 }
 
+                /*alert(data.typename)*/
                 if (data.typename=="1级类目"){
                     content ='确定要'+type+'1级类目吗？，此分类下的所有分类都会被禁用，请谨慎操作.';
                 }else if (data.typename=="2级类目"){
@@ -415,6 +419,9 @@
                         })
                     })
                     this.imageUrl = row.picture;
+                    //修改图片要删除他上一个图片
+                    this.deleteImgUrl = row.picture;
+                    console.log( this.deleteImgUrl)
                     this.show_upload = true;
                     this.disabled2 = false;
                     this.disabled1 = false;
@@ -449,7 +456,7 @@
             goPost(){
                 /*新增,新增这里图片有个bug，如果先修改图片会缓存，所以在这里要判断下用户有没有点击跟换图片*/
                 if (this.addOrUpdate=="add"){
-                    if (this.imgFile==""){
+                    if (this.imgFile==""&&this.optionvalue==3){
                         this.$message('图片会有缓存，请点击选择图片');
                         return;
                     } ;
@@ -475,8 +482,13 @@
                         let formDatas02 = new FormData()
                         formDatas02.append("file", this.imgFile);
                         upload02(formDatas02).then(res => {
-
+                            upload03Totarget(formDatas02).then(res => {
+                            })
+                            upload04Tofront(formDatas02).then(res => {
+                            })
                         })
+
+
                     };
 
                     /*  console.log(this.formData)*/
@@ -526,16 +538,29 @@
                         formDatas.append("type", 3);
                         formDatas.append("name", this.formname);
                         formDatas.append("id", this.updateType01Id);
-                        formDatas.append("sid", this.updateGoodstype2IdTo3);
+                        formDatas.append("sid", this.optionvalue2);
 
                         //false就是没有修改图片
                         if (this.changeImg==false){
                             formDatas.append("file", null);
                         } else {
+
                             formDatas.append("file", this.imgFile);
+
                             let formDatas02 = new FormData()
                             formDatas02.append("file", this.imgFile);
+                            formDatas02.append("delete", this.deleteImgUrl);
+                            //修改图片前要先删除他的上一个图片
+                            deletesb(formDatas02).then(res => {
+
+                            })
                             upload02(formDatas02).then(res => {
+
+                            })
+                            upload03Totarget(formDatas02).then(res => {
+
+                            })
+                            upload04Tofront(formDatas02).then(res => {
                             })
                         };
 
@@ -548,11 +573,12 @@
                                 message: '编辑成功!',
                                 duration:2000
                             });
+                                //新增ok后刷新数据
+                              this.getData();
                             this.imgFile="";
                             //新增ok后窗口关闭
                             this.editVisible = false;
-                            //新增ok后刷新数据
-                            this.getData();
+
                         } else {
                             this.$message({
                                 type: 'error',
@@ -593,7 +619,7 @@
 
     /*------------------------------------文件上传的样式----*/
     #goodstype_upload{
-
+        margin-left: 70px;
     }
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
@@ -602,7 +628,7 @@
         position: relative;
         overflow: hidden;
         width: 200px !important;
-        margin-left: 70px;
+        margin: 0 auto;
     }
     .avatar-uploader .el-upload:hover {
         border-color: #409EFF;

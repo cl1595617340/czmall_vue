@@ -27,13 +27,23 @@ export default new Router({
                 },
                 {
                     path: '/allgoods',
-                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/type/AllGoods.vue'),
-                    meta: { title: '商品管理' }
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/AllGoods.vue'),
+                    meta: { title: '商品管理' },
+                    children: [
+                        {
+                            path: '/GoodsVersions',
+                            component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/GoodsVersions.vue'),
+                        },
+                        {
+                            path: '/GoodsColor',
+                            component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/GoodsColor.vue'),
+                        },
+                    ]
                 },
                 {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
-                    meta: { title: '自定义图标' }
+                    meta: { title: '自定义图标' },
                 },
                 {
                     path: '/table',

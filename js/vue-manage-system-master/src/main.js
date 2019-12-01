@@ -11,14 +11,22 @@ import './components/common/directives';
 import 'babel-polyfill';
 import qs from 'qs';
 import axios from 'axios';
+import moment from 'moment'
 
 
 //Vue全局对象可用
 Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
+Vue.prototype.$moment = moment;
+
+Vue.filter("dateFilter", function(date, formatPattern){
+    return moment(date).format(formatPattern || "YYYY-MM-DD");
+});
+
 
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
+Vue.use(moment);
 Vue.use(ElementUI, {
     size: 'small'
 });

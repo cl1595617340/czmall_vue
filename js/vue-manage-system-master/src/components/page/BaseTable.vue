@@ -98,15 +98,15 @@
                     <el-input v-model="form.address"></el-input>
                 </el-form-item>
             </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+    </span>
+    </el-dialog>
     </div>
-</template>
+    </template>
 
-<script>
+    <script>
     import { getlist } from '../../api/index'
 
 export default {
