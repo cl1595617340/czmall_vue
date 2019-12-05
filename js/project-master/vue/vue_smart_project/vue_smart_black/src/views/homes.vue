@@ -1,6 +1,6 @@
 <template>
-  <div id="home_div">
-    <Carousel v-model="value1"  autoplay autoplay-speed=4000 loop class="home_carousel">
+  <!--<div id="home_div">
+    <Carousel v-model="value1" radius-dot="true" utoplay  loop class="home_carousel">
       <CarouselItem>
         <div class="demo-carousel"><img src="../assets/img/test/1.jpg" ></div>
       </CarouselItem>
@@ -14,20 +14,61 @@
         <div class="demo-carousel"><img src="../assets/img/test/4.jpg" ></div>
       </CarouselItem>
     </Carousel>
+  </div>-->
+  <div id="home_div">
+    <div class="block">
+      <el-carousel trigger="click" height="615px" >
+        <el-carousel-item>
+          <div class="demo-carousel"><img src="../assets/img/test/1.jpg" ></div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="demo-carousel"><img src="../assets/img/test/2.jpg" ></div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="demo-carousel"><img src="../assets/img/test/3.jpg" ></div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="demo-carousel"><img src="../assets/img/test/4.jpg" ></div>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
   </div>
+
+
 </template>
 <script>
   export default {
     data () {
       return {
-        value1: 0
       }
+    },
+
+    methods:{
+
     }
   }
 </script>
 
 
 <style scoped>
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }
 #home_div{
   width: 100%;
   height: 615px;
@@ -37,6 +78,9 @@
   .home_carousel{
     width: 100%;
     height: 615px;
+  }
+  .demo-carousel{
+    background: black;
   }
 .demo-carousel img{
   height: 615px;

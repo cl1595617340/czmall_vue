@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import "../assets/css/reset.css"
 import "../assets/css/header.css"
-import  Shop from  "../views/shop"
+import  Shop from "../views/shop/shop"
 import Item from "../views/item"
 import Cart from "../views/cart"
 import Checkout from "../views/checkout"
@@ -25,7 +25,13 @@ export default new Router({
     {
       path: '/Shop',
       name:"Shop",
-      component: Shop
+      component: Shop,
+      children:[
+        {
+          path: '/shopGoods',
+          component: () => import(/* webpackChunkName: "dashboard" */ '../views/shop/shopGoods.vue'),
+        },
+      ]
     },
     {
       path: '/item',

@@ -109,6 +109,8 @@ pre {
 	padding: 0 0 25px;
 	margin: 0 auto;
 	position: relative;
+  background: whitesmoke;
+  z-index: 1;
 }
 .hide{
 	display: none!important;

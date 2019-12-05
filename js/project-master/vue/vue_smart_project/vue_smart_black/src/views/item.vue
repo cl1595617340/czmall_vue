@@ -64,6 +64,7 @@
 <script>
   import itemsData from '../lib/newItemsData';
   import Prompt from "../components/prompt";
+  import header from "../common/header-nav";
     export default {
       components: {Prompt},
       data () {
@@ -74,6 +75,9 @@
                  count:1
                }
              },
+      created() {
+        this.getData();
+      },
       computed:{
         itemsInfo () {
           let itemsInfo = this.itemsList.filter((item) => {
@@ -83,6 +87,9 @@
         }
         },
         methods: {
+          getData(){
+
+          },
           TableImg(index) {
             this.ImageIndex = index;
           },
@@ -110,6 +117,9 @@
 </script>
 
 <style>
+
+
+
   .item .item-box{
     width: 1098px;
     padding: 60px;

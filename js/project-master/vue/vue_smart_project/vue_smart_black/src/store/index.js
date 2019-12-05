@@ -45,9 +45,20 @@ let state={
     el: null,
     img: ''
   },
-  orderData:[]
+  orderData:[],
+
+
+  navStyle:'position: fixed',
 }
 let mutations ={
+
+  changNav(state){
+    state.navStyle = 'position: relative';
+  },
+  changNav2(state){
+    state.navStyle = 'position: fixed';
+  },
+
   //加入购物车
   addCarPanelData (state,data) {
     // data[0] = 表示存入的数据,data[1]表示存入的数量
@@ -180,6 +191,10 @@ let mutations ={
 let actions ={
 
 }
+let goodsb = {
+
+}
+
 let getters ={
   totleCount(state){
     //返回数量

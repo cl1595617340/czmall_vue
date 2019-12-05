@@ -1,7 +1,7 @@
 <template>
   <div id="header" style="z-index: 100" >
     <!----------------------------------------------------------显示的头----->
-    <div class="nav-global">
+    <div class="nav-global" :style="this.$store.state.navStyle">
       <!--搜索框-->
       <transition name="show_search" >
         <div class="nav_search" v-if="show_search">
@@ -60,144 +60,76 @@
           </ul>
         </div>
       </transition>
-    </div>
-    <!----------------------------------------------------------fixed的头----->
-    <transition name="showFix">
-      <div class="nav-global" style="position: fixed;margin-top: -52px;width: 100%;height: 50px;box-shadow:0px 20px 10px -15px #EDEDED;z-index: 200"  v-if="shownav" v-cloak >
-        <!--搜索框-->
-        <transition name="show_search" style="z-index: 100000">
-          <div class="nav_search" v-if="show_search">
-            <div class="nav_search_div">
-              <img src="../assets/img/搜索.png" class="nav_search_div_img01">
-              <input placeholder="搜索appom.com.cn"/>
-              <img @click="show_searchs()" src="../assets/img/叉.png" class="nav_search_div_img02">
-            </div>
-
-            <div class="nav_search_div02">
-
-            </div>
-          </div>
-        </transition>
-
-        <transition name="show_nav">
-          <div class="container" style="top: 0px" v-if="show_nav">
-            <h1 class="nav-logo">
-              <a href="javascript:;"></a>
-            </h1>
-            <!--个人信息-->
-            <ul class="nav-aside" >
-              <li>
-                <img @click="show_searchs()" src="../assets/img/搜索.png" style="width: 18px;margin-top: 2px;cursor: pointer">
-              </li>
-              <li class="nav-user" style="z-index: 101">
-                <a href="javascript:;">个人中心</a>
-                <!--active-->
-                <div class="nav-user-wrapper" >
-                  <div class="nav-user-list">
-                    <dl class="nav-user-avatar">
-                      <dd><span class="ng-scope"></span></dd>
-                      <dt class="ng-binding">+86 138****9453</dt>
-                    </dl>
-                    <ul>
-                      <li class="order">  <router-link :to="{ path: 'account' }">现在结算</router-link></li>
-                      <li class="support"><a href="javascript:;">售后服务</a></li>
-                      <li class="coupon"><a href="javascript:;">我的优惠</a></li>
-                      <li class="information"><a href="javascript:;">账户资料</a></li>
-                      <li class="address"><a href="javascript:;">收货地址</a></li>
-                      <li class="logout"><a href="javascript:;">退出</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </li>
-              <!--active-->
-              <car-panel></car-panel>
-            </ul>
-            <ul class="nav-list">
-              <li><a href="javascript:;">在线商城</a></li>
-              <li><a href="javascript:;">坚果 Pro</a></li>
-              <li><a href="javascript:;">Smartisan M1 / M1L</a></li>
-              <li><a href="javascript:;">Smartisan OS</a></li>
-              <li><a href="javascript:;">应用下载</a></li>
-              <li><a href="javascript:;">官方论坛</a></li>
-            </ul>
-          </div>
-        </transition>
-      </div>
-    </transition>
 
 
-    <!------------------------------------------------------2级头----->
-    <transition name="nav_sub_show">
-      <div @mouseleave="show=false" v-if="show_nav_sub">
-      <div class="nav-sub">
-        <div class="nav-sub-wrapper">
-          <div class="container">
-            <ul class="nav-list" style="padding-left: 360px">
-              <li>
-                <router-link :to="{ path: '/' }" @mouseover="show=true" @click="show=false">首页</router-link>
-              </li>
-              <li><a href="javascript:;" @mouseover="show=true">手机</a></li>
-              <li><a href="javascript:;" @mouseover="show=true">官方配件</a></li>
-              <li class="active">
-                <router-link :to="{ path: '/Shop' }" @mouseover="show=true">服饰鞋包</router-link>
-              <li><a href="javascript:;" @mouseover="show=true">畅呼吸</a></li>
-              <li><a href="javascript:;" @mouseover="show=true">打印机</a></li>
-              <li><a href="javascript:;" @mouseover="show=true">服务</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-----------------------------------------------鼠标悬浮出现的信息-->
-      <transition name="bounce">
-        <div id="main_div" v-if="show"  v-cloak>
-            <div class="main_div_div">
-
-                <ul>
+      <!------------------------------------------------------2级头----->
+      <transition name="nav_sub_show">
+        <div @mouseleave="show=false" v-if="show_nav_sub">
+          <div class="nav-sub">
+            <div class="nav-sub-wrapper">
+              <div class="container">
+                <ul class="nav-list" style="margin-left:270px">
                   <li>
-                    <label>衣服</label>
+                    <a  @click="gohomepage">首页</a>
+                  </li>
+                  <li v-for="site in goodstypeList">
+                    <a style="font-size: 5px" @click="goitem()"  @mouseover="showGoodsTypeAll(site.goodstypeId)">{{site.goodstypeName}}</a>
                   </li>
                   <li>
-                    <img src="../assets/img/logo.png">
-                    <span>蓝牙耳机</span>
-                  </li>
-                  <li>
-                    <img src="../assets/img/logo.png">
-                    <span>蓝牙耳机</span>
-                  </li>
-                  <li>
-                    <img src="../assets/img/logo.png">
-                    <span>蓝牙耳机</span>
+                    <a href="javascript:;" @mouseover="showServe()">服务</a>
                   </li>
                 </ul>
-
-              <ul>
-                <li>
-                  <label>衣服</label>
-                </li>
-                <li>
-                  <img src="../assets/img/logo.png">
-                  <span>蓝牙耳机</span>
-                </li>
-                <li>
-                  <img src="../assets/img/logo.png">
-                  <span>蓝牙耳机</span>
-                </li>
-                <li>
-                  <img src="../assets/img/logo.png">
-                  <span>蓝牙耳机</span>
-                </li>
-              </ul>
+              </div>
             </div>
+          </div>
+          <!-----------------------------------------------鼠标悬浮出现的信息-->
+          <transition name="bounce">
+            <div id="main_div" v-if="show"  v-cloak>
+              <div class="main_div_div" >
+
+                <transition-group name="typelistsb">
+                  <div style="margin-top: 15px" v-for="site in goodstype2List" v-show="sbsb2" :key="site.goodstype2Id">
+
+                    <!--显示所有的分类信息-->
+                    <ul  v-if="site.goodstype2Name!='手机'">
+                      <li>
+                        <label>{{site.goodstype2Name}}</label>
+                      </li>
+                      <li v-for="site2 in site.goodstype3">
+                        <img :src="site2.goodstype3Picture">
+
+                        <span :style="spanStyle">{{site2.goodstype3Name}}</span>
+                      </li>
+                    </ul>
+
+
+                    <!--显示所有的手机-->
+                    <ul v-for="goodlist in goodslist"   v-if="site.goodstype2Name=='手机'" >
+                      <li>
+                        <label>{{goodlist.goodsName}}</label>
+                      </li>
+                      <li class="goodsimgli" v-for="goodcolorList in goodlist.goodscolorList" :key="goodcolorList.goodscolorId">
+
+                        <img class="goodsimgsb"  :src="goodcolorList.goodscolorPicture">
+                        <span class="goodsimgsbspan"  :style="spanStyle">{{goodcolorList.goodscolorName}}</span>
+                      </li>
+                    </ul>
+
+                  </div>
+                </transition-group>
+
+              </div>
+            </div>
+          </transition>
+
         </div>
       </transition>
-
     </div>
-    </transition>
+
 
     <!--屏幕阴影-->
     <transition name="shadow_div">
       <div class="shadow_div" v-if="show_shadow">
-
       </div>
     </transition>
   </div>
@@ -205,6 +137,9 @@
 
 <script>
   import CarPanel from "../components/car-panel";
+  import { getAllGoodsTypeByF } from '../api/goodtype'
+  import { getGoodstypeTo23ByF } from '../api/goodtype'
+  import { f_getGoodsListToType } from '../api/goods'
   export default {
         //默认暴露一个模块
       components:{
@@ -220,19 +155,87 @@
           show_shadow:false,
           show_nav_sub:false,
           sbi2:0,
+          /*-----------------我的属性--*/
+          //装1级分类的数组
+          goodstypeList:{},
+          //装2级分类的数组
+          goodstype2List:{},
+          spanStyle:"",
+          /*----------------分类显示所有手机--*/
+          goodslist:{},
+          sbsb:false,
+          sbsb2:false,
+
         }
       },
-      mounted() {
-        window.addEventListener('scroll', this.windowScroll)
+
+      created() {
+        this.getData();
       },
+
       methods:{
+        getData(){
+          getAllGoodsTypeByF().then(res => {
+            this.goodstypeList = res;
+          })
+
+          f_getGoodsListToType().then(res => {
+            this.goodslist = res.goodsList;
+            console.log(res.goodsList)
+          })
+        },
+        /*回到首页*/
+        gohomepage(){
+          this.show = false;
+          this.$store.commit('changNav2');
+          this.$router.push("/");
+          this.$router.go(0);
+        },
+        /*点击2级头跳转页面*/
+        goitem(){
+          this.show = false;
+          this.$router.push("/shop");
+          this.$router.go(0);
+        },
+
+        /*悬浮1级分类显示其下的所有分类信息,(id是1级分类的id)*/
+        showGoodsTypeAll(id){
+
+          this.sbsb2 = true;
+          this.show = true;
+          let formDatas = new FormData();
+          formDatas.append("id", id);
+          getGoodstypeTo23ByF(formDatas).then(res => {
+            this.goodstype2List = res.goodstype.goodstype2;
+          })
+
+        },
+
+        /*鼠标悬浮服务*/
+        showServe(){
+          this.sbsb2 = true;
+          this.show = true;
+          this.goodstype2List=[{
+            goodstype2Id:9999,
+            goodstype2Name: '',
+            goodstype3: [
+              {goodstype3Name: '自助服务'},
+              {goodstype3Name: '在线客服'},
+              {goodstype3Name: '修理门店'},
+              {goodstype3Name: '服务政策'},
+              {goodstype3Name: '发起售后'},
+              ]}, {
+          }]
+          console.log(this.goodstype2List)
+        },
+
 
         windowScroll () {
           // 滚动条距离页面顶部的距离
           // 以下写法原生兼容
           let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
           /*console.log(scrollTop)*/
-          if (scrollTop>=100){
+          if (scrollTop>=70){
             this.shownav = true;
           }else {
             this.shownav = false;
@@ -263,11 +266,42 @@
           }
         }
 
-      }
+      },
+      /*监听滚动条*/
+      mounted() {
+        window.addEventListener('scroll', this.windowScroll)
+      },
     }
 </script>
 
 <style>
+.nav-list{
+
+}
+  /*--------------------鼠标悬浮头部的手机图片动画*/
+  .goodsimgsb{
+    background: white;
+    transition: all 0.8s ease;
+    position: relative;
+    left: 20px;
+
+  }
+  .goodsimgli:hover .goodsimgsb{
+    left: -5px;
+  }
+  .goodsimgli:hover .goodsimgsbspan{
+    left: 5px;
+    opacity: 1;
+  }
+  /*图片的颜色字*/
+  .goodsimgsbspan{
+    position: relative;
+    left: -20px;
+    transition: all 0.8s;
+    opacity: 0;
+  }
+
+
   /*-------------------------------搜索框*/
   .shadow_div{
     position: fixed;
@@ -275,6 +309,7 @@
     height: 120%;
     background: rgba(0,0,0,0.48);
     z-index: 102;
+    margin-top: -5px;
   }
 
 
@@ -322,26 +357,29 @@
   }
   /*--------------------------------2级头---*/
   .main_div_div img{
-    width: 80px;
+    width: 50px;
     display: inline;
   }
   .main_div_div span{
     position: relative;
-    top: -30px;
+    top: -20px;
   }
   .main_div_div label{
     position: relative;
     color: black;
-    top: 7px;
+    top: 2px;
   }
   .main_div_div li{
-    margin: 20px auto;
+    margin: 20px 20px;
     text-align: center;
+    cursor: pointer;
   }
+
   .main_div_div ul{
     margin-top: -15px;
     margin-left: 50px;
     float: left;
+   /* background: red;*/
   }
 
 
@@ -350,11 +388,13 @@
     display: none;
   }
 .main_div_div{
-  width: 70%;
+  width: 100%;
   height: 100%;
-/*  background: whitesmoke;*/
+ /* background: whitesmoke;*/
   margin: 0 auto;
-  padding-left: 120px;
+  padding-left: 110px;
+  display: inline-block;
+  overflow: hidden;
 }
 
   .bounce-enter-active {
@@ -393,6 +433,17 @@
   .nav_sub_show-leave-active {
     animation: fadeInDown 0.5s reverse;
   }
+  /*商品*/
+  .goodslist-enter-active {
+    animation: fadeInDown 0.8s;
+  }
+/*分类*/
+  .typelistsb-enter-active {
+    animation: fadeInDown 1s;
+
+  }
+
+
 #main_div{
   width: 100%;
   height: 340px;
@@ -412,5 +463,12 @@
 
   body{
     overflow-x: hidden;
+
   }
+  /*右键复制文字背景变红色*/
+  ::selection {
+    background:#CC0033;
+    color:white;
+  }
+
 </style>

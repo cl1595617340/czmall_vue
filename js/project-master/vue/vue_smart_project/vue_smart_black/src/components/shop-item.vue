@@ -77,6 +77,9 @@
     height: 206px;
     margin: 50px auto 10px;
   }
+
+
+
   .sku-box .item h3, .sku-box .item h6{
     overflow: hidden;
     text-align: center;
