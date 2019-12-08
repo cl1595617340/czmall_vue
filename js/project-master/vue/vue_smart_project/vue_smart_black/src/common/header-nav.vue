@@ -7,13 +7,39 @@
         <div class="nav_search" v-if="show_search">
           <div class="nav_search_div">
             <img src="../assets/img/搜索.png" class="nav_search_div_img01">
-            <input placeholder="搜索appom.com.cn"/>
+            <input placeholder="搜索appom.com.cn" @input="specifiName($event)"/>
             <img @click="show_searchs()" src="../assets/img/叉.png" class="nav_search_div_img02">
           </div>
 
-          <div class="nav_search_div02">
-
+          <!--输入建议-->
+          <div class="nav_search_div02" v-show="nav_search">
+            <label>快速链接</label>
+            <ul>
+              <li>查找零售店</li>
+              <li>佳节好礼</li>
+              <li>配件</li>
+              <li>服务网店查询</li>
+              <li>关于我们</li>
+            </ul>
           </div>
+
+          <!--输入建议模糊查询-->
+          <div class="nav_search_div02" v-show="isnav_search" style="padding-top: 0px">
+            <div v-for="site in goodstype3ListAndGoods" style="padding-top: 20px">
+              <label style="top: 0px">{{site.goodstype3Name}}</label>
+              <ul v-for="site2 in site.goodsList">
+                <li>{{site2.goodsName}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <!--输入建议为空的时候-->
+          <div class="nav_search_div02" v-show="isnav_searchNone" style="padding-top: 0px">
+            <div style="padding-top: 20px">
+              <label style="top: 0px;font-weight: 200">星空下流浪的你 仍然是秘密的距离_ &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp空</label>
+            </div>
+          </div>
+
         </div>
       </transition>
 
@@ -140,6 +166,7 @@
   import { getAllGoodsTypeByF } from '../api/goodtype'
   import { getGoodstypeTo23ByF } from '../api/goodtype'
   import { f_getGoodsListToType } from '../api/goods'
+  import { getType3AndGoods } from '../api/goods'
   export default {
         //默认暴露一个模块
       components:{
@@ -166,6 +193,14 @@
           sbsb:false,
           sbsb2:false,
 
+          /*发送到后台的查询条件，主页的，不给会报错*/
+          querylistsb:{laterNumcameras:"",tab:"",cell:"",cpunum:"",screen:""},
+
+          /*主页大模糊查询的集合*/
+          goodstype3ListAndGoods:[],
+          nav_search:true,
+          isnav_search:false,
+          isnav_searchNone:false,
         }
       },
 
@@ -175,14 +210,47 @@
 
       methods:{
         getData(){
+          let formDatas = new FormData();
+          formDatas.append("obj", JSON.stringify(this.querylistsb));
+          formDatas.append("endGoodsid", 100);
           getAllGoodsTypeByF().then(res => {
             this.goodstypeList = res;
           })
 
-          f_getGoodsListToType().then(res => {
+          f_getGoodsListToType(formDatas).then(res => {
             this.goodslist = res.goodsList;
-            console.log(res.goodsList)
           })
+        },
+        /*输入框change事件并获取值*/
+        specifiName(e) {
+          var that = this;
+          var val = e.target.value;
+
+          let formDatas = new FormData();
+
+          /*输入的值为空出现快速链接*/
+          if (val==""){
+            this.goodstype3ListAndGoods = [];
+            this.nav_search = true;
+            this.isnav_search = false;
+          } else {
+            formDatas.append("name", val);
+            getType3AndGoods(formDatas).then(res => {
+              this.goodstype3ListAndGoods = res.goodstype3List;
+
+              if (this.goodstype3ListAndGoods.length==0){
+                this.isnav_searchNone = true;
+                this.isnav_search = false
+              }else {
+                this.isnav_searchNone = false;
+                this.nav_search = false;
+                this.isnav_search = true;
+              }
+
+            /*  console.log(this.goodstype3ListAndGoods)*/
+            })
+          }
+
         },
         /*回到首页*/
         gohomepage(){
@@ -325,12 +393,42 @@
     left: 720px;
     cursor: pointer;
   }
+
+
+.nav_search_div02 label{
+  font-size:9px;
+  position: relative;
+  top: -10px;
+  left: 2px;
+  font-weight: 600;
+  font-family: "SF Pro SC","HanHei SC","SF Pro Text","Myriad Set Pro","SF Pro Icons","PingFang SC","Helvetica Neue","Helvetica","Arial",sans-serif;
+}
+.nav_search_div02 li{
+  line-height: 35px;
+  width: 100%;
+  padding-left: 25px;
+  cursor: pointer;
+}
+.nav_search_div02 li:hover{
+  background: ghostwhite;
+  color: indianred;
+  transition: all 0.2s;
+}
+.nav_search_div02 ul{
+  width: 97%;
+  height: 100%;
+
+}
   .nav_search_div02{
     width: 100%;
-    height: 84%;
+    min-height: 20%;
     box-shadow:0px 4px 10px #888888;
     border-radius: 0px 0px 20px 20px;
     z-index: 100;
+    font-family: 'Microsoft Yahei', '微软雅黑', 'PingFang SC', sans-serif;
+    padding-left: 20px;
+    padding-top: 30px;
+    padding-bottom: 15px;
   }
   .nav_search_div input{
     background: black;
@@ -349,11 +447,11 @@
   .nav_search{
     position: absolute;
     width: 745px;
-    height: 340px;
     background: white;
     z-index: 1000;
     left: 310px;
     border-radius: 0px 0px 20px 20px;
+    max-height: 310px;
   }
   /*--------------------------------2级头---*/
   .main_div_div img{

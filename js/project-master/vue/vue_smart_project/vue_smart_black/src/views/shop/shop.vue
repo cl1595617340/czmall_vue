@@ -15,7 +15,7 @@
                 <div class="main_div_divsb_query_div">
                   <label>{{list.title}}:{{list.values}}</label>
                   <div class="main_div_divsb_query_i">
-                    <i class="el-icon-close" @click="delquery(list.title,index)"></i>
+                    <i class="el-icon-close" @click="delquery(list.title,index,list.values)"></i>
                   </div>
                 </div>
               </li>
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div id="content">
+    <div id="content" :style="content">
       <div class="content_left">
         <div style="padding-top: 30px">
           <label style="font-size: 31px;font-weight: 400;">机型概述</label>
@@ -48,7 +48,30 @@
 
         <div class="content_left_mian">
 
-          <div class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==0">
+
+          <!--这个ul是滑块-->
+          <ul style="padding-top: 30px" class="content_left_mian_ul">
+            <li>
+              <span style="font-size: 14px;color: black;">制造商建议零售价（含增值税）</span>
+              <div class="block" style="width: 180px">
+                <el-slider
+                  v-model="slidervalue"
+                  range
+                  @change="changeslider"
+                  :max="10">
+                </el-slider>
+              </div>
+
+              <div v-for="(slider,index) in slidervalue">
+                <label v-if="index==0 && slider==0">{{slider}}</label>
+                <label v-if="index==0 && slider!=0">{{slider}},000</label>
+                <label v-if="index==1" style="position: relative;left: 150px;top: -17px">{{slider}},000</label>
+              </div>
+            </li>
+          </ul>
+
+
+          <div style="padding-top: 5px" class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==0">
             <span style="font-size: 14px;color: black;">{{list.title}}</span>
             <ul class="content_left_mian_ul">
               <li v-for="(list2,index2) in list.values" >
@@ -93,14 +116,6 @@
             </ul>
           </div>
 
-          <div class="block">
-            <el-slider
-              v-model="value"
-              range
-              show-stops
-              :max="10">
-            </el-slider>
-          </div>
         </div>
 
       </div>
@@ -112,64 +127,93 @@
       <div class="content_right">
         <div>
 
-          <div class="content_right_div">
-            <label><i class="el-icon-arrow-right"></i> i 我所爱  <span style="font-weight: 600">iphone8 Plus</span></label>
-            <ul class="content_right_ul">
+          <transition-group name="queryGoodslist">
+            <div v-show="queryGoodslist" :key="goodlist.goodsId" class="content_right_div" v-for="(goodlist,index) in goodslist" >
+            <label  @click="showsb(index,goodlist.goodsId)" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
+              <i class="el-icon-arrow-right"></i> {{goodlist.goods_title}}
+              <span style="font-weight: 600">{{goodlist.goodsName}}
+              </span>
+            </label>
 
-              <li class="content_right_ul_li1" :style="li1" @mouseover="showipone" @mouseleave="hideipone">
+            <ul class="content_right_ul" >
+
+              <li  v-if="index2==0" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li1 : li1sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
                 <div class="content_right_ul_div">
-                  <img src="../../../static/images/goods/iphone8-plus深空灰.jpg">
+                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+
+                  <!--版本-->
+                  <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
+                    <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
+                      <label>建议零售价:￥<span style="color: #D10D0D">{{sbv.versionsPrice}}</span>起*</label>
+                    </div>
+                  </span>
+
+                  <label class="goodcolorList_label" :style="liindexlabel == goodlist.goodsId ? goodcolorList_label : goodcolorList_labelsb">{{goodcolorList.goodscolorName}}</label>
                 </div>
               </li>
 
-              <li class="content_right_ul_li2" :style="li2" @mouseover="showipone" @mouseleave="hideipone">
+              <li  v-if="index2==1" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li2 : li2sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
                 <div class="content_right_ul_div">
-                  <img src="../../../static/images/goods/iphone8-plus金色.jpg">
+                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <!--版本-->
+                  <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
+                    <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
+                      <label>建议零售价:￥<span style="color: #D10D0D">{{sbv.versionsPrice}}</span>起*</label>
+                    </div>
+                  </span>
+                  <label class="goodcolorList_label" :style="liindexlabel == goodlist.goodsId ? goodcolorList_label : goodcolorList_labelsb">{{goodcolorList.goodscolorName}}</label>
                 </div>
               </li>
 
-              <li class="content_right_ul_li3" :style="li3" @mouseover="showipone" @mouseleave="hideipone">
-                <div class="content_right_ul_div">
-                  <img src="../../../static/images/goods/iphone8-plus银色.jpg">
-                  <button style="margin-left: 50px" @click="showallgoods">catch</button>
 
+              <li  v-if="index2==2" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li3 : li3sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
+                <div class="content_right_ul_div">
+                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <!--版本-->
+                  <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
+                    <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
+                      <label>建议零售价:￥<span style="color: #D10D0D">{{sbv.versionsPrice}}</span>起*</label>
+                    </div>
+                  </span>
+                  <label class="goodcolorList_label" :style="liindexlabel == goodlist.goodsId ? goodcolorList_label : goodcolorList_labelsb">{{goodcolorList.goodscolorName}}</label>
                 </div>
               </li>
 
-
+              <li  v-if="index2==3" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li4 : li4sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
+                <div class="content_right_ul_div">
+                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <!--版本-->
+                  <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
+                    <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
+                      <label>建议零售价:￥<span style="color: #D10D0D">{{sbv.versionsPrice}}</span>起*</label>
+                    </div>
+                  </span>
+                  <label class="goodcolorList_label" :style="liindexlabel == goodlist.goodsId ? goodcolorList_label : goodcolorList_labelsb">{{goodcolorList.goodscolorName}}</label>
+                </div>
+              </li>
             </ul>
 
           </div>
-          <div class="content_right_div">
-            <label><i class="el-icon-arrow-right"></i> Fever To  <span style="font-weight: 600">vivo X27</span></label>
-            <ul class="content_right_ul">
+          </transition-group>
+          <!--搜索为空的时候-->
+          <transition name="queryGoodslistNone">
+            <div id="queryGoodslistNone" v-show="queryGoodslistNone" style="text-align: center">
+              <p style="color: indianred">“星空之所以美丽，是因为不管黑暗如何蔓延，</p>
+              <p style="color: indianred">都会有星星的光芒去把它照亮,</p>
+              <p style="color: indianred">找到和自己一样的星星，把通往自由的路照亮吧！”</p>
+              <p>空</p>
+            </div>
+          </transition>
 
-              <li class="content_right_ul_li1" :style="li1" @mouseover="showipone" @mouseleave="hideipone">
-                <div class="content_right_ul_div">
-                  <img src="../../../static/images/goods/iphone8-plus深空灰.jpg">
-                </div>
-              </li>
+        </div>
 
-              <li class="content_right_ul_li2" :style="li2" @mouseover="showipone" @mouseleave="hideipone">
-                <div class="content_right_ul_div">
-                  <img src="../../../static/images/goods/iphone8-plus金色.jpg">
-                </div>
-              </li>
-
-              <li class="content_right_ul_li3" :style="li3" @mouseover="showipone" @mouseleave="hideipone">
-                <div class="content_right_ul_div">
-                  <img src="../../../static/images/goods/iphone8-plus银色.jpg">
-                  <button style="margin-left: 50px" @click="showallgoods">catch</button>
-
-                </div>
-              </li>
-
-
-            </ul>
-
-          </div>
+        <!--展开全部-->
+        <div id="openall">
+          <button @click="allshow">Catch ME</button>
         </div>
       </div>
+
+
     </div>
 
     <prompt v-if="maxCount"></prompt>
@@ -183,6 +227,7 @@
   import $ from 'jquery'
   /*我的组件*/
   import vShopGoods from "../shop/shopGoods";
+  import { f_getGoodsListToType } from '../../api/goods'
     export default {
         //默认暴露一个模块
       components:{
@@ -273,44 +318,249 @@
           li1:"",
           li2:'',
           li3:"",
+          li4:"",
+          li1sb:"",
+          li2sb:'',
+          li3sb:"",
+          li4sb:"",
+          li1sb:'',
 
           changipone:false,
           i :0,
+          isb :0,
+
+          liindex:-1,
+
+          /*-----------------------------手机信息---*/
+          goodslist:{},
+          sstt: [
+            "content_right_ul_li1",
+            "content_right_ul_li2",
+            "content_right_ul_li3",
+            "content_right_ul_li4",
+          ],
+          goodcolorList_label:"",
+          goodcolorList_labelsb:"",
+          goodcolorList_img:"",
+          liindeximg:-1,
+          /*点击展开后鼠标悬浮图片才有动画*/
+          changimg:false,
+          liindexlabel:-1
+          /*版本的动画*/,
+          liindexver:-1,
+          goodcolorList_ver:"",
+          goodcolorList_versb:"",
+
+          /*搜索为空的时候*/
+          queryGoodslist:true,
+          queryGoodslistNone:false,
+
+          /*发送到后台的查询条件*/
+          querylistsb:{laterNumcameras:"",tab:"",cell:"",cpunum:"",screen:"",startslider:"",endslider:""},
+          //装物品id的集合,发送给前台的数据数量是由物品id数量决定的(endGoodsid),相当于分页的分页数量
+          endGoodsid:2,
+          /*解决滚动条到达懒加载会一直请求数据的bug*/
+          isendGoodsid:false,
+          /*滑块的值*/
+          slidervalue:[0, 10],
+          /*右边的搜索结果提示*/
+          isgoquery:false,
+          /*显示手机的内容高度,懒加载用的*/
+          content:'',
         }
       },
-      methods:{
-        showallgoods(){
-          if (this.i==0){
-            this.li2 = "left: -30px;";
-            this.li3 = "left: 0px;";
-            this.i++;
-            this.changipone = true;
-          } else {
-            this.li2 = "left: -200px;";
 
-            this.i--;
-            this.changipone = false;
+      created() {
+        this.$store.commit('changNav');
+        this.getData();
+      },
+
+      methods:{
+        getData(){
+          let formDatas = new FormData();
+          formDatas.append("obj", JSON.stringify(this.querylistsb));
+          formDatas.append("endGoodsid", this.endGoodsid);
+          console.log(JSON.stringify(this.querylistsb))
+          f_getGoodsListToType(formDatas).then(res => {
+            this.goodslist = res.goodsList;
+
+            //如果数据为的时候，则出现提示
+            if (this.goodslist==""){
+              this.queryGoodslist = false;
+              this.queryGoodslistNone =true;
+              this.disabledandStart(1);
+              this.isgoquery=false;
+            }else {
+              this.queryGoodslist = true;
+              this.queryGoodslistNone =false;
+              this.disabledandStart(2);
+
+              if (this.isgoquery==true){
+                this.$notify({
+                  title: "共"+this.goodslist.length+"款机型",
+                  dangerouslyUseHTMLString: true,
+                  message:"自 2019 年 4 月 1 日起增值税税率进行调整。因此所列的厂商建议零售价将可能进行调整。请您与相对授权经销商咨询具体的价格信息。",
+                });
+              }
+
+            }
+            console.log(res.goodsList)
+          })
+        },
+        /*通用禁用和启用查询按钮的方法*/
+        disabledandStart(q){
+          if (q==1){
+            this.disabledsb = true;
+            this.disabledsb2 = true;
+            this.disabledsb3 = true;
+            this.disabledsb4 = true;
+            this.disabledsb5 = true;
+            this.classsb = 'addclassb';
+            this.classsb2 = 'addclassb';
+            this.classsb3 = 'addclassb';
+            this.classsb4 = 'addclassb';
+            this.classsb5 = 'addclassb';
+          } else{
+            this.disabledsb = false;
+            this.disabledsb2 = false;
+            this.disabledsb3 = false;
+            this.disabledsb4 = false;
+            this.disabledsb5 = false;
+            if (this.querylistsb.laterNumcameras!=''){
+              this.disabledsb = true;
+              this.classsb = 'addclassb';
+              return;
+            }
+            if (this.querylistsb.tab!=''){
+              this.disabledsb2 = true;
+              this.classsb2 = 'addclassb';
+              return;
+            }
+            if (this.querylistsb.cell!=''){
+              this.disabledsb3 = true;
+              this.classsb3 = 'addclassb';
+              return;
+            }
+            if (this.querylistsb.cpunum!=''){
+              this.disabledsb4 = true;
+              this.classsb4 = 'addclassb';
+              return;
+            }
+            if (this.querylistsb.screen!=''){
+              this.disabledsb5 = true;
+              this.classsb5 = 'addclassb';
+              return;
+            }
+            this.classsb = 'otherclass';
+            this.classsb2 = 'otherclass';
+            this.classsb3 = 'otherclass';
+            this.classsb4 = 'otherclass';
+            this.classsb5 = 'otherclass';
+          }
+        },
+        changeslider(){
+          this.isgoquery=true;
+          this.querylistsb.startslider = this.slidervalue[0]+"000";
+          this.querylistsb.endslider = this.slidervalue[1]+"000";
+          this.getData();
+        },
+        hide_img(id){
+          if (this.changimg==true){
+            this.liindexver = id;
+            this.goodcolorList_ver="opacity:1;top:-25px;z-index:-1;opacity:0";
+            this.liindeximg = id;
+            this.goodcolorList_img="top:0px";
+          }
+        },
+        /*鼠标悬浮图片*/
+        show_img(id){
+          if (this.changimg==true){
+            this.liindexver = id;
+            this.goodcolorList_ver="opacity:1;top:-15px;z-index:1;opacity:1";
+            this.liindeximg = id;
+            this.goodcolorList_img="top:-20px";
           }
 
         },
-        hideipone(){
+        /*展开全部*/
+        allshow(){
+          if (this.isb==0){
+            this.goodcolorList_label="opacity:1;top:-10px";
+            this.goodcolorList_labelsb="opacity:1;top:-10px";
+            this.li1 = "left: -70px;";
+            this.li2 = "left: -40px;";
+            this.li3 = "left: -20px;";
+            this.li4 = "left: 10px;";
+            this.li1sb = "left: -70px;";
+            this.li2sb = "left: -40px;";
+            this.li3sb = "left: -20px;";
+            this.li4sb = "left: 10px;";
+            this.changipone=true;
+            this.changimg=true;
+            this.isb++;
+          } else {
+            this.goodcolorList_label="opacity:0;top:-30px";
+            this.goodcolorList_labelsb="opacity:0;top:-30px";
+            this.li1 = "left: 0px;";
+            this.li2 = "left: -200px;";
+            this.li3 = "left: -400px;";
+            this.li4 = "left: -600px;";
+            this.li1sb = "left: 0px;";
+            this.li2sb = "left: -200px;";
+            this.li3sb = "left: -400px;";
+            this.li4sb = "left: -600px;";
+            this.changipone=false;
+            this.changimg=false;
+            this.isb--;
+          }
+
+        },
+        /*点击标题展开手机*/
+        showsb(index,id){
+          this.liindexlabel = id;
+          this.liindex = index;
+          if (this.i==0){
+            this.goodcolorList_label="opacity:1;top:-10px";
+            this.li1 = "left: -70px;";
+            this.li2 = "left: -40px;";
+            this.li3 = "left: -20px;";
+            this.li4 = "left: 10px;";
+            this.changipone=true;
+            this.changimg=true;
+            this.i++;
+          } else {
+            this.goodcolorList_label="opacity:0;top:-30px";
+              this.li1 = "left: 0px;";
+            this.li2 = "left: -200px;";
+            this.li3 = "left: -400px;";
+            this.li4 = "left: -600px;";
+            this.changipone=false;
+            this.changimg=false;
+            this.i--;
+          }
+
+        },
+        hideipone(index){
           if (this.changipone==false){
+            this.liindex = index;
             this.li1 = "left: 0px;";
             this.li3 = "left: -400px;";
+            this.li4 = "left: -600px;";
           }
 
         },
-        showipone(){
+        showipone(index){
           if (this.changipone==false){
+            this.liindex = index;
             this.li1 = "left: -60px;";
             this.li3 = "left: -340px;";
-          } else {
-
+            this.li4 = "left: -480px;";
           }
 
         },
-        /*----------------------------------------------鼠标悬浮手机的动画---*/
-        delquery(title,index){
+        /*----------------------------------------------上面鼠标悬浮手机的动画---*/
+        delquery(title,index,name){
+          this.isgoquery=false;
           // 根据下标删除
           this.querylist.splice(index,1);
           if (title=='拍照像素'){
@@ -318,31 +568,42 @@
             this.classsb = 'otherclass';
             this.disabledsb = false;
             this.classi=-1;
+
+            this.querylistsb.laterNumcameras = "";
           }else if (title=='运行内存'){
             this.activesb2 = -1;
             this.classsb2 = 'otherclass';
             this.disabledsb2 = false;
             this.classi2=-1;
+
+            this.querylistsb.tab  = "";
           }else if (title=='电池续航'){
             this.activesb3 = -1;
             this.classsb3 = 'otherclass';
             this.disabledsb3 = false;
             this.classi3=-1;
+
+            this.querylistsb.cell = "";
           }else if (title=='CPU主频'){
             this.activesb4 = -1;
             this.classsb4 = 'otherclass';
             this.disabledsb4 = false;
             this.classi4=-1;
+
+            this.querylistsb.cpunum = "";
           }else if (title=='屏幕'){
             this.activesb5 = -1;
             this.classsb5 = 'otherclass';
             this.disabledsb5 = false;
             this.classi5=-1;
-          }
 
+            this.querylistsb.screen = "";
+          }
+          this.getData();
         },
         /*点击查询条件。固定的头部显示条件*/
         goquery(title,name,index2){
+          this.isgoquery=true;
           let listsb = [{title:'',values:""}];
           listsb.title = title;
           listsb.values = name;
@@ -354,32 +615,42 @@
             this.classsb = 'addclassb';
             this.disabledsb = true;
             this.classi=index2;
+
+            this.querylistsb.laterNumcameras = name;
           }else if (title=='运行内存') {
             //将点击的元素的索引赋值给变量
             this.activesb2 = index2;
             this.classsb2 = 'addclassb';
             this.disabledsb2 = true;
             this.classi2=index2;
+
+            this.querylistsb.tab = name;
           }else if (title=='电池续航') {
             //将点击的元素的索引赋值给变量
             this.activesb3 = index2;
             this.classsb3 = 'addclassb';
             this.disabledsb3 = true;
             this.classi3=index2;
+
+            this.querylistsb.cell = name;
           }else if (title=='CPU主频') {
             //将点击的元素的索引赋值给变量
             this.activesb4 = index2;
             this.classsb4 = 'addclassb';
             this.disabledsb4 = true;
             this.classi4=index2;
+
+            this.querylistsb.cpunum = name;
           }else if (title=='屏幕') {
             //将点击的元素的索引赋值给变量
             this.activesb5 = index2;
             this.classsb5 = 'addclassb';
             this.disabledsb5 = true;
             this.classi5=index2;
-          }
 
+            this.querylistsb.screen = name;
+          }
+          this.getData();
 
 
         },
@@ -415,12 +686,32 @@
           // 滚动条距离页面顶部的距离
           // 以下写法原生兼容
           let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-          /*console.log(scrollTop)*/
+         /* console.log(scrollTop)*/
           if (scrollTop>=80){
             this.goodsnav = "position: fixed;top:0px";
           }else {
             this.goodsnav = "position: relative";
           }
+
+          if (scrollTop>=470){
+            if (this.isendGoodsid==false){
+              this.endGoodsid = 3;
+              this.getData();
+              this.isendGoodsid=true;
+            }
+          } else{
+           /* this.endGoodsid = 2;
+            this.getData();*/
+          }
+
+          /*正式用的高度*/
+          /*if (scrollTop>=850){
+            this.endGoodsid = 3;
+            this.getData();
+            /!*this.content = 'height:2400px';*!/
+          } else{
+
+          }*/
         },
       },
       /*监听滚动条*/
@@ -428,35 +719,93 @@
         window.addEventListener('scroll', this.windowScroll)
       },
 
-      created() {
-        this.$store.commit('changNav');
-      },
       computed:{
         maxCount(){
           return this.$store.state.maxOff;
         },
       },
     }
+
+
 </script>
 
-
+<style>
+  .el-slider__button-wrapper{
+    z-index: 0;
+  }
+</style>
 <style scoped>
-  .content_right_ul_li3{
 
+#queryGoodslistNone{
+
+  display: block;
+  font: normal 700 30px/12px "SimSun", serif;
+  transform: scale(1, 1.2);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+#queryGoodslistNone p{
+  position: relative;
+  top: 50px;
+  margin-top: 50px;
+}
+/*-------------------------------------------搜索为空的样子--*/
+  .goodcolorList_versions{
+    transition: all 0.5s ease;
+    position: relative;
+    top: -25px;
+    z-index: -1;
+    opacity: 0;
+  }
+  /*--------------------------------------价钱动画---*/
+.goodcolorList_img{
+  position: relative;
+  transition: all 0.5s ease;
+  top: 1px;
+}
+.goodcolorList_label{
+  transition: all 1.1s ease;
+  position: relative;
+  top: -30px;
+  opacity: 0;
+}
+  /*------------------颜色--------------*/
+  #openall{
+    position: fixed;
+    width: 20px;
+    height: 30px;
+    top: 380px;
+    right:20px;
+    padding-left: 10px;
+    padding-right: 30px;
+
+  }
+#openall button{
+  width: 50px;
+  height: 140px;
+  background: #2A4B6D;
+  box-shadow:0px 4px 10px #888888;
+  color: white;
+}
+  .content_right_ul_li4{
+    position: relative;
+    left: -600px;
+    transition: all 0.6s ease;
+  }
+  .content_right_ul_li3{
     position: relative;
     left: -400px;
-    transition: all 0.8s ease;
+    transition: all 0.6s ease;
   }
   .content_right_ul_li2{
-
     position: relative;
     left: -200px;
-    transition: all 0.8s ease;
+    transition: all 0.6s ease;
   }
   .content_right_ul_li1{
     position: relative;
-
-    transition: all 0.8s ease;
+    left: -1px;
+    transition: all 0.6s ease;
   }
 
   /*.content_right_ul_li1:hover + .content_right_ul_li2{
@@ -475,6 +824,8 @@
 }
   .content_right_ul{
     margin-left: 55px;
+    text-align: center;
+    margin-top: 10px;
   }
 .content_right_ul li{
   float: left;
@@ -490,7 +841,8 @@
     transform: scale(1, 1.1);
     transition: all 0.3s ease;
     cursor: pointer;
-    width: 400px;
+    width: 360px;
+    height: 50px;
   }
   .content_right_div>label:hover{
     color:  #D10D0D;
@@ -499,7 +851,7 @@
     width: 90%;
     height: 350px;
     margin-left: 61px;
-    margin-top: 30px;
+    margin-top: 10px;
     padding-top: 30px;
   }
  .content_right>div{
@@ -511,7 +863,7 @@
 
 .content_right{
   width: 970px;
-  min-height:1700px;
+  height:1800px;
    /* background: wheat;*/
   position: relative;
   top: 80px;
@@ -631,14 +983,14 @@
 
   .content_left_mian{
     width: 100%;
-    min-height:1700px;
+    height:1600px;
     border-right: 1px #E3E4E4 solid;
 
   }
 
   .content_left{
     width: 240px;
-    min-height:1700px;
+    height:1800px;
   /*  background: whitesmoke;*/
     position: relative;
     top: 80px;
@@ -648,7 +1000,7 @@
   #content{
 
     width: 1220px;
-    min-height:1700px;
+    height:1800px;
     padding: 0 0 25px;
     margin: 0 auto;
 
@@ -794,6 +1146,17 @@
   }
   .querysb-leave-active {
     animation: fadeInDown 0.5s reverse;
+  }
+
+  .queryGoodslist-enter-active {
+    animation: fadeIn 0.8s;
+  }
+  .queryGoodslist-leave-active {
+    animation: fadeIn 0.8s reverse;
+  }
+
+  .queryGoodslistNone-enter-active {
+    animation: fadeIn 4s;
   }
 
 </style>
