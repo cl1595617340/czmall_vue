@@ -125,7 +125,7 @@
     padding: 50px 0 20px;
     border-top: 1px solid #e6e6e6;
     background: #fafafa;
-    margin-top: 60px;
+    margin-top: 50px;
     height: 350px;
     display: flex;
     flex-direction: column;

@@ -7,7 +7,7 @@
         <div class="nav_search" v-if="show_search">
           <div class="nav_search_div">
             <img src="../assets/img/搜索.png" class="nav_search_div_img01">
-            <input placeholder="搜索appom.com.cn" @input="specifiName($event)"/>
+            <input @keyup.enter="goQueryGoods($event)" placeholder="搜索appom.com.cn" @input="specifiName($event)"/>
             <img @click="show_searchs()" src="../assets/img/叉.png" class="nav_search_div_img02">
           </div>
 
@@ -26,7 +26,7 @@
           <!--输入建议模糊查询-->
           <div class="nav_search_div02" v-show="isnav_search" style="padding-top: 0px">
             <div v-for="site in goodstype3ListAndGoods" style="padding-top: 20px">
-              <label style="top: 0px">{{site.goodstype3Name}}</label>
+              <label style="top: 0px">{{site.goodstype3Name}} {{site.goodsList.length}}</label>
               <ul v-for="site2 in site.goodsList">
                 <li>{{site2.goodsName}}</li>
               </ul>
@@ -34,7 +34,7 @@
           </div>
 
           <!--输入建议为空的时候-->
-          <div class="nav_search_div02" v-show="isnav_searchNone" style="padding-top: 0px">
+          <div class="nav_search_div02" v-show="isnav_searchNone" style="padding-top: 00px">
             <div style="padding-top: 20px">
               <label style="top: 0px;font-weight: 200">星空下流浪的你 仍然是秘密的距离_ &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp空</label>
             </div>
@@ -221,18 +221,27 @@
             this.goodslist = res.goodsList;
           })
         },
-        /*输入框change事件并获取值*/
+        /*----------------------回车搜索框*/
+        goQueryGoods(e){
+          var that = this;
+          var val = e.target.value;
+          /*跳转页面并传值*/
+          this.$router.push({path: '/queryGoods',query:{ id:val}});
+          this.$router.go(0);
+        },
+        /*---------------输入框change事件并获取值*/
         specifiName(e) {
           var that = this;
           var val = e.target.value;
 
           let formDatas = new FormData();
 
-          /*输入的值为空出现快速链接*/
+          /*-------------------输入的值为空出现快速链接*/
           if (val==""){
             this.goodstype3ListAndGoods = [];
             this.nav_search = true;
             this.isnav_search = false;
+            this.isnav_searchNone = false;
           } else {
             formDatas.append("name", val);
             getType3AndGoods(formDatas).then(res => {
@@ -241,13 +250,13 @@
               if (this.goodstype3ListAndGoods.length==0){
                 this.isnav_searchNone = true;
                 this.isnav_search = false
+                this.nav_search = false;
               }else {
                 this.isnav_searchNone = false;
                 this.nav_search = false;
+                /*有数据*/
                 this.isnav_search = true;
               }
-
-            /*  console.log(this.goodstype3ListAndGoods)*/
             })
           }
 
@@ -259,7 +268,7 @@
           this.$router.push("/");
           this.$router.go(0);
         },
-        /*点击2级头跳转页面*/
+        /*----------------点击2级头跳转页面*/
         goitem(){
           this.show = false;
           this.$router.push("/shop");

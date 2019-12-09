@@ -13,6 +13,8 @@ import Address from '../views/account/address'
 
 import homes from '../views/homes'
 
+import QueryGoods from '../views/shop/queryGoods'
+
 Vue.use(Router)
 
 export default new Router({
@@ -26,12 +28,11 @@ export default new Router({
       path: '/Shop',
       name:"Shop",
       component: Shop,
-      children:[
-        {
-          path: '/shopGoods',
-          component: () => import(/* webpackChunkName: "dashboard" */ '../views/shop/shopGoods.vue'),
-        },
-      ]
+    },
+    {
+      path: '/queryGoods',
+      name:"QueryGoods",
+      component: QueryGoods,
     },
     {
       path: '/item',
