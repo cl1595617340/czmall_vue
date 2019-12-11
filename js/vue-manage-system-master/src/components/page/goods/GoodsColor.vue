@@ -125,29 +125,31 @@
                 formDatas.append("file", this.imgFile);//文件上传的参数
                 if (this.addOrUpdatesb =="add"){
                     upload02(formDatas).then(res => {
+                        addGoodsColor(formDatas).then(res => {
+                            if (res){
+                                // 触发父组件中的事件，并传递参数
+                                this.$emit('getDatasb',this.goods_id);
+                                this.$message({
+                                    type: 'success',
+                                    message: '添加成功!',
+                                    duration:2000
+                                });
+                                this.editVisible =false;
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: '添加失败!',
+                                    duration:2000
+                                });
+                            }
+                        })
                         upload03Totarget(formDatas).then(res => {
                         })
                         upload04Tofront(formDatas).then(res => {
                         })
+
                     })
-                    addGoodsColor(formDatas).then(res => {
-                        if (res){
-                            // 触发父组件中的事件，并传递参数
-                            this.$emit('getDatasb',this.goods_id);
-                            this.$message({
-                                type: 'success',
-                                message: '添加成功!',
-                                duration:2000
-                            });
-                            this.editVisible =false;
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: '添加失败!',
-                                duration:2000
-                            });
-                        }
-                    })
+
                 } else {
                     let formDatas2 = new FormData();
                     //false就是没有修改图片
@@ -179,33 +181,35 @@
                         formDatas2.append("delete", this.delimg);
                         formDatas.append("type", 1);
                         upload02(formDatas).then(res => {
+                            updateGoodsColor(formDatas).then(res => {
+                                if (res){
+                                    this.$message({
+                                        type: 'success',
+                                        message: '编辑成功!',
+                                        duration:2000
+                                    });
+                                    //删除服务器的旧图片
+                                    deleteGoodsColorimg(formDatas2).then(res => {
+                                    })
+                                    // 触发父组件中的事件，并传递参数
+                                    this.$emit('getDatasb',this.goods_id);
+                                    this.editVisible =false;
+
+                                } else {
+                                    this.$message({
+                                        type: 'error',
+                                        message: '编辑失败!',
+                                        duration:2000
+                                    });
+                                }
+                            })
                             upload03Totarget(formDatas).then(res => {
                             })
                             upload04Tofront(formDatas).then(res => {
                             })
-                        })
-                        updateGoodsColor(formDatas).then(res => {
-                            if (res){
-                                this.$message({
-                                    type: 'success',
-                                    message: '编辑成功!',
-                                    duration:2000
-                                });
-                                //删除服务器的旧图片
-                                deleteGoodsColorimg(formDatas2).then(res => {
-                                })
-                                // 触发父组件中的事件，并传递参数
-                                this.$emit('getDatasb',this.goods_id);
-                                this.editVisible =false;
 
-                            } else {
-                                this.$message({
-                                    type: 'error',
-                                    message: '编辑失败!',
-                                    duration:2000
-                                });
-                            }
                         })
+
                     };
 
 
@@ -269,7 +273,7 @@
             add(){
                 this.resetForm();
                 this.addOrUpdatesb = "add";
-                this.title = "添加";
+                this.title = "添加展示图";
                 this.editVisible =true;
             },
             cloessb(){
@@ -309,7 +313,7 @@
             /*抽屉*/
             isVisiblesb:false,
             othertitle:"",
-            gridData2:[],
+            gridData2:{},
             goods_id:"",
         },
         watch: {

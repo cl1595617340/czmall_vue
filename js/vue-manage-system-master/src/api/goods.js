@@ -65,3 +65,37 @@ export const deleteGoodsColorimg = (params) => {
 export const updateGoodsColor = (params) => {
     return http.fetchPost('/admin/goods/goods/updateGoodsColor', params)
 }
+
+/*----------------------------------------------------------------参数操作-----*/
+/*修改参数*/
+export const updateParameter = (params) => {
+    return http.fetchPost('/admin/goods/goods/updateParameter', params)
+}
+/*添加参数*/
+export const addParameter = (params) => {
+    return http.fetchPost('/admin/goods/goods/addParameter', params)
+}
+/*--------------------------------------------------------文本域的上传图片,也是4次----*/
+export const mdupload = (params) => {
+    return http.fetchPost('/admin/goods/goods/mdupload', params)
+}
+export const mdupload02 = (params) => {
+    return http.fetchPost('/admin/goods/goods/mdupload02', params)
+}
+export const mdupload03Totarget = (params) => {
+    return http.fetchPost('/admin/goods/goods/mdupload03Totarget', params)
+}
+export const mdupload04Tofront = (params) => {
+    return http.fetchPost('/admin/goods/goods/mdupload04Tofront', params)
+}
+
+/*---------------------------------------修改商品的基本信息--*/
+export const updateGoods = (params) => {
+    return http.fetchPost('/admin/goods/goods/updateGoods', params)
+}
+
+
+/*---------------------------------------添加商品的基本信息--*/
+export const addGoods = (params) => {
+    return http.fetchPost('/admin/goods/goods/addGoods', params)
+}

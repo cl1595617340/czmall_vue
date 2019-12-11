@@ -102,7 +102,7 @@
                                     <label>{{site.versionsName}}:<span style="margin-left: 5px;color: red">{{site.versionsPrice}}</span><i>￥</i></label>
                                 </div>
                             </div>
-                            <i @click="showOther(scope.row.versionsList,scope.row.goodsName,scope.row.goodsId)"  class="el-icon-c-scale-to-original" style="font-size: 20px;cursor: pointer"></i>
+                            <i @click="showOther(scope.row.versionsList,scope.row.goodsName,scope.row.goodsId,scope.row.goodstype3.goodstype3Name)"  class="el-icon-c-scale-to-original" style="font-size: 20px;cursor: pointer"></i>
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -149,12 +149,14 @@
 
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
-                        <el-button
-                                size="mini"
-                                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button
-                                size="mini"
-                                @click="handleEdit(scope.$index, scope.row)"  type="warning">参数</el-button>
+
+                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+
+                        <span v-if="scope.row.goodstype3.goodstype3Id !='137'"></span>
+
+                        <el-button v-if="scope.row.goodstype3.goodstype3Id =='137'"  size="mini" @click="showOtherParameter(scope.$index, scope.row)"  type="warning">参数</el-button>
+
+
                     </template>
                 </el-table-column>
 
@@ -164,14 +166,16 @@
         <!-----------------------------------------------------------分页-->
         <div class="block" id="pagination">
             <!--批量下架-->
-            <div style="margin-top: 12px;margin-left: 9px;width: 100px">
-                <el-button  type="danger" @click="toggleSelection()" plain>批量下架</el-button>
+            <div style="margin-top: 12px;margin-left: 19px;width: 250px">
+                <el-button class="delgoods" :icon="updateStateIcon"  :type="updateStateType" @click="toggleSelection()" plain>{{updateStateText}}</el-button>
+                <el-button class="addgoods" icon="el-icon-plus"  type="primary" @click="addGoods()" plain>新增商品</el-button>
             </div>
+
             <div style="margin-top: -31px">
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage4"
+                        :current-page="pageIndex"
                         :page-sizes="[2, 10, 20]"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
@@ -181,26 +185,14 @@
         </div>
 
 
-        <!--编辑-->
-        <el-dialog title="编辑" :visible.sync="updateeditVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px" :rules="rules">
-
-                <el-form-item label="颜色名:" prop="goodscolorName">
-                    <el-input v-model="form.goodscolorName" placeholder="请输入颜色名字" ></el-input>
-                </el-form-item>
-
-            </el-form>
-            <span slot="footer" class="dialog-footer" >
-                <el-button @click="updateeditVisible = false">取 消</el-button>
-                <el-button type="primary" @click="goPost">确 定</el-button>
-            </span>
-
-        </el-dialog>
-
         <!--子组件版本-->
-        <vVersions :goods_id="goods_id" :isVisiblesb="sbsbsb" :othertitle="sbtitle" :gridData="gridData" @getDatasb="getDatasb" @dialogVisibleEvent="showotherDialog"></vVersions>
+        <vVersions :goods_id="goods_id" :isVisiblesb="sbsbsb" :othertitle="sbtitle" :gridData="gridData" :typename="typename" @getDatasb="getDatasb" @dialogVisibleEvent="showotherDialog" ></vVersions>
         <!--子组件颜色-->
         <vGoodsColor :goods_id="goods_id" :gridData2="gridData2" :othertitle="sbtitle2" :isVisiblesb="sbsbsb2" @getDatasb="getDatasbcolor" @dialogVisibleEvent="showotherDialogColor"></vGoodsColor>
+        <!--子组件参数-->
+        <vGoodsParametersb :isVisiblesb="sbsbsb3" @dialogVisibleEvent="showotherDialogParameter" :othertitle="sbtitle3" :form="gridData3" @getDatasb="getDataParm"></vGoodsParametersb>
+
+        <vupdateGoods :isVisiblesb="sbsbsb4" @dialogVisibleEvent="showotherDialogUpdate" :othertitle="sbtitle4" :form="gridData4" :goodstype3="optionstypeToupdate" @getDatasb="getDataGoods" :type="updateOrAdd" :editVisiblesteps="editVisiblesteps"></vupdateGoods>
     </div>
 </template>
 <script>
@@ -212,22 +204,25 @@
     /*子组件们*/
     import vVersions from '../goods/GoodsVersions'
     import vGoodsColor from '../goods/GoodsColor'
-
+    import vGoodsParametersb from '../goods/GoodsParameter'
+    import vupdateGoods from '../goods/updateGoods'
 
     export default {
         components: {
             "vVersions": vVersions,
             "vGoodsColor": vGoodsColor,
+            "vGoodsParametersb": vGoodsParametersb,
+            "vupdateGoods": vupdateGoods,
         },
         data() {
             return {
                 tableData: [],
                 loading:true,
                 /*分页数据*/
-                currentPage4:1,
+              /*  currentPage4:1,*/
                 pageTotal:0,
                 pageSize:"",
-                pageIndex:"",
+                pageIndex:1,
                 /*日期*/
                 pickerOptions: {
                     shortcuts: [{
@@ -273,15 +268,32 @@
                 sbtitle:"1",
                 gridData:[],
                 goods_id:"",
+                typename:"",
                 /*控制版本的子组件颜色*/
                 sbsbsb2:false,
                 gridData2:[],
                 sbtitle2:"",
                 //输入建议
                 InputSearch:[],
-                /*--------------------------编辑框*/
-                updateeditVisible:false,
-                form:[],
+                /*控制版本的子组件参数*/
+                sbsbsb3:false,
+                sbtitle3:"",
+                gridData3:{},
+                /*修改的组件*/
+                sbsbsb4:false,
+                sbtitle4:"",
+                gridData4:"",
+                optionstypeToupdate:{},
+
+                /*批量下架要根据用户的操纵动态改变*/
+                updateStateText:"批量下架",
+                updateStateType:"danger",
+                updateStateIcon:"el-icon-close",
+
+                /*判断页面是修改还是新增*/
+                updateOrAdd:"",
+                /*步骤条*/
+                editVisiblesteps:false,
             }
         },
         created() {
@@ -291,6 +303,7 @@
         methods: {
             // 获取数据
             getData(){
+
                 let formDatas = new FormData();
                 formDatas.append("page", this.pageIndex);
                 formDatas.append("size", this.pageSize);
@@ -300,8 +313,6 @@
                 list(formDatas).then(res => {
                     /*表格的数据*/
                     this.tableData = res.data;
-
-                    this.InputSearch = res.inputSearcheslist;
 
                     /*分页的数据*/
                     this.pageTotal = res.page.total;
@@ -313,11 +324,11 @@
                     this.loading = false;
                     console.log(this.tableData);
 
-
                 })
             },
             /*--------------------------------------------------------提交查询的按钮------*/
             submit(){
+
                 //每次查询页码都是1开始
                 this.pageIndex = 1;
                 this.loading = true;
@@ -336,13 +347,23 @@
                 this.getData();
                /* console.log(`当前页: ${val}`);*/
             },
+            /*===========================================================新增商品=*/
+            addGoods(){
+                this.sbsbsb4 = true;
+                this.sbtitle4 = "新增商品";
+                this.gridData4 = {goodsName:"",goodsRepertory:"",goodsDescribe:"",goodsType3Id:"",goodsExplain:"",goodsInfo:""};
+                this.optionstypeToupdate = this.optionstype;
+                this.updateOrAdd = "add";
+                this.editVisiblesteps = true;
+            },
             /*---------====================================================================版本抽屉-------*/
-            showOther(data,name,goodsbid){
+            showOther(data,name,goodsbid,typename){
                 this.goods_id = goodsbid;
                 this.sbtitle = name+"的版本信息";
                 this.gridData = data;
                 /*this.props.othertable = true;*/
                 this.sbsbsb = true;
+                this.typename = typename;
             },
             /*控制版本的子组件显示*/
             showotherDialog(visible) {
@@ -362,7 +383,6 @@
                 this.sbtitle2 = name+"的展示图信息";
                 this.sbsbsb2 = true;
                 this.gridData2 = data;
-                console.log(this.gridData2)
             },
             /*控制版本的子组件显示*/
             showotherDialogColor(visible) {
@@ -377,6 +397,40 @@
                 })
                 this.getData();
             },
+            /*-----------------------------参数*/
+            showOtherParameter(index,row){
+                this.sbsbsb3 = true;
+                if (row.parameter.parameterId==undefined){
+                    this.sbtitle3 = "请填写"+row.goodsName+"的参数数据";
+                }else {
+                    this.sbtitle3 = row.goodsName+"的参数数据";
+                }
+
+                this.gridData3 = row.parameter;
+            },
+            showotherDialogParameter(visible){
+                this.sbsbsb3 = visible;
+            },
+            getDataParm(){
+                this.getData();
+            },
+            /*--------------------------------------修改的组件*/
+            handleEdit(index, row) {
+                this.sbsbsb4 = true;
+                this.sbtitle4 = "编辑"+row.goodsName+"的基本信息";
+                this.gridData4 = row;
+                this.optionstypeToupdate = this.optionstype;
+                this.updateOrAdd = "update";
+                this.editVisiblesteps = false;
+            },
+            showotherDialogUpdate(visible){
+                this.sbsbsb4= visible;
+            },
+            getDataGoods(){
+
+                this.getData();
+
+            },
             /*-----------------------------------------------------------输入提示-------*/
             querySearch(queryString, cb) {
                 var restaurants = this.restaurants;
@@ -390,12 +444,23 @@
                 };
             },
             loadAll() {
-                console.log(this.InputSearch);
                 return this.InputSearch;
+            },
+            /*----------------------------------------------------------得到所有的输入建议数据-------------*/
+            getInputSearch(){
+                let formDatas = new FormData();
+                formDatas.append("page", this.pageIndex);
+                formDatas.append("size", 10000);
+                formDatas.append("newobj", JSON.stringify(this.goods));
+                list(formDatas).then(res => {
+                    this.InputSearch = res.inputSearcheslist;
+                    this.restaurants = this.loadAll();
+                })
             },
             handleSelect(item) {
                 console.log(item);
             },
+
             /*----------------------------------------------------------监听开关-----*/
             changeSwitch(data){
                 let content = "";
@@ -440,10 +505,7 @@
                 });
 
             },
-            /*-------------------------------------------------------编辑操作----*/
-            handleEdit(index, row) {
-                this.updateeditVisible = true;
-            },
+
             // 表头样式设置
             headClass () {
                 return 'text-align: center;'
@@ -527,6 +589,16 @@
                                 message: '操作成功!',
                                 duration:2000
                             });
+
+                            if (statelist=="0"){
+                                this.updateStateText = "批量上架";
+                                this.updateStateType = "success";
+                                this.updateStateIcon = "el-icon-check";
+                            } else {
+                                this.updateStateText = "批量下架";
+                                this.updateStateType = "danger";
+                                this.updateStateIcon = "el-icon-close";
+                            };
                             this.getData();
                         } else {
                             this.$message({
@@ -552,23 +624,19 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            /*----------------------------------------------------------得到所有的输入建议数据-------------*/
-            getInputSearch(){
-                let formDatas = new FormData();
-                formDatas.append("page", this.pageIndex);
-                formDatas.append("size", 10000);
-                formDatas.append("newobj", JSON.stringify(this.goods));
-                list(formDatas).then(res => {
-                    this.InputSearch = res.inputSearcheslist;
-                    this.restaurants = this.loadAll();
-                })
-            },
 
         },
     }
 </script>
 
 <style scoped>
+    /*-------------------------------------------------新增商品的按钮样式---------*/
+    .addgoods{
+        margin-left: 19px;
+    }
+    .delgoods{
+        margin-left: -40px;
+    }
     /*------------------------------------------搜索div的样式------------------*/
     #search_div{
         width: 100%;
@@ -607,7 +675,6 @@
         height: 178px;
         display: block;
     }
-
     body{
         overflow-x: hidden;
     }

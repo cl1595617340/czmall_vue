@@ -6,7 +6,8 @@
                 :visible.sync="IsShowPage"
                 direction="rtl"
                 :before-close ="cloessb"
-                size="30%">
+                @open="opensb"
+                size="40%">
             <div style="">
                 <el-table
                         :cell-style="rowClass"
@@ -15,6 +16,16 @@
                     <el-table-column property="versionsId" label="编号" width="80"></el-table-column>
                     <el-table-column property="versionsName" label="容量" width="100"></el-table-column>
                     <el-table-column property="versionsPrice" label="价格(￥)" width="80"></el-table-column>
+                    <el-table-column
+                            v-if="showtag"
+                            label="标签"
+                            width="110">
+                        <template slot-scope="scope">
+                            <div slot="reference" class="name-wrapper">
+                                <el-tag size="medium">{{ scope.row.versions_tab }}</el-tag>
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" >
                         <template slot-scope="scope">
                             <el-button
@@ -30,7 +41,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div style="margin-top: 10px;margin-left: 290px">
+                <div style="margin-top: 10px;margin-left: 422px;">
                     <el-button type="primary" icon="el-icon-plus"  @click="add">添加版本</el-button>
                 </div>
 
@@ -44,11 +55,22 @@
             <el-form ref="form" :model="form" label-width="70px" :rules="rules">
 
 
-                <el-form-item label="容量:" prop="versionsName">
-                    <el-input v-model="form.versionsName" placeholder="请选择容量" ></el-input>
+                <el-form-item label="版本名:" prop="versionsName">
+                    <el-input v-model="form.versionsName" placeholder="请选择版本名" ></el-input>
                 </el-form-item>
                 <el-form-item label="价格:" prop="versionsPrice">
                     <el-input v-model="form.versionsPrice" placeholder="请选择价格(￥)"></el-input>
+                </el-form-item>
+
+                <el-form-item class="form_item" label="标签:" v-if="showtag">
+                    <el-select style="width: 200px" v-model="form.versions_tab" placeholder="请选择">
+                        <el-option
+                                v-for="item in tablist"
+                                :key="item.text"
+                                :label="item.text"
+                                :value="item.text">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
 
             </el-form>
@@ -69,6 +91,8 @@
     export default {
         data(){
             return{
+                /*除了手机，其他商品都没有标签列*/
+                showtag:true,
                 //定义一个IsShowPage来接收传递过来的值
                 IsShowPage: this.isVisiblesb,
                 editVisible:false,
@@ -82,10 +106,23 @@
                 },
                 addOrUpdatesb:'',
                 visible: false,
+                tablist:[
+                    {text:"极速畅玩"},
+                    {text:"高速"},
+                    {text:"流畅"},
+                    {text:"实用"},
+                ]
             }
         },
 
         methods:{
+            opensb(){
+              if (this.typename!='手机'){
+                  this.showtag = false;
+              } else {
+                  this.showtag = true;
+              };
+            },
             /*提交表单*/
             goPost(){
                 let formDatas = new FormData();
@@ -144,7 +181,7 @@
             add(){
                 this.resetForm();
                 this.addOrUpdatesb = "add";
-                this.title = "添加",
+                this.title = "添加版本",
                 this.editVisible =true;
             },
             cloessb(){
@@ -203,11 +240,12 @@
                 return 'text-align: center;'
             },
         },
-        props: { /*抽屉*/
+        props: {
             isVisiblesb:false,
             othertitle:"",
-            gridData:[],
+            gridData:{},
             goods_id:"",
+            typename:"",
         },
         watch: {
             isVisiblesb: {

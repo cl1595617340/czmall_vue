@@ -38,6 +38,14 @@ export default new Router({
                             path: '/GoodsColor',
                             component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/GoodsColor.vue'),
                         },
+                        {
+                            path: '/GoodsParameter',
+                            component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/GoodsColor.vue'),
+                        },
+                        {
+                            path: '/updateGoods',
+                            component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/updateGoods.vue'),
+                        },
                     ]
                 },
                 {
