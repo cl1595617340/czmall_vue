@@ -139,7 +139,7 @@
 
               <li  v-if="index2==0" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li1 : li1sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
                 <div class="content_right_ul_div">
-                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <img @click="goGoodsInfo(goodlist.goodsId)" class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
 
                   <!--版本-->
                   <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
@@ -154,7 +154,7 @@
 
               <li  v-if="index2==1" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li2 : li2sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
                 <div class="content_right_ul_div">
-                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <img @click="goGoodsInfo(goodlist.goodsId)" class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
                   <!--版本-->
                   <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
                     <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
@@ -168,7 +168,7 @@
 
               <li  v-if="index2==2" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li3 : li3sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
                 <div class="content_right_ul_div">
-                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <img @click="goGoodsInfo(goodlist.goodsId)" class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
                   <!--版本-->
                   <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
                     <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
@@ -181,7 +181,7 @@
 
               <li  v-if="index2==3" :class="sstt[index2]" v-for="(goodcolorList,index2) in goodlist.goodscolorList" :style="liindex == index ? li4 : li4sb" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
                 <div class="content_right_ul_div">
-                  <img class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
+                  <img @click="goGoodsInfo(goodlist.goodsId)" class="goodcolorList_img" @mouseover="show_img(goodcolorList.goodscolorId)" @mouseleave="hide_img(goodcolorList.goodscolorId)" :style="liindeximg == goodcolorList.goodscolorId ? goodcolorList_img : ''" :src="goodcolorList.goodscolorPicture">
                   <!--版本-->
                   <span v-for="(sbv,indexv) in goodlist.versionsList" v-if="indexv==0">
                     <div class="goodcolorList_versions" :style="liindexver == goodcolorList.goodscolorId ? goodcolorList_ver : goodcolorList_versb">
@@ -406,6 +406,12 @@
             }
             console.log(res.goodsList)
           })
+        },
+        /*点击图片进入商品信息*/
+        goGoodsInfo(id){
+          /*跳转页面并传值*/
+          this.$router.push({path: '/ShopInfo',query:{ id:id}});
+          this.$router.go(0);
         },
         /*通用禁用和启用查询按钮的方法*/
         disabledandStart(q){
@@ -790,22 +796,22 @@
   .content_right_ul_li4{
     position: relative;
     left: -600px;
-    transition: all 0.6s ease;
+    transition: all 0.4s ease;
   }
   .content_right_ul_li3{
     position: relative;
     left: -400px;
-    transition: all 0.6s ease;
+    transition: all 0.4s ease;
   }
   .content_right_ul_li2{
     position: relative;
     left: -200px;
-    transition: all 0.6s ease;
+    transition: all 0.4s ease;
   }
   .content_right_ul_li1{
     position: relative;
     left: -1px;
-    transition: all 0.6s ease;
+    transition: all 0.4s ease;
   }
 
   /*.content_right_ul_li1:hover + .content_right_ul_li2{
@@ -1032,7 +1038,7 @@
     width: 240px;
     height: 150px;
     margin-left: 65px;
-    margin-top: -10px;
+    margin-top: -30px;
   }
 .main_div_sb{
   width: 100%;

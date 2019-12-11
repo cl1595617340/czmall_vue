@@ -22,3 +22,13 @@ export const f_likeGetGoods = (params) => {
 export const f_likeGetGoodsNot = (params) => {
   return http.fetchPost(hostUrl+'/front/goods/goods/f_likeGetGoodsNot', params)
 }
+
+/*根据商品id查询信息(富文本)*/
+export const f_getGoodsByid = (params) => {
+  return http.fetchPost(hostUrl+'/front/goods/goods/f_getGoodsByid', params)
+}
+
+/*4表查询手机的参数信息*/
+export const f_getParameterinfo = (params) => {
+  return http.fetchPost(hostUrl+'/front/goods/goods/f_getParameterinfo', params)
+}

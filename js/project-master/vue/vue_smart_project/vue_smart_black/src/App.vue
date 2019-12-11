@@ -25,6 +25,6 @@ export default {
 
 <style>
 #App_main{
-
+  background: white;
 }
 </style>

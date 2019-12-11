@@ -49,6 +49,7 @@ let state={
 
 
   navStyle:'position: fixed',
+
 }
 let mutations ={
 

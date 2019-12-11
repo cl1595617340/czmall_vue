@@ -14,6 +14,10 @@ import Address from '../views/account/address'
 import homes from '../views/homes'
 
 import QueryGoods from '../views/shop/queryGoods'
+import ShopInfo from '../views/shop/shopInfo'
+import GoodsParameter from '../views/shop/goodsParameter'
+import BuyGoods from '../views/shop/buyGoods'
+
 
 Vue.use(Router)
 
@@ -34,6 +38,22 @@ export default new Router({
       name:"QueryGoods",
       component: QueryGoods,
     },
+    {
+      path: '/ShopInfo',
+      name:"ShopInfo",
+      component: ShopInfo,
+    },
+    {
+      path: '/GoodsParameter',
+      name:"GoodsParameter",
+      component: GoodsParameter,
+    },
+    {
+      path: '/BuyGoods',
+      name:"BuyGoods",
+      component: BuyGoods,
+    },
+
     {
       path: '/item',
       name:"Item",

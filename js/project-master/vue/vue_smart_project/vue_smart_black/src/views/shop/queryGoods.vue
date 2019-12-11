@@ -1,13 +1,13 @@
 <template>
 <div id="mainsb">
-  <div class="main_div">
+  <!--<div class="main_div">
     <div style="padding-top: 20px;padding-left: 72px">
       <div style="margin-top: -5px">
         <p>保时捷（中国）汽车销售有限公司是保时捷在中国大陆</p>
         <p>市场及售后服务等环节为合作伙伴提供专业支持以及香港。</p>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <!--搜索框内容-->
   <div class="main_querdiv">
@@ -33,8 +33,8 @@
   </div>
 
   <!--搜索的主要内容-->
-  <div class="query_div">
-    <div class="query_div_div" v-show="showgoodss"  :style="goodsname8p == site.goodsName ? pColor : ''"   style="margin-top: 30px" v-for="(site,index) in goodslists">
+  <div class="query_div" >
+    <div   v-cloak class="query_div_div" v-show="showgoodss"  :style="goodsname8p == site.goodsName ? pColor : ''"   style="margin-top: 30px" v-for="(site,index) in goodslists">
       <img v-for="(siteimg,indeximg) in site.goodscolorList" v-if="indeximg==0" :src="siteimg.goodscolorPicture" style="width: 180px;height: auto">
 
       <div class="query_div_div_div">{{site.goodsName}}
@@ -44,7 +44,7 @@
       <div class="query_div_div_div2">{{site.goodsDescribe}}</div>
       <!--进一步了解的按钮-->
       <div class="query_div_div_gobuy" :style="goodsname8p == site.goodsName ? pColor2 : ''">
-        <p class="query_div_div_gobuy_p1">进一步了解<div class="line linesb"></div>
+        <p class="query_div_div_gobuy_p1" @click="goGoodsInfo(site.goodsId)">进一步了解<div class="line linesb"></div>
         </p>
         <p class="query_div_div_gobuy_p2">现在购买<div class="line linesb2"></div>
         </p>
@@ -52,7 +52,7 @@
     </div>
 
     <div class="goodsNone" v-show="goodsNone">
-asd
+      <p>使用上面的标签页查看更多结果或尝试其他搜索词</p>
     </div>
   </div>
 
@@ -90,6 +90,8 @@ asd
 
         goodsNone:false,
         showgoodss:true,
+        /*如果查询条件是手机就查所有*/
+        searchValuesb:"",
       }
     },
     created() {
@@ -99,7 +101,8 @@ asd
       getData(){
         if (this.isshowgoods==1){
           let formDatas = new FormData();
-          formDatas.append("name", this.searchValue);
+          this.queryidIpone();
+          formDatas.append("name", this.searchValuesb);
           formDatas.append("type", this.querytype);
           f_likeGetGoods(formDatas).then(res => {
             this.goodslists = res.goodsList
@@ -121,7 +124,8 @@ asd
 
         }else {
           let formDatas2 = new FormData();
-          formDatas2.append("name", this.searchValue);
+          this.queryidIpone();
+          formDatas2.append("name",  this.searchValuesb);
           formDatas2.append("type", this.querytype);
           f_likeGetGoodsNot(formDatas2).then(res => {
             this.goodslists = res.goodsList
@@ -136,7 +140,20 @@ asd
             }
             console.log(res.goodsList)
           })
-
+        }
+      },
+      /*跳转到商品详情页面*/
+      goGoodsInfo(id){
+        /*跳转页面并传值*/
+        this.$router.push({path: '/ShopInfo',query:{ id:id}});
+        this.$router.go(0);
+      },
+      /*如果查询条件是手机就查所有*/
+      queryidIpone(){
+        if (this.searchValue=="手机"){
+          this.searchValuesb = "";
+        }else {
+          this.searchValuesb = this.searchValue;
         }
       },
       /*查询*/
@@ -166,7 +183,7 @@ asd
         }
       },
     },
-    /*监听滚动条*/
+
     mounted() {
       let id = this.$route.query.id;
       this.searchValue = id;
@@ -177,6 +194,16 @@ asd
 </script>
 
 <style scoped>
+  /*解决屏幕刷新会闪现的bug*/
+  [v-cloak] {
+    display: none;
+  }
+  .goodsNone{
+    margin-left: 72px;
+    font-size: 17px;
+    width: 500px;
+    padding-top: 40px;
+  }
   .linesb2{
 
     position: relative;
@@ -217,12 +244,14 @@ asd
     color: #008cdc;
     cursor: pointer;
     margin-left: 30px;
+
   }
   .query_div_div_gobuy{
     position: relative;
     left: 610px;
     top: -65px;
     width: 300px;
+    font-family: OPPOfont2;
   }
   .query_div_div_div2{
     position: relative;
@@ -234,6 +263,7 @@ asd
     letter-spacing: 1.5px;
     width: 500px;
     cursor: pointer;
+    font-family: OPPOfont5;
   }
   .query_div_div_label{
     display: inline-block;
@@ -241,6 +271,7 @@ asd
     padding: 0 20px;
     font-size: 20px;
     cursor: pointer;
+    font-family: OPPOfont1;
   }
   .query_div_div_div{
     position: relative;
@@ -248,7 +279,7 @@ asd
     top: -170px;
     color: #333333;
     display: block;
-    font: normal 400 30px/12px "微软雅黑", serif;
+    font: normal 400 30px/12px OPPOfont1, serif;
     transform: scale(1, 1.1);
     width: 500px;
     cursor: pointer;
@@ -269,9 +300,10 @@ asd
   .query_div{
     width: 100%;
     min-height: 200px;
-    background: #F7F7F7;
+    background: #FAFAFA;
     padding-top: 30px;
     padding-bottom: 80px;
+    position: relative;
   }
   /*----------------------------------搜索内容----------------*/
   .main_querdiv_typediv li:hover{
@@ -315,7 +347,7 @@ asd
   .main_querdiv_div>div{
     width: 100%;
     height: 50%;
-    padding-top: 20px;
+    padding-top: 10px;
   }
 
   .main_querdiv_div{

@@ -1,0 +1,34 @@
+@font-face {
+  font-family: OPPOfont1;
+  src: url('../../../static/font/Font-OPPOSans/OPPOSans-M.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: OPPOfont2;
+  src: url('../../../static/font/Font-OPPOSans/OPPOSans-B.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: OPPOfont3;
+  src: url('../../../static/font/Font-OPPOSans/OPPOSans-H.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: OPPOfont4;
+  src: url('../../../static/font/Font-OPPOSans/OPPOSans-L.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: OPPOfont5;
+  src: url('../../../static/font/Font-OPPOSans/OPPOSans-R.ttf');
+  font-weight: normal;
+  font-style: normal;
+}

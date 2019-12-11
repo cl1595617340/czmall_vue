@@ -25,10 +25,10 @@
 
           <!--输入建议模糊查询-->
           <div class="nav_search_div02" v-show="isnav_search" style="padding-top: 0px">
-            <div v-for="site in goodstype3ListAndGoods" style="padding-top: 20px">
+            <div v-for="site in goodstype3ListAndGoods" style="    padding-top: 20px;">
               <label style="top: 0px">{{site.goodstype3Name}} {{site.goodsList.length}}</label>
               <ul v-for="site2 in site.goodsList">
-                <li>{{site2.goodsName}}</li>
+                <li @click="goqueryGoods(site2.goodsId)">{{site2.goodsName}}</li>
               </ul>
             </div>
           </div>
@@ -77,7 +77,7 @@
             <car-panel></car-panel>
           </ul>
           <ul class="nav-list">
-            <li><a href="javascript:;">在线商城</a></li>
+            <li><a href="javascript:;" @click="gohomepage">在线商城</a></li>
             <li><a href="javascript:;">坚果 Pro</a></li>
             <li><a href="javascript:;">Smartisan M1 / M1L</a></li>
             <li><a href="javascript:;">Smartisan OS</a></li>
@@ -220,6 +220,12 @@
           f_getGoodsListToType(formDatas).then(res => {
             this.goodslist = res.goodsList;
           })
+        },
+        /*输入提示点击查询进入商品*/
+        goqueryGoods(id){
+          /*跳转页面并传值*/
+          this.$router.push({path: '/ShopInfo',query:{ id:id}});
+          this.$router.go(0);
         },
         /*----------------------回车搜索框*/
         goQueryGoods(e){
@@ -410,7 +416,7 @@
   top: -10px;
   left: 2px;
   font-weight: 600;
-  font-family: "SF Pro SC","HanHei SC","SF Pro Text","Myriad Set Pro","SF Pro Icons","PingFang SC","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-family: OPPOfont1;
 }
 .nav_search_div02 li{
   line-height: 35px;
@@ -424,20 +430,23 @@
   transition: all 0.2s;
 }
 .nav_search_div02 ul{
-  width: 97%;
+  width: 91%;
   height: 100%;
-
+  font-size: 10px;
+  position: relative;
+  top: 7px;
 }
   .nav_search_div02{
     width: 100%;
     min-height: 20%;
-    box-shadow:0px 4px 10px #888888;
+
     border-radius: 0px 0px 20px 20px;
     z-index: 100;
-    font-family: 'Microsoft Yahei', '微软雅黑', 'PingFang SC', sans-serif;
     padding-left: 20px;
     padding-top: 30px;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
+    font-weight: 300;
+    font-family: OPPOfont1;
   }
   .nav_search_div input{
     background: black;
@@ -461,6 +470,7 @@
     left: 310px;
     border-radius: 0px 0px 20px 20px;
     max-height: 310px;
+    font-weight: 300;
   }
   /*--------------------------------2级头---*/
   .main_div_div img{
@@ -558,7 +568,9 @@
   z-index: 50;
   position: absolute;
   box-shadow:0px 20px 10px -15px #ccc;
-
+  margin-top: -10px;
+  font-size: 12px;
+  font-weight: 300;
 }
   input::-webkit-input-placeholder {
     color: #ccc;
