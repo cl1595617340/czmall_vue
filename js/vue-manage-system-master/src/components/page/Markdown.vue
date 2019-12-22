@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="margin-left: 80px;margin-top: 95px">
+        <div style="margin-left: 80px;margin-top: 95px;position: relative;top: 50px;">
             <mavon-editor v-model="content" ref="md" @imgAdd="$imgAdd" @imgDel="$imgDel" @change="change" style="min-height: 600px;width: 957px"/>
         </div>
     </div>
@@ -46,22 +46,22 @@
 
                 mdupload02(formdata).then(res => {
                   /*  console.log(res.newFileName);*/
-                    let url = "static/images/goodsinfo/"+res.oldFileName;
+                    let url = "http://localhost:8070/static/images/goodsinfo/"+res.oldFileName;
                     // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)，也就是回显
                     this.$refs.md.$img2Url(pos, url);
 
-                    mdupload(formdata).then(res => {
+                   /* mdupload(formdata).then(res => {
                     })
                     mdupload03Totarget(formdata).then(res => {
                     })
                     mdupload04Tofront(formdata).then(res => {
-                    })
+                    })/!**!/*/
                 })
 
             },
             $imgDel(pos){
                 var formdata = new FormData();
-                formdata.append('delete', "static/images/goodsinfo/"+pos[1].name);
+                formdata.append('delete', "http://localhost:8070/static/images/goodsinfo/"+pos[1].name);
                 deleteGoodsColorimg(formdata).then(res => {
                 })
 

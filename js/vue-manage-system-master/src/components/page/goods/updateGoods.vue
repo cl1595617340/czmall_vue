@@ -51,18 +51,50 @@
                </el-form-item>
 
 
-               <div style="position: relative;top: 40px">
-                   <div style="position: relative;top: 95px;left: -925px">
-                       <label>商品详情:</label>
-                   </div>
+               <el-form-item class="form_item" label="花呗:" :label-width="formLabelWidth" style="width: 280px;margin-left: 50px">
+                   <el-select style="width: 200px" v-model="form.goods_loans" placeholder="请选择">
+                       <el-option
+                               v-for="item in optionstype"
+                               :key="item.value"
+                               :label="item.text"
+                               :value="item.value">
+                       </el-option>
+                   </el-select>
+               </el-form-item>
 
-                   <!--富文本-->
-                   <vMarkdown :contentsb="form.goodsInfo" @getDatasb="getDataGoodsinfo" :goodsname="form.goodsName"></vMarkdown>
+               <el-form-item class="form_item" label="以旧换新:" :label-width="formLabelWidth" style="width: 280px;margin-left: 50px">
+                   <el-select style="width: 200px" v-model="form.goods_oldToNew" placeholder="请选择">
+                       <el-option
+                               v-for="item in optionstype"
+                               :key="item.value"
+                               :label="item.text"
+                               :value="item.value">
+                       </el-option>
+                   </el-select>
+               </el-form-item>
+
+               <el-form-item class="form_item" label="赠品:" :label-width="formLabelWidth" style="width: 280px;margin-left: 50px">
+                   <el-select style="width: 200px" v-model="form.goods_complimentary" placeholder="请选择">
+                       <el-option
+                               v-for="item in optionstype"
+                               :key="item.value"
+                               :label="item.text"
+                               :value="item.value">
+                       </el-option>
+                   </el-select>
+               </el-form-item>
+
+
+               <div style="position: relative;top: 195px;left: -925px">
+                   <label>商品详情:</label>
                </div>
+
+                   <!-------------------------富文本------------------->
+               <vMarkdown :contentsb="form.goodsInfo" @getDatasb="getDataGoodsinfo" :goodsname="form.goodsName"></vMarkdown>
            </el-form>
 
-           <span slot="footer" class="dialog-footer" >
-                <el-button @click="cloesParameter">取 消</el-button>
+           <span slot="footer" class="dialog-footer" style="margin-top: 50px">
+                <el-button style="margin-top: 30px;" @click="cloesParameter">取 消</el-button>
                 <el-button type="primary" @click="goPost">确 定</el-button>
             </span>
 
@@ -91,8 +123,11 @@
                     goodsName: [{ required: true, message: '请输入商品名', trigger: 'blur' },],
                     goodsRepertory: [{ required: true, message: '请输入库存', trigger: 'blur' },],
                     goodsDescribe: [{ required: true, message: '请输入商品简介', trigger: 'blur' },],
-                    goodsExplain: [{ required: true, message: '请输入商品说明', trigger: 'blur' },],
                 },
+                optionstype:[
+                    {value:0,text:"支持"},
+                    {value:1,text:"不支持"},
+                ],
 
             }
         },

@@ -481,13 +481,13 @@
 
                         let formDatas02 = new FormData()
                         formDatas02.append("file", this.imgFile);
-                        upload02(formDatas02).then(res => {
-                            upload03Totarget(formDatas02).then(res => {
+                      /*  upload02(formDatas02).then(res => {
+                           /!* upload03Totarget(formDatas02).then(res => {
                             })
                             upload04Tofront(formDatas02).then(res => {
-                            })
+                            })*!/
                         })
-
+*/
 
                     };
 
@@ -538,7 +538,7 @@
                         formDatas.append("type", 3);
                         formDatas.append("name", this.formname);
                         formDatas.append("id", this.updateType01Id);
-                        formDatas.append("sid", this.optionvalue2);
+                        formDatas.append("sid", this.updateGoodstype2IdTo3);
 
                         //false就是没有修改图片
                         if (this.changeImg==false){
@@ -554,14 +554,14 @@
                             deletesb(formDatas02).then(res => {
 
                             })
-                            upload02(formDatas02).then(res => {
+                           /* upload02(formDatas02).then(res => {
 
                             })
                             upload03Totarget(formDatas02).then(res => {
 
                             })
                             upload04Tofront(formDatas02).then(res => {
-                            })
+                            })*/
                         };
 
                     };

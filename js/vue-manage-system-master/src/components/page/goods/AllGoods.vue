@@ -150,7 +150,7 @@
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
 
-                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">更多</el-button>
 
                         <span v-if="scope.row.goodstype3.goodstype3Id !='137'"></span>
 

@@ -124,7 +124,6 @@
                 formDatas.append("obj", JSON.stringify(this.form));
                 formDatas.append("file", this.imgFile);//文件上传的参数
                 if (this.addOrUpdatesb =="add"){
-                    upload02(formDatas).then(res => {
                         addGoodsColor(formDatas).then(res => {
                             if (res){
                                 // 触发父组件中的事件，并传递参数
@@ -142,11 +141,6 @@
                                     duration:2000
                                 });
                             }
-                        })
-                        upload03Totarget(formDatas).then(res => {
-                        })
-                        upload04Tofront(formDatas).then(res => {
-                        })
 
                     })
 
@@ -180,7 +174,6 @@
                     } else {
                         formDatas2.append("delete", this.delimg);
                         formDatas.append("type", 1);
-                        upload02(formDatas).then(res => {
                             updateGoodsColor(formDatas).then(res => {
                                 if (res){
                                     this.$message({
@@ -203,12 +196,7 @@
                                     });
                                 }
                             })
-                            upload03Totarget(formDatas).then(res => {
-                            })
-                            upload04Tofront(formDatas).then(res => {
-                            })
 
-                        })
 
                     };
 
