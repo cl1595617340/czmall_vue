@@ -28,7 +28,7 @@
                       <div class="verify-error"></div>
                     </div>
                   </div>
-                  <div class="module-form-row clear">
+                 <!-- <div class="module-form-row clear">
                     <div class="form-item-v3 area-code-w fn-left form-valid-item">
                       <input type="text" class="js-verify js-address-area-code" placeholder="区号（可选）" v-model="receive.areaCode">
                       <div class="verify-error"></div>
@@ -37,7 +37,7 @@
                       <input type="text" class="js-verify js-address-telephone" placeholder="固定电话（可选）" v-model="receive.landLine">
                       <div class="verify-error"></div>
                     </div>
-                  </div>
+                  </div>-->
                   <div class="module-form-row clear">
                     <div class="form-item-v3 select-item province-wrapper">
                       <select name="province_code" class="province select-province js-form-province js-verify" v-model="receive.provinceId">
@@ -66,12 +66,12 @@
                       <div class="verify-error"></div>
                     </div>
                   </div>
-                  <div class="module-form-row fn-clear" @click="chooseDefault">
+                  <div class="module-form-row fn-clear" @click="chooseDefault" style="font-family: OPPOfont5">
                     <input type="checkbox" class="hide">
                     <span class="blue-checkbox " :class="{'blue-checkbox-on': receive.default}" ></span>设为默认
                   </div>
                   <div class="dialog-blue-btn big-main-btn  js-verify-address" :class="{'disabled-btn':!right}" @click="sumbitReceive">
-                    <a>保存</a>
+                    <a style="font-family: OPPOfont1">保存</a>
                   </div>
                 </div>
               </div>
@@ -204,6 +204,20 @@
 </script>
 
 <style>
+  .form-item-v3 input{
+    font-family: OPPOfont5 !important;
+    font-size: 14px !important;
+  }
+  .form-item-v3 i{
+    font-family: OPPOfont5 !important;
+    font-size: 14px !important;
+  }
+  .js-dialog-title{
+    font-size: 15px;
+    font-family: OPPOfont1;
+  }
+
+  /*-----------------------------------------------上面是我的样式-----*/
   #pop .module-dialog-layer{
     display: none;
     position: fixed;
@@ -247,16 +261,16 @@
     background: #FFF;
     box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset, 1px 0 3px rgba(0,0,0,.1);
     text-align: left;
-    height: 592px;
+    height: 540px;
   }
   #pop .module-dialog .topbar{
     overflow: hidden;
     width: 100%;
     height: 60px;
-    background: linear-gradient(#FFF,#F5F5F5);
+   /* background: linear-gradient(#FFF,#F5F5F5);
     border-bottom: 1px solid #DCDCDC;
     border-radius: 10px 10px 0 0;
-    box-shadow: 2px 0 5px rgba(0,0,0,.1);
+    box-shadow: 2px 0 5px rgba(0,0,0,.1);*/
   }
   #pop .module-dialog-address .topbar{
     position: relative;
@@ -321,7 +335,7 @@
     background: #FFF;
     border: 1px solid #CCC;
     border-radius: 6px;
-    box-shadow: 0 3px 5px -4px rgba(0,0,0,.4) inset, -1px 0 3px -2px rgba(0,0,0,.1) inset;
+   /* box-shadow: 0 3px 5px -4px rgba(0,0,0,.4) inset, -1px 0 3px -2px rgba(0,0,0,.1) inset;*/
     line-height: 46px;
     font-size: 18px;
     opacity: .618;

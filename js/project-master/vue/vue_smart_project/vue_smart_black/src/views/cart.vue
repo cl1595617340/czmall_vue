@@ -1,6 +1,6 @@
 <template>
   <div id="main" class="hander-car">
-    <div class="store-content">
+<!--  <div class="store-content">
       <div class="cart-box">
         <div class="title">
           <h2>购物清单</h2>
@@ -18,17 +18,18 @@
               <span class="num">数量</span>
               <span class="price">单价</span>
             </div>
+
             <div class="cart-table">
               <div class="cart-group">
-                <!--购物列表-->
+                &lt;!&ndash;购物列表&ndash;&gt;
                 <div class="cart-top-items" :key="index" v-for="(item,index) in carGoodsData">
                   <div class="cart-items">
                     <div class="items-choose">
                       <span class="blue-checkbox-new " @click="checked(item.sku_id)" :class="{' checkbox-on':item.checked}"><a></a></span>
                     </div>
                     <div class="items-thumb">
-                      <img :src="item.ali_image+'?x-oss-process=image/resize,w_80/quality,Q_100/format,webp'">
-                      <a href="javascript:;" target="_blank"></a>
+                      <img :src="item.spec_json.image">
+                   &lt;!&ndash;   <a href="javascript:;" target="_blank"></a>&ndash;&gt;
                     </div>
                     <div class="name hide-row" >
                       <div class="name-table">
@@ -92,6 +93,109 @@
           </div>
         </div>
       </div>
+    </div>-->
+
+
+    <div class="cart_content">
+      <div class="cart_content_div"  v-if="carGoodsData.length!=0">
+        <div class="cart_content_div_name">
+          购物车
+        </div>
+
+        <div class="cart_content_div_mian">
+          <!--循环的-->
+          <section class="cart_content_div_sec" :key="index" v-for="(item,index) in carGoodsData">
+            <ul class="cart_content_div_sec_ul">
+
+              <li class="shp-col select" style="height: 30px;width: 30px;margin-top: 15px;margin-left: 20px">
+                <span class="blue-checkbox-new" @click="checked(item.sku_id)" :class="{' checkbox-on':item.checked}"><a></a></span>
+              </li>
+
+              <li class="shp-col image"  style="margin-left:50px">
+                <div>
+                  <img :src="item.spec_json.image">
+                </div>
+              </li>
+              <li class="shp-col" style="width: 200px">
+                <div class="name hide-row">
+                  <div class="name-table shp-col-sb">
+                    <a href="javascript:;" target="_blank" class="shp-col-name">{{item.sub_title}}</a>
+                    <ul class="attribute" style="margin-top: 5px">
+                      <li>{{item.spec_json.show_name}} - {{item.title}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              <li class="shp-col" style="margin-top: 10px;margin-left: 100px;width: 50px">
+                <div class="shp-col-sb">¥ {{item.price}}</div>
+              </li>
+              <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
+                <div class="item-cols-num">
+                  <div class="select js-select-quantity">
+                    <span class="down" :class="{' down-disabled':item.count<=1}" @click="subCarPanelHandle(item.sku_id)">-</span>
+                    <span class="num">{{item.count}}</span>
+                    <span class="up" :class="{' up-disabled':item.count>=item.limit_num}" @click="plusCarPanelHandle(item.sku_id)">+</span>
+                  </div>
+                </div>
+              </li>
+              <li class="shp-col" style="margin-top: 20px;margin-left: 140px">
+                <div>
+                  <a class="shp-col-del"><i style="font-size: 20px" class="el-icon-delete" @click="delCarPanelHandle(item.sku_id)"></i></a>
+                </div>
+              </li>
+            </ul>
+            <!--赠品-->
+            <section class="cart_content_div_sec_sec" v-if="item.complimentary.compName!=''">
+              <ul style="margin-top: -20px">
+                <li style="width: 284px;">
+                  <label class="oc-label">
+                    <em>赠品</em>
+                  </label>
+                  <figure class="oc-figure">
+                    <img :src="item.complimentary.img" style="width: 40px;height: auto">
+                  </figure>
+                  <a>{{item.complimentary.compName}}</a>
+                </li>
+              </ul>
+            </section>
+
+          </section>
+        </div>
+
+        <!--结算的div-->
+        <div v-if="count>0" class="cart_bar">
+          <section class="cart_bar_sec">
+            <i class="el-icon-shopping-cart-2" style="font-size: 22px"></i>
+            <label>继续选购</label>
+          </section>
+
+          <section class="cart_bar_total">
+            <section class="cart_bar_total_price">
+              <label>应付:</label>
+              <span>
+                <strong class="cart_bar_total_sum01">￥</strong>
+                <strong class="cart_bar_total_sum">{{checkedprice}}.00</strong>
+              </span>
+            </section>
+            <section class="cart_bar_total_price">
+              <label>共计:</label>
+              <span>
+                <strong class="cart_bar_total_sum">{{checkedcount}}件</strong>
+              </span>
+            </section>
+            <!--结算按钮-->
+            <section class="cart_bar_total_btn">
+              <a><router-link :to="{ path: 'checkout' }">去结算</router-link></a>
+            </section>
+          </section>
+        </div>
+      </div>
+
+      <!--购物车为空的div-->
+      <div class="cart_content_nonediv" v-if="carGoodsData.length==0">
+        <img src="../../static/images/shuchai/carNone.png">
+        <label>你的购物车还是空的，快去逛逛吧 。</label>
+      </div>
     </div>
   </div>
 </template>
@@ -120,9 +224,23 @@
           return this.$store.getters.checkedPrice;
         }
       },
+      created() {
+        this.$store.commit('changNav');
+      },
       methods:{
+        /*删除购物车商品*/
         delCarPanelHandle (id) {
-          this.$store.commit('delCarPanelData',id)
+          this.$confirm('确认要删除此商品吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+           /* type: 'warning',*/
+            center: true
+          }).then(() => {
+            this.$store.commit('delCarPanelData',id)
+          }).catch(() => {
+
+          });
+
         },
         plusCarPanelHandle(id){
           this.$store.commit('plusCarPanelData',id)
@@ -139,12 +257,263 @@
         delCheckGoods(){
           this.$store.commit('delCheckGoods');
         }
-      }
+      },
+
 
     }
 </script>
 
-<style>
+<style scoped>
+  .cart_content_nonediv label{
+
+    position: relative;
+    top: 70px;
+  }
+.cart_content_nonediv img{
+  width: 75px;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  top: 50px;
+}
+  .cart_content_nonediv{
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    position: relative;
+    top: 70px;
+    text-align: center;
+    font-family: OPPOfont1;
+  }
+  /*------------------------购物车空的样式--*/
+.oc-figure{
+  width: 42px;
+  height: 42px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-left: 0px;
+}
+  .oc-label{
+    color: #f79a47 !important;
+    border-color: #f79a47 !important;
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    padding: 0 .4em;
+    height: 20px;
+    line-height: 1.5;
+    text-align: center;
+    margin-right: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #333;
+    border: 1px #666 solid;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+.cart_content_div_sec_sec{
+  padding-top: 35px;
+  height: 95px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-top: 1px #EDEDED solid;
+  margin-left: 270px;
+  display: block;
+
+}
+  /*---------------------------------赠品的样式--*/
+
+  .cart_bar_total_btn a:hover{
+    background:rgba(5, 181, 112, 0.8);
+  }
+  .cart_bar_total_btn a{
+    width: 210px;
+    height: 60px;
+    line-height: 60px;
+    color: #fff;
+    background-color: #05B570;
+    font-size: 16px;
+    display: inline-block;
+    margin-bottom: 0;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    background-image: none;
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: background-color 0.35s ease;
+    transition: background-color 0.35s ease;
+  }
+  .cart_bar_total_btn{
+    display: block;
+  }
+  .cart_bar_total_sum01{
+    font-size: 21px;
+  }
+  .cart_bar_total_sum{
+    color: #333;
+    font-weight: normal;
+    font-size: 30px;
+    display: table-cell;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .cart_bar_total_price label{
+    text-align: left;
+    display: table-cell;
+    color: #666;
+  }
+  .cart_bar_total_price{
+    width: 100%;
+    display: table;
+    padding-bottom: 20px;
+  }
+  .cart_bar_total{
+    vertical-align: top;
+    text-align: right;
+    font-family: OPPOfont1;
+    width: 210px;
+  }
+  .cart_bar_sec label{
+    position: relative;
+    top: -3px;
+    cursor: pointer;
+  }
+  .cart_bar_sec :hover{
+    opacity: 0.7;
+  }
+.cart_bar_sec{
+  /*background: wheat;*/
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  vertical-align: top;
+  text-align: left;
+  font-family: OPPOfont1;
+  transition: all 0.3s;
+}
+.cart_bar{
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+
+}
+  /*--------------------------------底部结算的div------*/
+  .shp-col-del:hover{
+    opacity: 0.7;
+  }
+  .shp-col-del{
+    transition: all 0.3s;
+  }
+  .shp-col-name:hover{
+    opacity: 0.7;
+  }
+  .shp-col-name{
+    transition: all 0.3s;
+  }
+  .blue-checkbox-new{
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background: url(../assets/img/checkbox-new.png) no-repeat 0 -20px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .checkbox-on{
+    background: url(../assets/img/checkbox-new.png) no-repeat 0 0;
+  }
+  .shp-col-sb{
+    margin-top: 10px;
+  }
+  .image{
+    padding-right: 70px;
+    padding-left: 20px;
+    height: 80px;
+    width: 80px;
+    position: relative;
+    text-align: center;
+  }
+  .select{
+
+  }
+  .shp-col{
+    position: relative;
+  }
+  .cart_content_div_sec_ul img{
+    width: 60px;
+    height: auto;
+  }
+  .cart_content_div_sec_ul li{
+    float: left;
+  }
+  .cart_content_div_sec_ul{
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    min-height: 120px;
+    padding-top: 30px;
+  }
+  .cart_content_div_sec{
+    width: 100%;
+    min-height: 120px;
+  /*  background: beige;*/
+    box-sizing: border-box;
+    border-top: 1px #EDEDED solid;
+   /* border-bottom:1px #EDEDED solid;*/
+    font-family: OPPOfont1;
+
+  }
+  /*----------------------------上面是循环的项--*/
+  .cart_content_div_mian{
+    width: 100%;
+    min-height: 100px;
+   /* background: gainsboro;*/
+    margin-top: 10px;
+    border-bottom:1px #EDEDED solid;
+  }
+  .cart_content_div_name{
+    font-family: OPPOfont2;
+    font-size: 18px;
+  }
+.cart_content_div{
+  width: 93%;
+  min-height: 380px;
+ /* background: silver;*/
+  margin: 0 auto;
+
+}
+  .cart_content{
+    width: 1200px;
+    min-height: 380px;
+    background: white;
+    margin: 0 auto;
+    position: relative;
+    top: 60px;
+
+    padding-top:25px;
+    padding-bottom: 30px;
+  }
+
+  #main{
+  min-height: 650px;
+  width: 100%;
+  background: #F5F5F5;
+  position: relative;
+  /* top: 50px;*/
+  overflow: hidden;
+  padding-bottom: 100px;
+}
+
+  /*---------------------------------------------------上面是我的样式---*/
   .cart-box{
     position: relative;
     margin-top: 40px;
@@ -292,6 +661,7 @@
     word-break: keep-all;
     white-space: nowrap;
     text-overflow: ellipsis;
+
   }
   .cart-items .name-table{
     display: table-cell;

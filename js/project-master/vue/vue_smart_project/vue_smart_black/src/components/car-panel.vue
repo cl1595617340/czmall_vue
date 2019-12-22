@@ -1,5 +1,5 @@
 <template>
-  <li class="nav-cart active" @mouseenter="showCarHandle" @mouseleave="hideCarHandle">
+  <li style="font-family: OPPOfont5" class="nav-cart active" @mouseenter="showCarHandle" @mouseleave="hideCarHandle">
     <a href="javascript:;" class="ball-rect">购物车</a>
     <!--根据class改变颜色-->
     <span class="cart-empty-num " :class="{'cart-num':count>0}">
@@ -18,15 +18,18 @@
                 <div class="cart-item js-cart-item cart-item-sell">
                   <div class="cart-item-inner">
                     <div class="item-thumb">
-                      <img :src="item.ali_image+'?x-oss-process=image/resize,w_80/quality,Q_100/format,webp'">
+                      <img :src="item.spec_json.image">
                     </div>
                     <div class="item-desc">
                       <div class="cart-cell">
                         <h4>
-                          <a href="#/item/100027401">{{item.title}}</a>
+                          <a href="#/item/100027401">{{item.sub_title}} </a>
+                          <label class="oc-label" v-if="item.complimentary.compName!=''">
+                            <em> 赠品</em>
+                          </label>
                         </h4>
                         <p class="attrs">
-                          <span>透明</span>
+                          <span>{{item.spec_json.show_name}} {{item.title}}</span>
                         </p>
                         <h6>
                           <span class="price-icon">¥</span><span class="price-num">{{item.price}}</span><span class="item-num">x {{item.count}}</span>
@@ -128,6 +131,25 @@
 </script>
 
 <style>
+  .oc-label{
+    color: #f79a47 !important;
+    border-color: #f79a47 !important;
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    padding: 0 .4em;
+    height: 20px;
+    line-height: 1.5;
+    text-align: center;
+    margin-right: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #333;
+    border: 1px #666 solid;
+    border-radius: 2px;
+    overflow: hidden;
+  }
   .ball-enter-active{
     transition: 1s cubic-bezier(.15,.69,.6,1.29);
   }

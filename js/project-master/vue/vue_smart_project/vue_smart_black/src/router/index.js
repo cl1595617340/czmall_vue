@@ -18,6 +18,7 @@ import ShopInfo from '../views/shop/shopInfo'
 import GoodsParameter from '../views/shop/goodsParameter'
 import BuyGoods from '../views/shop/buyGoods'
 
+import  shopsb from "../views/shopsb"
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ export default new Router({
       path: '/Shop',
       name:"Shop",
       component: Shop,
+    },
+    {
+      path: '/shopsb',
+      name:"shopsb",
+      component: shopsb,
     },
     {
       path: '/queryGoods',

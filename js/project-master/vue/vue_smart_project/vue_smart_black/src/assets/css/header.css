@@ -342,10 +342,10 @@
     top: 0;
     bottom: 0;
     z-index: 2;
-    border: 1px solid #f0f0f0;
+   /* border: 1px solid #f0f0f0;*/
     /*border: 0 solid transparent;*/
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
-    border-radius: 3px;
+   /* box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);*/
+   /* border-radius: 3px;*/
 }
 .nav-cart-list .item-thumb img{
 	display: block;

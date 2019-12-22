@@ -4,14 +4,19 @@
       <div class="js-checkout-address-box">
         <div class="gray-box clear">
           <div class="title columns-title pre-title">
-            <h2>收货信息</h2>
+            <h3>收货信息</h3>
           </div>
           <div class="box-inner js-checkout-address-panel ">
             <div class="address-common-table js-multiple-address-panel">
               <ul class="address-item-list clear js-address-item-list">
                 <li class="js-choose-address " :class="{'selected-address-item':receiveIndex==index}" v-for="(info,index) in receiveInfo" @click="chooseReceive(index)">
                   <div class="address-item">
-                    <div class="name-section">{{info.name}}</div>
+                    <div class="name-section">
+                      {{info.name}}
+                      <label class="oc-label">
+                        <em> 默认</em>
+                      </label>
+                    </div>
                     <div class="mobile-section">{{info.phone}}</div>
                     <div class="detail-section"> {{info.province}} {{info.city}} {{info.county}}<br>{{info.add}} </div>
                   </div>
@@ -30,7 +35,7 @@
       </div>
       <div class="gray-box">
         <div class="title">
-          <h2>发票信息</h2>
+          <h3>发票信息</h3>
         </div>
         <div class="box-inner invoice-box js-invoice-box">
           <p class="invoice-detail"> 发票类型：电子发票 </p>
@@ -58,44 +63,71 @@
       </div>
       <div class="gray-box">
         <div class="title pre-title">
-          <h2>购物清单</h2>
+          <h3>购物清单</h3>
         </div>
-        <div class="box-inner ui-goods-cart">
-          <div class="gray-sub-title cart-table-title">
-            <span class="name">商品名称</span>
-            <span class="subtotal">小计</span>
-            <span class="num">数量</span>
-            <span class="price">单价</span>
-          </div>
-          <div class="cart-table">
-            <div class="cart-group js-cart-group">
-              <div class="cart-items" v-for="(item,index) in carPanelData">
-                <div class="items-thumb">
-                  <a href="javascript:;" target="_blank"><img :src="item.ali_image+'?x-oss-process=image/resize,w_80/quality,Q_100/format,webp'"></a>
+        <!--购买的商品-->
+        <div class="cart_content_div_mian">
+          <!--循环的-->
+          <section class="cart_content_div_sec" :key="index" v-for="(item,index) in carPanelData">
+            <ul class="cart_content_div_sec_ul">
+
+              <li class="shp-col select" style="height: 30px;width: 30px;margin-top: 15px;margin-left: 20px">
+                <span class="blue-checkbox-new" @click="checked(item.sku_id)" :class="{' checkbox-on':item.checked}"><a></a></span>
+              </li>
+
+              <li class="shp-col image"  style="margin-left:50px">
+                <div>
+                  <img :src="item.spec_json.image">
                 </div>
+              </li>
+              <li class="shp-col" style="width: 200px">
                 <div class="name hide-row">
-                  <div class="name-cell">
-                    <a href="http://www.smartisan.com/shop/#/item/100027501" :title="item.title+'（'+item.spec_json.show_name+'）'" target="_blank">{{item.title}}（{{item.spec_json.show_name}}）</a>
+                  <div class="name-table shp-col-sb">
+                    <a href="javascript:;" target="_blank" class="shp-col-name">{{item.sub_title}}</a>
+                    <ul class="attribute" style="margin-top: 5px">
+                      <li>{{item.spec_json.show_name}} - {{item.title}}</li>
+                    </ul>
                   </div>
                 </div>
-                <div class="subtotal">
-                  <div class="subtotal-cell">{{item.price * item.count}}.00</div>
+              </li>
+              <li class="shp-col" style="margin-top: 10px;margin-left: 100px;width: 50px">
+                <div class="shp-col-sb">¥ {{item.price}}</div>
+              </li>
+              <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
+                <div class="item-cols-num">
+                  <div class="select js-select-quantity">
+                    <span class="num">{{item.count}}</span>
+                  </div>
                 </div>
-                <div class="goods-num">{{item.count}}</div>
-                <div class="price">¥{{item.price}}.00</div>
-              </div>
-            </div>
-          </div>
-
+              </li>
+            </ul>
+            <!--赠品-->
+            <section class="cart_content_div_sec_sec" v-if="item.complimentary.compName!=''">
+              <ul style="margin-top: -20px">
+                <li style="width: 284px;">
+                  <label class="oc-label">
+                    <em>赠品</em>
+                  </label>
+                  <figure class="oc-figure">
+                    <img :src="item.complimentary.img" style="width: 40px;height: auto">
+                  </figure>
+                  <a>{{item.complimentary.compName}}</a>
+                </li>
+              </ul>
+            </section>
+          </section>
         </div>
-        <div class="box-inner">
+
+
+
+        <div class="box-inner" style="font-family: OPPOfont1">
           <div class="order-discount-line">
             <p> 商品总计： <span>¥ {{checkedPrice + freight}}.00</span> </p>
             <p> 运费： <span>+ ¥ {{freight}}.00</span> </p>
             <p class="discount-line js-discount-cash"> <em>现金券</em>： <span> - 0 </span> </p>
           </div>
         </div>
-        <div class="box-inner">
+        <div class="box-inner" style="font-family: OPPOfont1">
           <div class="last-payment clear">
             <span class="jianguo-blue-main-btn big-main-btn payment-blue-bt fn-right js-checkout" @click="submitOrderHandle"> <a>提交订单</a> </span> <span class="prices fn-right">应付金额： <em>¥  {{checkedPrice + freight}}.00</em></span>
           </div>
@@ -214,6 +246,133 @@
 
 
 <style>
+  .oc-figure{
+    width: 42px;
+    height: 42px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    margin-left: 0px;
+  }
+  .oc-label{
+    color: #f79a47 !important;
+    border-color: #f79a47 !important;
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    padding: 0 .4em;
+    height: 20px;
+    line-height: 1.5;
+    text-align: center;
+    margin-right: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #333;
+    border: 1px #666 solid;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .cart_content_div_sec_sec{
+    padding-top: 35px;
+    height: 95px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-top: 1px #EDEDED solid;
+    margin-left: 270px;
+    display: block;
+
+  }
+  /*---------------------------------赠品的样式--*/
+  .shp-col-del:hover{
+    opacity: 0.7;
+  }
+  .shp-col-del{
+    transition: all 0.3s;
+  }
+  .shp-col-name:hover{
+    opacity: 0.7;
+  }
+  .shp-col-name{
+    transition: all 0.3s;
+  }
+  .shp-col-sb{
+    margin-top: 10px;
+  }
+  .image{
+    padding-right: 70px;
+    padding-left: 20px;
+    height: 80px;
+    width: 80px;
+    position: relative;
+    text-align: center;
+  }
+  .select{
+
+  }
+  .shp-col{
+    position: relative;
+  }
+  .cart_content_div_sec_ul img{
+    width: 60px;
+    height: auto;
+  }
+  .cart_content_div_sec_ul li{
+    float: left;
+  }
+  .cart_content_div_sec_ul{
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    min-height: 120px;
+    padding-top: 30px;
+  }
+  .cart_content_div_sec{
+    width: 97%;
+    min-height: 120px;
+    /*  background: beige;*/
+    box-sizing: border-box;
+   /* border-top: 1px #EDEDED solid;*/
+    /* border-bottom:1px #EDEDED solid;*/
+    font-family: OPPOfont1;
+
+  }
+  .cart_content_div_mian{
+    width: 100%;
+    min-height: 100px;
+    /* background: gainsboro;*/
+    margin-top: 10px;
+   /* border-bottom:1px #EDEDED solid;*/
+  }
+  .oc-label{
+    color: #f79a47 !important;
+    border-color: #f79a47 !important;
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    padding: 0 .4em;
+    height: 20px;
+    line-height: 1.5;
+    text-align: center;
+    margin-right: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #333;
+    border: 1px #666 solid;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .title>h3{
+    border-bottom:1px #EDEDED solid;
+    width: 98%;
+  }
+  #main{
+    width: 100%;
+    background: #F5F5F5;
+  }
+  /*------------------------------------------------上面是我的样式------*/
   /*.nav-sub{
       display: none;
   }*/
@@ -229,9 +388,9 @@
   }
   .checkout .gray-box{
     overflow: hidden;
-    border: 1px solid #D1D1D1;
-    border-color: rgba(0,0,0,.14);
-    border-radius: 8px;
+   /* border: 1px solid #D1D1D1;
+    border-color: rgba(0,0,0,.14);*/
+   /* border-radius: 8px;*/
     box-shadow: 0 3px 8px -6px rgba(0,0,0,.1);
   }
   .checkout .gray-box, .gray-btn-menu-on:hover{
@@ -243,13 +402,14 @@
   .checkout .gray-box .title{
     height: 60px;
     padding: 0 10px 0 28px;
-    background: #F5F5F5;
-    background: linear-gradient(#FFF,#F5F5F5);
-    border-bottom: 1px solid #DCDCDC;
-    border-radius: 10px 10px 0 0;
-    box-shadow: 0 1px 7px rgba(0,0,0,.06);
+   /* background: #F5F5F5;
+    background: linear-gradient(#FFF,#F5F5F5);*/
+   /* border-bottom: 1px solid #DCDCDC;*/
+ /*   border-radius: 10px 10px 0 0;
+    box-shadow: 0 1px 7px rgba(0,0,0,.06);*/
     line-height: 60px;
     color: #646464;
+    font-family: OPPOfont1;
   }
   .checkout .gray-box .pre-title{
     position: relative;
@@ -297,12 +457,14 @@
     line-height: 16px;
     font-size: 16px;
     color: #666;
+    font-family: OPPOfont1;
   }
   .checkout .address-common-table .mobile-section{
     height: 14px;
     padding-top: 17px;
     line-height: 14px;
     color: #999;
+    font-family: OPPOfont5;
   }
   .checkout .address-common-table .detail-section{
     padding-top: 6px;
@@ -310,7 +472,7 @@
     color: #999;
   }
   .checkout .address-common-table .address-item-list li.selected-address-item:after{
-    content: '√';
+   /* content: '√';*/
     display: block;
     position: absolute;
     right: 17px;
@@ -499,7 +661,7 @@
   .checkout .gray-box .gray-sub-title{
     height: 38px;
     padding: 0 24px;
-    background: #EEE;
+    background: white;
     border-top: 1px solid #DBDBDB;
     border-bottom: 1px solid #DBDBDB;
     line-height: 38px;
@@ -600,36 +762,39 @@
     width: 120px;
   }
   .page-order-checkout .order-discount-line{
+    width: 90%;
     padding: 21px 30px;
     border-top: 1px solid #EBEBEB;
     line-height: 30px;
     text-align: right;
+    margin-left: 30px;
   }
   .page-order-checkout .order-discount-line span{
     float: right;
     width: 157px;
   }
   .page-order-checkout .last-payment{
-    padding: 22px 29px 19px 30px;
-    background: linear-gradient(#FCFCFC,#F5F5F5);
-    border-top: 1px solid #DADADA;
-    box-shadow: -3px 0 8px rgba(0,0,0,.04);
+    padding: 22px 60px 19px 30px;
+   /* background: linear-gradient(#FCFCFC,#F5F5F5);*/
+    /*border-top: 1px solid #DADADA;*/
+  /*  box-shadow: -3px 0 8px rgba(0,0,0,.04);*/
   }
   .blue-main-btn, .gray-main-btn, .jianguo-blue-main-btn{
     display: block;
     padding: 1px;
     margin: 0 auto;
-    border-radius: 6px;
+   /* border-radius: 6px;*/
     background: #015e94;
-    background: linear-gradient(#5598c9,#2a6da2);
+   /* background: linear-gradient(#5598c9,#2a6da2);*/
     text-align: center;
-    text-shadow: rgba(255,255,255,.496094) 0 1px 0;
-    font-family: 'Microsoft Yahei','微软雅黑','PingFang SC',sans-serif;
+   /* text-shadow: rgba(255,255,255,.496094) 0 1px 0;
+    font-family: 'Microsoft Yahei','微软雅黑','PingFang SC',sans-serif;*/
+    font-family: OPPOfont1;
     cursor: pointer;
-    -webkit-user-select: none;
+   /* -webkit-user-select: none;
     -ms-user-select: none;
     -o-user-select: none;
-    user-select: none;
+    user-select: none;*/
   }
   .jianguo-blue-main-btn{
     background: #6383C6;

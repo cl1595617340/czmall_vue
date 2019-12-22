@@ -1,0 +1,277 @@
+
+
+/*--------------------------------------------底部提示框*/
+.floor_alert{
+    font-size: 14px;
+    width: 230px;
+    height: 40px;
+    background-color: wheat;
+    color: white;
+    border-radius:25px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    position: fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    bottom:0;
+    transition: all 0.5s ease 0s;
+    z-index: 10;
+    box-shadow: #c7c7c7 1px 1px 10px;
+    /*color: black;*/
+}
+
+/*--------------------------------------------遮罩层提示框*/
+.shade_alert{
+    width:320px;
+    height:140px;
+    font-size: 17px;
+    font-weight: 200;
+    text-align: center;
+    border-radius:10px;
+    color: grey;
+
+    padding-top: 60px;
+    padding-left: 50px;
+    padding-right: 50px;
+    position:fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background-color: white;
+    box-shadow:0 0 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.5s;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.shade_alertTitle{
+    font-size: 20px;
+    font-weight: 700;
+    display: block;
+    width:350px;
+    position:fixed;
+    color: black;
+
+    margin:auto;
+    left:0;
+    right:0;
+    top:-130px;
+    bottom:0;
+    border-bottom: 1px silver solid;
+    height: 35px;
+    transition: all 0.5s;
+}
+
+.shade_alertBtn{
+    cursor: pointer;
+    display: block;
+    background-color: #50BCE0;
+    color: whitesmoke;
+    font-size: 13px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    border-radius:8px;
+    position:fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    top:140px;
+    bottom:0;
+    transition: all 0.5s;
+}
+
+/*----------------------------------------------------*/
+.body_mark{
+    border-radius:0px;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    position: fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    bottom:0;
+    transition: all 0.5s ease 0s;
+}
+.sure_alert{
+    width:320px;
+    height:110px;
+    font-size: 17px;
+    font-weight: 200;
+    text-align: center;
+    border-radius:10px;
+    color: grey;
+
+    padding-top: 190px;
+    padding-left: 50px;
+    padding-right: 50px;
+    position:fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background-color: white;
+    box-shadow:0 0 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.5s;
+    cursor: default;
+    z-index: 1000;
+}
+
+.sureimg_alert{
+    width: 90px;
+    height: auto;
+    position: fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    top:-160px;
+    bottom:0;
+    transition: all 0.5s ease 0s;
+}
+.sureTitle_alert{
+    font-size: 21px;
+    font-weight: 700;
+    display: block;
+    width:350px;
+    position:fixed;
+    color: black;
+
+    margin:auto;
+    left:0;
+    right:0;
+    top:5px;
+    bottom:0;
+    height: 35px;
+    transition: all 0.5s;
+}
+.sureOff_alert{
+    cursor: pointer;
+    display: block;
+    background-color: #50BCE0;
+    color: whitesmoke;
+    font-size: 13px;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    border-radius:5px;
+    position:fixed;
+    margin:auto;
+    left:-160px;
+    right:0;
+    top:220px;
+    bottom:0;
+    transition: all 0.5s;
+}
+.sureOk_alert{
+    cursor: pointer;
+    display: block;
+    background-color: #E3685E;
+    color: whitesmoke;
+    font-size: 13px;
+    width: 140px;
+    height: 30px;
+    line-height: 30px;
+    border-radius:5px;
+    position:fixed;
+    margin:auto;
+    left:80px;
+    right:0;
+    top:220px;
+    bottom:0;
+    transition: all 0.5s;
+}
+/*-----------------------------------------------------------------点击确定后出现的样式--*/
+.sureimg2_alert{
+    width: 90px;
+    height: auto;
+    position: fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    top:-160px;
+    bottom:0;
+    transition: all 0.5s ease 0s;
+}
+.sureimg3_alert{
+    width: 60px;
+    height: auto;
+    position: fixed;
+    margin:auto;
+    left:0;
+    right:0;
+    top:-360px;
+    bottom:0;
+    transition: all 1s ease 0s;
+}
+.sureBtn4_alert{
+    cursor: pointer;
+    display: block;
+    background-color: black;
+    color: whitesmoke;
+    font-size: 13px;
+    width:100px;
+    height: 30px;
+    line-height: 30px;
+    border-radius:5px;
+    position:fixed;
+    margin:auto;
+    left:0px;
+    right:0;
+    top:320px;
+    bottom:0;
+    outline: none; /* 不显示轮廓线 */
+    border-width: 0px; /* 边框宽度 */
+    transition: all 0.5s;
+}
+
+.sureCon_alert{
+    font-size: 17px;
+    font-weight: 200;
+    text-align: center;
+    display: block;
+    width:350px;
+    position:fixed;
+    color: grey;
+
+    margin:auto;
+    left:0;
+    right:0;
+    top:114px;
+    bottom:0;
+    height: 35px;
+    transition: all 1s;
+}
+.sureSb_alert{
+    font-size: 17px;
+    font-weight: 200;
+    text-align: center;
+    display: block;
+    width:350px;
+    position:fixed;
+    color: grey;
+
+    margin:auto;
+    left:0;
+    right:0;
+    top:114px;
+    bottom:0;
+    height: 35px;
+    transition: all 0.5s;
+}
+/*======================================用来标记判断的样式==*/
+.judge{
+    position: absolute;
+    opacity: 0;
+}
+
+body{
+    position: absolute;
+    transition: all 0.5s ease 0s;
+
+}

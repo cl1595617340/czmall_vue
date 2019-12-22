@@ -46,7 +46,7 @@
       <div class="query_div_div_gobuy" :style="goodsname8p == site.goodsName ? pColor2 : ''">
         <p class="query_div_div_gobuy_p1" @click="goGoodsInfo(site.goodsId)">进一步了解<div class="line linesb"></div>
         </p>
-        <p class="query_div_div_gobuy_p2">现在购买<div class="line linesb2"></div>
+        <p class="query_div_div_gobuy_p2" @click="goBuyGoods(site.goodsId)">现在购买<div class="line linesb2"></div>
         </p>
       </div>
     </div>
@@ -95,7 +95,7 @@
       }
     },
     created() {
-
+      this.$store.commit('changNav');
     },
     methods:{
       getData(){
@@ -141,6 +141,11 @@
             console.log(res.goodsList)
           })
         }
+      },
+      goBuyGoods(id){
+        /*跳转页面并传值*/
+        this.$router.push({path: '/BuyGoods',query:{ id:id}});
+        this.$router.go(0);
       },
       /*跳转到商品详情页面*/
       goGoodsInfo(id){
@@ -194,6 +199,7 @@
 </script>
 
 <style scoped>
+
   /*解决屏幕刷新会闪现的bug*/
   [v-cloak] {
     display: none;
@@ -388,7 +394,7 @@
     width: 100%;
     /*background: wheat;*/
     position: relative;
-    top: 50px;
+   /* top: 50px;*/
     overflow: hidden;
   }
 </style>

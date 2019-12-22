@@ -1,5 +1,5 @@
 <template>
-  <div id="header" style="z-index: 100" >
+  <div id="header" style="z-index: 100;">
     <!----------------------------------------------------------显示的头----->
     <div class="nav-global" :style="this.$store.state.navStyle">
       <!--搜索框-->
@@ -76,7 +76,7 @@
             <!--active-->
             <car-panel></car-panel>
           </ul>
-          <ul class="nav-list">
+          <ul class="nav-list" style="font-family: OPPOfont5">
             <li><a href="javascript:;" @click="gohomepage">在线商城</a></li>
             <li><a href="javascript:;">坚果 Pro</a></li>
             <li><a href="javascript:;">Smartisan M1 / M1L</a></li>

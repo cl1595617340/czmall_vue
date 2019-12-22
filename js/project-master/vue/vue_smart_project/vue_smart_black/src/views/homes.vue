@@ -71,19 +71,19 @@
   }
 #home_div{
   width: 100%;
-  height: 615px;
+  height: 665px;
   background: black;
   cursor: pointer;
 }
   .home_carousel{
     width: 100%;
-    height: 615px;
+    height: 665px;
   }
   .demo-carousel{
     background: black;
   }
 .demo-carousel img{
-  height: 615px;
+  height: 665px;
   width: auto;
   margin: 0 auto;
 }

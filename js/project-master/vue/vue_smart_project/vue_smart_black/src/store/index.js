@@ -88,6 +88,10 @@ let mutations ={
       //第一次加入的时候就设置状态
       Vue.set(goodsData,'checked',true)
       state.carPanelData.push(goodsData)
+      /*for (const argument of state.carPanelData) {
+        console.log("-----------"+argument)
+      }
+*/
       state.carShow = true
       state.ball.el = event.path[0]
       state.ball.show = true

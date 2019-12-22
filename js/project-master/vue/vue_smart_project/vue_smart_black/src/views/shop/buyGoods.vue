@@ -44,7 +44,7 @@
               ￥<label v-text="versionsPrice==index?site.versionsPrice:''" v-for="(site,index) in goodszh.versionsList"></label>.00
             </p>
 
-            <p class="p_text" v-if="goodszh.goods_loans==0 && goodszh.goods_oldToNew==0">商品支持：
+            <p class="p_text" v-if="goodszh.goods_loans==0 || goodszh.goods_oldToNew==0">商品支持：
               <label v-if="goodszh.goods_loans==0"><i class="el-icon-bank-card" ></i>花呗分期</label>
               <label v-if="goodszh.goods_oldToNew==0"><i class="el-icon-mobile" ></i>以旧换新</label>
             </p>
@@ -67,15 +67,15 @@
             </div>
           </div>
 
-          <div class="main_right_item_div01sb" v-if="goodszh.goods_complimentary==0 && goodszh.goods_complimentary==0">
+          <div class="main_right_item_div01sb" v-if="goodszh.goods_complimentary==0">
             <p class="P_color">选择赠品</p>
             <div class="main_right_item_div01_btn main_right_item_div01_complimentary">
 
               <p class="complimentary_p"  v-for="(site,index) in complimentarylist">
                 <img @click="gocomplimentary(site.goodsId)" v-for="(siteimg,indeximg) in site.goodscolorList" v-if="indeximg==0" :src='siteimg.goodscolorPicture'>
-                <label @click="getcomplimentary(index,site.goodsName)"  style="color: #ABABAB">{{site.goodsName}}</label>
+                <label @click="getcomplimentary(index,site.goodsName,site.goodscolorList)"  style="color: #ABABAB">{{site.goodsName}}</label>
                 <br>
-                <label @click="getcomplimentary(index,site.goodsName)"  v-for="(siteprice,indexprice) in site.versionsList" v-if="indexprice==0" style="position: relative;top: 15px">
+                <label @click="getcomplimentary(index,site.goodsName,site.goodscolorList)"  v-for="(siteprice,indexprice) in site.versionsList" v-if="indexprice==0" style="position: relative;top: 15px">
                   <i v-if="activecomplimentary==index" style="color: indianred" class="el-icon-success"></i>
                   ￥{{siteprice.versionsPrice}}
                 </label>
@@ -84,7 +84,7 @@
             </div>
           </div>
 
-          <div class="main_right_item_div01sb" style="margin-top: 20px" v-if="goodszh.goods_loans==0 && goodszh.goods_loans==0">
+          <div class="main_right_item_div01sb" style="margin-top: 20px" v-if="goodszh.goods_loans==0">
             <p class="P_color">花呗分期</p>
             <div class="main_right_item_div01_btn ">
 
@@ -134,7 +134,7 @@
           <!--最后的购买按钮-->
           <div class="main_right_item_div01sb">
             <div class="main_right_item_div01_btn">
-              <button v-show="!isloans" class="color_btn" style="background:#353434;color: white">加入购物车</button>
+              <button @click="addCarPanelHandle" v-show="!isloans" class="color_btn" style="background:#353434;color: white">加入购物车</button>
               <button class="color_btn" style="background:#EA0041;color: white">购买</button>
             </div>
           </div>
@@ -225,8 +225,17 @@
         /*固定的手机价格，计算数量的价格用的*/
         priceGoodsb:0,
         /*用户所有选择的参数对象*/
-        activeGodos:{color:"qwe",versions:"123",nums:"123333",complimentary:"暂无"},
+        activeGodos:{goodsid:"-1",color:"qwe",versions:"123",nums:"123333",complimentary:"暂无"},
+        complimentaryCar:{name:"",img:""},
         activecomplimentary:-1,
+
+        /*左边手机不是固定定位的位置,默认是970，如果没有赠品和花呗的话要重新计算*/
+        leftposition:"970px",
+        leftscrollTop:"1100",
+
+        /*当前商品的图片对象集合*/
+        imglist:{},
+        activeimglist:"",//用户选中的商品图片对象
       }
     },
     created() {
@@ -241,6 +250,9 @@
           this.goodszh = res.goodsList;
           console.log(this.goodszh)
 
+          this.imglist = this.goodszh.goodscolorList;
+          /*用户所有选择的参数对象,拿到当前商品的id*/
+          this.activeGodos.goodsid = this.goodszh.goodsId;
           /*拿到默认第一个价格计算花呗*/
           let i =0;
           for (const formDatum of this.goodszh.versionsList) {
@@ -250,6 +262,7 @@
               this.priceGoodsb = this.priceGoods;
               this.countloans();
               this.activeGodos.versions=formDatum.versionsName;
+              this.goodszh.versions = formDatum.versionsName;
             }
 
           }
@@ -259,9 +272,24 @@
             if (i2==1){
               this.activeGodos.color=formDatum.goodscolorName;
               this.activeGodos.nums = this.num;
+              this.activeimglist = formDatum;//默认第一个用户选中的商品图片对象
             }
           }
 
+
+          if (this.goodszh.goods_complimentary==1){
+            this.leftposition = "650px";
+            this.leftscrollTop = "780";
+          }
+          if (this.goodszh.goods_loans==1){
+            this.leftposition = "800px";
+            this.leftscrollTop = "800";
+          }
+          if (this.goodszh.goods_complimentary==1&&this.goodszh.goods_loans==1){
+            this.leftposition = "350px";
+            this.leftscrollTop = "480";
+            this.windowScroll();
+          }
         })
         /*赠品*/
         let formDatas2 = new FormData();
@@ -277,7 +305,6 @@
         })
 
       },
-
       /*计算花呗的通用方法*/
       countloans(){
         /*分期的金额*/
@@ -289,6 +316,33 @@
         this.loanslist[1].interest = (this.loanslist[1].loansprice*0.02).toFixed(2);
         this.loanslist[2].interest = (this.loanslist[2].loansprice*0.02).toFixed(2);
       },
+
+      /*加入购物车*/
+      addCarPanelHandle(){
+        /*购物车需要的数据格式*/
+        let data = {
+          checked: true,
+          count: 1,
+          limit_num: 5,
+          price: this.priceGoodsb,
+          sku_id: this.activeGodos.goodsid,
+          sub_title:  this.goodszh.goodsName,//这个标题改名字
+          title: this.activeGodos.versions,//这个标题改版本
+          spec_json:{
+            image: this.activeimglist.goodscolorPicture,
+            show_name: this.activeimglist.goodscolorName,
+          },
+          complimentary:{
+            compName:this.complimentaryCar.name,
+            img:this.complimentaryCar.img,
+          }
+        };
+        let ItemData = [data,this.num]
+        this.$store.commit('addCarPanelData',ItemData)
+        /*点击*/
+        $('html,body').animate({scrollTop: 0}, 1000);
+        console.log(data);
+      },
       /*点击赠品去到赠品页面*/
       gocomplimentary(id){
         /*vue中$router.push打开新窗口*/
@@ -296,9 +350,18 @@
         window.open(routeData.href, '_blank');
       },
       /*点击赠品*/
-      getcomplimentary(index,name){
+      getcomplimentary(index,name,imglist){
         this.activecomplimentary = index;
         this.activeGodos.complimentary = name;
+        //给购物车的数据
+        this.complimentaryCar.name = name;
+        let isbsb = 0;
+        for (const nameElement of imglist) {
+          isbsb++;
+          if (isbsb==1){
+            this.complimentaryCar.img = nameElement.goodscolorPicture;
+          }
+        }
       },
       noisloansb(){
         this.isloans = false;
@@ -324,6 +387,7 @@
         this.colorName = index;
         this.colorImg = index;
         this.activeGodos.color=name;
+        this.activeimglist = this.imglist[index];
       },
       /*计算数量的方法*/
       handleChange(value) {
@@ -354,7 +418,7 @@
         // 滚动条距离页面顶部的距离
         // 以下写法原生兼容
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        /* console.log(scrollTop)*/
+       /*  console.log(scrollTop)*/
         if (scrollTop>=100){
           this.main_left = "position: fixed;top:0px;";
           this.main_left_item = "padding-top: 100px;";
@@ -366,8 +430,8 @@
         }
 
 
-        if (scrollTop>=1100){
-          this.main_left = "position: relative;top:970px";
+        if (scrollTop>=this.leftscrollTop){
+          this.main_left = "position: relative;top:"+this.leftposition;
           this.main_left_item = "padding-top: 50px;";
           this.main_right = "left:0px;";
         }else {
@@ -390,7 +454,7 @@
 <style scoped>
   .enddiv>p{
     position: relative;
-    top: 220px;
+    top: 170px;
 
   }
   .enddiv{

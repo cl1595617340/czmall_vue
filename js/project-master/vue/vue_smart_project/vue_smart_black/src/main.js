@@ -12,7 +12,6 @@ import ElementUI from 'element-ui';
 // 导入组件相关样式
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/font.css'
-
 //Vue全局对象可用
 Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
