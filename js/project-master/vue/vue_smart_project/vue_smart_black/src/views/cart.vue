@@ -185,7 +185,7 @@
             </section>
             <!--结算按钮-->
             <section class="cart_bar_total_btn">
-              <a><router-link :to="{ path: 'checkout' }">去结算</router-link></a>
+              <a @click="gocheckout">去结算</a>
             </section>
           </section>
         </div>
@@ -226,8 +226,13 @@
       },
       created() {
         this.$store.commit('changNav');
+        $('html,body').animate({scrollTop: 0}, 10);
       },
       methods:{
+        gocheckout(){
+          this.$router.push({path: '/checkout'});
+          this.$router.go(0);
+        },
         /*删除购物车商品*/
         delCarPanelHandle (id) {
           this.$confirm('确认要删除此商品吗？', '提示', {
@@ -333,7 +338,7 @@
     height: 60px;
     line-height: 60px;
     color: #fff;
-    background-color: #05B570;
+    background-color: #D5001C;
     font-size: 16px;
     display: inline-block;
     margin-bottom: 0;

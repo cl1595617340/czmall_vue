@@ -20,6 +20,9 @@ import BuyGoods from '../views/shop/buyGoods'
 
 import  shopsb from "../views/shopsb"
 
+/*会员*/
+import memLogin from '../views/member/memLogin'
+import memUser from '../views/member/memUser'
 Vue.use(Router)
 
 export default new Router({
@@ -59,6 +62,19 @@ export default new Router({
       name:"BuyGoods",
       component: BuyGoods,
     },
+    /*会员登录*/
+    {
+      path: '/memLogin',
+      name:"memLogin",
+      component: memLogin
+    },
+    {
+      path: '/memUser',
+      name:"memUser",
+      component: memUser
+    },
+
+
 
     {
       path: '/item',
@@ -80,6 +96,7 @@ export default new Router({
       name:"Payment",
       component: Payment
     },
+
     {
       path: '/account',
       component: Account,

@@ -32,3 +32,8 @@ export const f_getGoodsByid = (params) => {
 export const f_getParameterinfo = (params) => {
   return http.fetchPost(hostUrl+'/front/goods/goods/f_getParameterinfo', params)
 }
+
+
+export const sbzfb = (params) => {
+  return http.fetchPost(hostUrl+'/sbzfb', params)
+}

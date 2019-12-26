@@ -96,7 +96,15 @@
               <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
                 <div class="item-cols-num">
                   <div class="select js-select-quantity">
-                    <span class="num">{{item.count}}</span>
+                    <span class="num">{{item.count}} 件</span>
+                  </div>
+                </div>
+              </li>
+              <!--单个商品共-->
+              <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
+                <div class="item-cols-num">
+                  <div class="select js-select-quantity">
+                    <span class="num">¥ {{item.price * item.count}}.00</span>
                   </div>
                 </div>
               </li>
@@ -159,6 +167,7 @@
         AdressPop
       },
       created(){
+        $('html,body').animate({scrollTop: 0}, 10);
         //页面创建的时候确定当前被选中的index数值
         this.$store.state.receiveInfo.forEach((item,index)=>{
            if(item.default){

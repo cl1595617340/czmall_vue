@@ -1,8 +1,8 @@
 <template>
 <div id="App_main">
-     <header-nav></header-nav>
+     <header-nav v-show="this.$store.state.headerStyle"></header-nav>
      <router-view></router-view>
-     <v-footer></v-footer>
+     <v-footer v-show="this.$store.state.footerStyle"></v-footer>
 </div>
 </template>
 

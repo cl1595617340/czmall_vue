@@ -99,3 +99,8 @@ export const updateGoods = (params) => {
 export const addGoods = (params) => {
     return http.fetchPost('/admin/goods/goods/addGoods', params)
 }
+
+
+export const zfb = (params) => {
+    return http.fetchPost('/zfbLogin', params)
+}

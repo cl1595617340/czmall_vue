@@ -6,14 +6,25 @@
                 :visible.sync="IsShowPage"
                 direction="rtl"
                 :before-close ="cloessb"
-                size="30%">
+                size="35%">
             <div style="">
             <el-table
                     :cell-style="rowClass"
                     :header-cell-style="headClass"
                     :data="gridData2">
                 <el-table-column property="goodscolorId" label="编号" width="80"></el-table-column>
-                <el-table-column property="goodscolorName" label="颜色名" width="70"></el-table-column>
+
+                </el-table-column>
+                <el-table-column
+                        label="颜色名"
+                        width="110">
+                    <template slot-scope="scope">
+                        <div>
+                            <i class="main_right_item_div01_btn_i" :style="{background: 'linear-gradient(to right bottom, '+scope.row.goodscolor_linearS +', '+scope.row.goodscolor_linearE+')'}"></i>
+                             {{ scope.row.goodscolorName }}
+                        </div>
+                    </template>
+                </el-table-column>
                 <!--图片-->
                 <el-table-column
                         prop="picture"
@@ -46,11 +57,12 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div style="margin-top: 10px;margin-left: 290px">
+            <div style="margin-top: 10px;margin-left: 336px">
                 <el-button type="primary" icon="el-icon-plus"  @click="add">添加展示图</el-button>
             </div>
         </div>
         </el-drawer>
+
 
         <el-dialog :title="title" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px" :rules="rules">
@@ -58,7 +70,31 @@
                 <el-form-item label="颜色名:" prop="goodscolorName">
                     <el-input v-model="form.goodscolorName" placeholder="请输入颜色名字" ></el-input>
                 </el-form-item>
+                <!--2个颜色选择器-->
+                <el-form-item label="渐变A:" prop="goodscolor_linearS">
+                    <div class="block" style="text-align: left;">
+                        <el-color-picker color-format="rgb" v-model="form.goodscolor_linearS"></el-color-picker>
+                    </div>
+                </el-form-item>
 
+                <el-form-item label="渐变B:" prop="goodscolor_linearE">
+                    <div class="block" style="text-align: left;">
+                        <el-color-picker color-format="rgb" v-model="form.goodscolor_linearE"></el-color-picker>
+                    </div>
+                </el-form-item>
+
+
+                <el-form-item label="渲染:">
+                    <!--关于线性渐变的解释-->
+                    <el-tooltip placement="top">
+                        <div slot="content">css线性渐变,不知道的建议切腹</div>
+                        <i class="el-icon-warning-outline colorexplain"></i>
+                    </el-tooltip>
+                    <div class="block" style="text-align: left;">
+                        <i class="main_right_item_div01_btn_i" :style="{background: 'linear-gradient(to right bottom, '+form.goodscolor_linearS +', '+form.goodscolor_linearE+')'}"></i>
+                        <label> {{form.goodscolorName}}</label>
+                    </div>
+                </el-form-item>
                 <!------------------------------------------------------------------文件上传----->
                 <div id="goodstype_upload_color">
 
@@ -103,6 +139,8 @@
                 form:{},
                 rules:{
                     goodscolorName: [{ required: true, message: '请输入颜色名字', trigger: 'blur' },],
+                    goodscolor_linearS: [{ required: true, message: '请输入颜色名字', trigger: 'blur' },],
+                    goodscolor_linearE: [{ required: true, message: '请输入颜色名字', trigger: 'blur' },],
                 },
                 /*图片上传*/
                 imgFile:"",//这个是图片对象
@@ -111,6 +149,7 @@
                 delimg:"",
                 //判断修改时有没有换图片(默认是false，如果跟更换了就是true)
                 changeImg:false,
+
             }
         },
         created() {
@@ -317,6 +356,22 @@
 </script>
 
 <style>
+    .colorexplain{
+        position: absolute;
+        left: -65px;
+        top: 9px;
+    }
+    .main_right_item_div01_btn_i{
+        position: relative;
+        display: inline-block;
+        background-color: transparent;
+        vertical-align: middle;
+        margin-top: -5px;
+        margin-right: 0;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+    }
     /*------------------------------------文件上传的样式----*/
     #goodstype_upload_color{
         margin-left: -30px;

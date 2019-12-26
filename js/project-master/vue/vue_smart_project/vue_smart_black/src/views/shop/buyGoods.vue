@@ -56,14 +56,19 @@
           <div class="main_right_item_div01sb">
             <p class="P_color">颜色</p>
             <div class="main_right_item_div01_btn">
-              <button @click="clickColor(index,site.goodscolorName)" :style="colorName==index?activeColor:''" class="color_btn" v-for="(site,index) in goodszh.goodscolorList">{{site.goodscolorName}}</button>
+              <button @click="clickColor(index,site.goodscolorName)" :style="colorName==index?activeColor:''" class="color_btn" v-for="(site,index) in goodszh.goodscolorList">
+                <i class="main_right_item_div01_btn_i" :style="{background: 'linear-gradient(to right bottom, '+site.goodscolor_linearS+', '+site.goodscolor_linearE+')'}"></i>
+                 {{site.goodscolorName}}
+              </button>
             </div>
           </div>
 
           <div class="main_right_item_div01sb">
             <p class="P_color">版本</p>
             <div class="main_right_item_div01_btn">
-              <button @click="clickVersion(index,site.versionsPrice,site.versionsName)" :style="versionsName==index?activeVersions:''" class="color_btn" v-for="(site,index) in goodszh.versionsList">{{site.versionsName}}</button>
+              <button @click="clickVersion(index,site.versionsPrice,site.versionsName)" :style="versionsName==index?activeVersions:''" class="color_btn" v-for="(site,index) in goodszh.versionsList">
+                {{site.versionsName}}
+              </button>
             </div>
           </div>
 
@@ -278,7 +283,7 @@
 
 
           if (this.goodszh.goods_complimentary==1){
-            this.leftposition = "650px";
+            this.leftposition = "630px";
             this.leftscrollTop = "780";
           }
           if (this.goodszh.goods_loans==1){
@@ -340,7 +345,7 @@
         let ItemData = [data,this.num]
         this.$store.commit('addCarPanelData',ItemData)
         /*点击*/
-        $('html,body').animate({scrollTop: 0}, 1000);
+        $('html,body').animate({scrollTop: 0}, 700);
         console.log(data);
       },
       /*点击赠品去到赠品页面*/
@@ -452,6 +457,19 @@
 </script>
 
 <style scoped>
+
+  .main_right_item_div01_btn_i{
+    position: relative;
+    display: inline-block;
+    background-color: transparent;
+    vertical-align: middle;
+    margin-top: -5px;
+    margin-right: 0;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+  }
+  /*-------------------------------每个颜色对应的彩色i-----------*/
   .enddiv>p{
     position: relative;
     top: 170px;

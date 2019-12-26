@@ -5,6 +5,10 @@ Vue.use(Vuex);
 let state={
   //存放购物车的数据
   carPanelData: [],
+  /*登录的用户信息*/
+  memberinfo: {
+
+  },
   //地址的数据
   receiveInfo: [{
     'name': '王某某',
@@ -50,6 +54,10 @@ let state={
 
   navStyle:'position: fixed',
 
+  /*显示头部*/
+  headerStyle:true,
+  /*显示底部*/
+  footerStyle:true,
 }
 let mutations ={
 
@@ -60,6 +68,24 @@ let mutations ={
     state.navStyle = 'position: fixed';
   },
 
+  /*使头部消失*/
+  changheaderStyle(state,i){
+    if (i==0){
+      state.headerStyle = false;
+    } else {
+      state.headerStyle = true;
+    }
+
+  },
+  /*使底部消失*/
+  changfooterStyle(state,i){
+    if (i==0){
+      state.footerStyle = false;
+    } else {
+      state.footerStyle = true;
+    }
+
+  },
   //加入购物车
   addCarPanelData (state,data) {
     // data[0] = 表示存入的数据,data[1]表示存入的数量

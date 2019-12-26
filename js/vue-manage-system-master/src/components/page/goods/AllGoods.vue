@@ -33,14 +33,23 @@
                 </div>
                 <!--分类下拉框-->
                 <div style="width: 250px;margin-top: -32px;margin-left: 620px">
-                    <el-select v-model="goods.goodsType3Id" placeholder="请选择">
+                 <!--   <el-select v-model="goods.goodsType3Id" placeholder="请选择">
                         <el-option
                                 v-for="item in optionstype"
                                 :key="item.goodstype3Id"
                                 :label="item.goodstype3Name"
                                 :value="item.goodstype3Id">
                         </el-option>
-                    </el-select>
+                    </el-select>-->
+                    <el-cascader
+                            :clearable="true"
+                            :change-on-select="true"
+                            :props="defaultParams"
+                            :show-all-levels="false"
+                            :options="options"
+                            @change="handleChange"
+                            @keyup.enter.native="goPost()" v-model="goods.goodsType3Id" placeholder="请选择">
+                    </el-cascader>
                 </div>
                 <!---提交的按钮-->
                 <div style="width: 50px;margin-top: -32px;margin-left: 870px">
@@ -201,6 +210,8 @@
     import { updateGodosState } from '../../../api/goods'
     import { Versionslist } from '../../../api/goods'
     import { GoodscolorlistById } from '../../../api/goods'
+
+    import { getGoodsType } from '../../../api/goodstype'
     /*子组件们*/
     import vVersions from '../goods/GoodsVersions'
     import vGoodsColor from '../goods/GoodsColor'
@@ -294,6 +305,13 @@
                 updateOrAdd:"",
                 /*步骤条*/
                 editVisiblesteps:false,
+                /*递归的分类信息*/
+                options:[],
+                defaultParams: {
+                    label: 'name',
+                    value: 'id',
+                    children: 'childrensb'
+                }
             }
         },
         created() {
@@ -323,8 +341,16 @@
 
                     this.loading = false;
                     console.log(this.tableData);
-
                 })
+                /*递归的分类信息*/
+                getGoodsType().then(res => {
+                    this.options = res.atreeGoodsList;
+                    console.log(this.options);
+                })
+            },
+            /*拿到3级分类的id*/
+            handleChange(value) {
+                this.goods.goodsType3Id = value[2];
             },
             /*--------------------------------------------------------提交查询的按钮------*/
             submit(){

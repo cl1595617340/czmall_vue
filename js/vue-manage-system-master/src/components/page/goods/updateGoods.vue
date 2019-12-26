@@ -5,7 +5,7 @@
            <div style="margin-top: -20px"  v-show="editVisiblesteps">
                <el-steps :active="1" align-center>
                    <el-step title="步骤1" description="新增商品的基本信息"></el-step>
-                   <el-step title="步骤2" description="在商品管理里新增商品的版本,展示图,参数等信息"></el-step>
+                   <el-step title="步骤2" description="在商品管理里修改新增商品的版本,展示图,参数等信息"></el-step>
                    <el-step title="步骤3" description="前台商城渲染展示"></el-step>
                </el-steps>
            </div>
@@ -31,14 +31,22 @@
 
 
                <el-form-item class="form_item"  label="所属3级分类:" :label-width="formLabelWidth"  style="width: 280px;margin-left: 50px">
-                   <el-select @keyup.enter.native="goPost()" style="width: 200px;z-index: 10" v-model="form.goodsType3Id" placeholder="请选择">
+                   <!--<el-select @keyup.enter.native="goPost()" style="width: 200px;z-index: 10" v-model="form.goodsType3Id" placeholder="请选择">
                        <el-option
                                v-for="item in goodstype3"
                                :key="item.goodstype3Id"
                                :label="item.goodstype3Name"
                                :value="item.goodstype3Id">
                        </el-option>
-                   </el-select>
+                   </el-select>-->
+                   <el-cascader
+                           :clearable="true"
+                           :change-on-select="true"
+                           :props="defaultParams"
+                           :options="options"
+                           @change="handleChange"
+                           @keyup.enter.native="goPost()" style="width: 200px;z-index: 10" v-model="form.goodsType3Id" placeholder="请选择">
+                   </el-cascader>
                </el-form-item>
 
 
@@ -107,6 +115,7 @@
     import { updateGoods } from '../../../api/goods'
     import { addGoods } from '../../../api/goods'
 
+    import { getGoodsType } from '../../../api/goodstype'
     import vMarkdown from '../Markdown'
     export default {
         components: {
@@ -128,11 +137,30 @@
                     {value:0,text:"支持"},
                     {value:1,text:"不支持"},
                 ],
-
+                /*递归的分类信息*/
+                options:[],
+                defaultParams: {
+                    label: 'name',
+                    value: 'id',
+                    children: 'childrensb'
+                }
             }
         },
-
+        created() {
+            this.getData();
+        },
         methods:{
+            getData(){
+                /*递归的分类信息*/
+                getGoodsType().then(res => {
+                    this.options = res.atreeGoodsList;
+                    console.log(this.options);
+                })
+            },
+            /*拿到3级分类的id*/
+            handleChange(value) {
+                this.form.goodsType3Id = value[2];
+            },
             goPost(){
                 let formDatas = new FormData();
                 this.$set( this.form, "goodsInfo", this.goodsinfo)
@@ -176,7 +204,6 @@
                         }
                     })
                 };
-
             },
             /*富文本子组件传来的html*/
             getDataGoodsinfo(html){

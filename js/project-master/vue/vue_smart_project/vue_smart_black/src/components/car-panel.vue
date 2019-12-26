@@ -36,17 +36,19 @@
                         </h6>
                       </div>
                     </div>
-                    <div class="del-btn" @click="delCarPanelHandle(item.sku_id)">删除</div>
+                    <div @click="delCarPanelHandle(item.sku_id)">
+                      <a class="shp-col-del"><i style="font-size: 20px" class="el-icon-delete" @click="delCarPanelHandle(item.sku_id)"></i></a>
+                    </div>
                   </div>
                 </div>
               </li>
             </ul>
           </div>
           <div class="nav-cart-total">
-            <p>共 <strong class="ng-binding">{{count}}</strong> 件商品</p>
+            <p>共 <strong   class="ng-binding">{{count}}</strong> 件商品</p>
             <h5>合计：<span class="price-icon">¥</span><span class="price-num ng-binding" ng-bind="cartMenu.totalPrice">{{totle}}</span></h5>
             <h6>
-              <router-link  class="nav-cart-btn" :to="{ path: 'cart' }">去购物车</router-link>
+              <a @click="goCart" style="background-color: #D5001C;border: none;" class="nav-cart-btn">去购物车</a>
             </h6>
           </div>
         </div>
@@ -92,6 +94,10 @@
        }
      },
       methods:{
+        goCart(){
+          this.$router.push({path: '/cart'});
+          this.$router.go(0);
+        },
         delCarPanelHandle (id) {
           this.$store.commit('delCarPanelData',id)
         },
@@ -102,7 +108,7 @@
         hideCarHandle () {
           this.iTimer = setTimeout(()=>{
             this.$store.commit('hideCar')
-          },500)
+          },10)
         },
         beforeEnter (el) {
           console.log(el)
@@ -130,7 +136,13 @@
     }
 </script>
 
-<style>
+<style scoped>
+.shp-col-del{
+  position: relative;
+  left: 290px;
+  color: grey;
+  top: -50px;
+}
   .oc-label{
     color: #f79a47 !important;
     border-color: #f79a47 !important;
