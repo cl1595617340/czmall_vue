@@ -1,5 +1,5 @@
 <template>
-  <div id="main">
+  <div id="main" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="content page-order-checkout checkout">
       <div class="js-checkout-address-box">
         <div class="gray-box clear">
@@ -9,20 +9,26 @@
           <div class="box-inner js-checkout-address-panel ">
             <div class="address-common-table js-multiple-address-panel">
               <ul class="address-item-list clear js-address-item-list">
-                <li class="js-choose-address " :class="{'selected-address-item':receiveIndex==index}" v-for="(info,index) in receiveInfo" @click="chooseReceive(index)">
+                <li class="js-choose-address " :class="{'selected-address-item':receiveIndex==index}" v-for="(info,index) in addresslist" @click="chooseReceive(index)">
                   <div class="address-item">
                     <div class="name-section">
-                      {{info.name}}
-                      <label class="oc-label">
+                      {{info.addressName}}
+                      <label class="oc-label" v-if="info.addressDefault==0">
                         <em> 默认</em>
                       </label>
+                      <span v-if="info.addressDefault!=0">
+                      </span>
+
                     </div>
-                    <div class="mobile-section">{{info.phone}}</div>
-                    <div class="detail-section"> {{info.province}} {{info.city}} {{info.county}}<br>{{info.add}} </div>
+                    <div class="mobile-section">{{info.addressIpone}}</div>
+                    <div class="detail-section"> {{info.addressProvince}} {{info.addressCity}} {{info.addressCounty}}<br>{{info.addressinfo}} </div>
                   </div>
-                  <div class="operation-section">
-                    <span class="update-btn js-edit-address">修改</span>
-                    <span class="delete-btn js-delete-address">删除</span>
+
+                  <div class="operation">
+                    <div style="position: relative;left: -20px;top: 10px">
+                      <i class="el-icon-edit-outline outlinesb" @click="updateAddressb(info)" style="position: relative;left: -20px"></i>
+                      <i class="el-icon-delete closesb" @click="delAddressb(info.addressId)"></i>
+                    </div>
                   </div>
                 </li>
                 <li class="add-address-item js-add-address" @click="addReceive">
@@ -33,6 +39,7 @@
           </div>
         </div>
       </div>
+
       <div class="gray-box">
         <div class="title">
           <h3>发票信息</h3>
@@ -61,6 +68,7 @@
           <p class="invoice-detail">发票内容：购买商品明细</p> <p class="invoice-label"> 电子发票是税务局认可的有效收付款凭证，可作为售后服务凭据。电子发票打印后可以用于企业报销。 </p>
         </div>
       </div>
+
       <div class="gray-box">
         <div class="title pre-title">
           <h3>购物清单</h3>
@@ -71,8 +79,8 @@
           <section class="cart_content_div_sec" :key="index" v-for="(item,index) in carPanelData">
             <ul class="cart_content_div_sec_ul">
 
-              <li class="shp-col select" style="height: 30px;width: 30px;margin-top: 15px;margin-left: 20px">
-                <span class="blue-checkbox-new" @click="checked(item.sku_id)" :class="{' checkbox-on':item.checked}"><a></a></span>
+              <li class="shp-col select" style="height: 30px;width: 30px;margin-top: 15px;margin-left: 32px">
+                {{index+1}}
               </li>
 
               <li class="shp-col image"  style="margin-left:50px">
@@ -142,31 +150,57 @@
         </div>
       </div>
     </div>
-    <adress-pop v-show="popShow"  @close="closePop"></adress-pop>
+    <adress-pop v-show="popShow" @getDatasb="getDatasb" :gridData="gridData"  @close="closePop"></adress-pop>
   </div>
 </template>
 
 <script>
   import AdressPop from '../components/address-pop';
+  import { f_getMemIdByavatar } from '../api/member';
+  import { f_memAddressBuId } from '../api/member';
+  import { delAddress } from '../api/member';
     export default {
         //默认暴露一个模块
       data(){
           return {
             //地址默认被选中的数值
-           receiveIndex:0,
+           receiveIndex:-1,
             //界面是否显示
             popShow:false,
             invoice: {
               personal: true, //用来控制，显示单位还是个人
               name: ''
             },
+            /*地址的集合数据*/
+            addresslist:[],
+            addressmem:{
+              memberId:"",
+            },
+            fullscreenLoading: false,
+            gridData:{
+              "name": "",
+              "phone": "",
+              "province": "",
+              "city": "",
+              "county": "",
+              "add": "",
+              "default": false,
 
+              "provinceId": 0,
+              "cityId": 0,
+              "countyId": 0,
+            },
           }
       },
       components:{
         AdressPop
       },
       created(){
+        this.getData();
+        /*拦截器，没有登录的话去到登录页面*/
+        if (this.$store.state.memberinfo.avatar==undefined) {
+          this.$router.push({path: '/memLogin'});
+        }
         $('html,body').animate({scrollTop: 0}, 10);
         //页面创建的时候确定当前被选中的index数值
         this.$store.state.receiveInfo.forEach((item,index)=>{
@@ -175,12 +209,17 @@
              return;
            }
         })
-        //页面创建之前；
+
       },
       computed:{
         //被选中的所有的商品
         carPanelData(){
-          return this.$store.getters.checkedCarPanelData;
+          if (this.$store.state.isCarOrOne==0){
+            return this.$store.getters.checkedCarPanelData;
+          } else {
+            return this.$store.state.carPanelDataOne;
+          }
+
         },
         checkedPrice(){
           return this.$store.getters.checkedPrice;
@@ -197,6 +236,78 @@
         }
       },
       methods:{
+        getData(){
+          this.openFullScreen1();
+          //得到登录的用户id
+          let formDatas = new FormData();
+          formDatas.append("avater",this.$store.state.memberinfo.avatar);
+          f_getMemIdByavatar(formDatas).then(res => {
+            //得到登录的用户id
+            this.addressmem.memberId = res.res.memberId;
+            /*//-------------------------查看用户的地址*/
+            let formDatas2 = new FormData();
+            formDatas2.append("id",this.addressmem.memberId);
+            f_memAddressBuId(formDatas2).then(resb => {
+              this.addresslist = resb.res.addressList;
+
+              /*循环拿到默认的下标，再根基下标选中默认的地址*/
+              let i = 0;
+              for (const argument of this.addresslist) {
+                if (argument.addressDefault==0){
+                 this.receiveIndex = i;
+                }
+                i++;
+              }
+            })
+          })
+        },
+        /*修改地址*/
+        updateAddressb(obj){
+          let defaddress = false;
+          this.gridData.name = obj.addressName;
+          this.gridData.phone = obj.addressIpone;
+          this.gridData.province = obj.addressProvince;
+          this.gridData.city = obj.addressCity;
+          this.gridData.county = obj.addressCounty;
+          this.gridData.add = obj.addressinfo;
+
+          this.gridData.provinceId = obj.provinceId;
+          this.gridData.cityId = obj.cityId;
+          this.gridData.countyId = obj.countyId;
+          //id
+          this.gridData.addressId = obj.addressId;
+          if (obj.addressDefault==0){
+            defaddress = true;
+          } else {
+            defaddress = false;
+          }
+          this.gridData.default = defaddress;
+
+          this.popShow = true;
+        },
+        /*删除地址*/
+        delAddressb(id){
+          let formDatas = new FormData();
+          formDatas.append("id",id);
+          this.$confirm('确认删除此地址吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            center: true
+          }).then(() => {
+            delAddress(formDatas).then(res => {
+              if (res.res){
+                this.getData();
+              }
+            })
+          }).catch(() => {
+
+          });
+
+        },
+        /*子组件的请求,添加后再请求数据*/
+        getDatasb(){
+          this.getData();
+        },
         //用来地址的选中
          chooseReceive(index){
            this.receiveIndex = index;
@@ -236,9 +347,16 @@
           if (strDate >= 0 && strDate <= 9) {
             strDate = "0" + strDate;
           }
+          console.log(this.$store.state.carPanelDataOne);
+          let goodsdata={};
+          if (this.$store.state.isCarOrOne==0){
+            goodsdata = this.carPanelData;
+          }else {
+            goodsdata = this.$store.state.carPanelDataOne;
+          }
           let data = {
             orderId: iDate.getTime(), //订单号
-            goodsData: this.carPanelData, //商品
+            goodsData: goodsdata, //商品
             price: this.checkedPrice, //价格
             freight: this.freight, //运费
             invoiceName: this.invoice.name, //发票信息
@@ -247,14 +365,50 @@
             isPay: false //是否付款
           }
           this.$store.commit('submitOrder',data)
-          this.$router.push({name: 'Payment', query: {orderId:data.orderId}}) //路由跳转
-        }
-        }
+      /*    this.$router.push({name: 'Payment', query: {orderId:data.orderId}}) //路由跳转*/
+          console.log(data);
+        },
+
+        openFullScreen1() {
+          this.fullscreenLoading = true;
+          setTimeout(() => {
+            this.fullscreenLoading = false;
+          }, 2000);
+        },
+      }
     }
 </script>
 
 
 <style>
+  .closesb:hover{
+    color: #D5001C;
+  }
+  .closesb{
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+  }
+  /*上面是删除图标*/
+  .outlinesb:hover{
+    color: #D5001C;
+  }
+  .outlinesb{
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 100;
+  }
+  /*上面是修改图标*/
+  .operation{
+    width: 100%;
+    height: 30px;
+   /* background: wheat;*/
+    text-align: right;
+    font-size: 15px;
+    position: relative;
+    z-index: 100;
+  }
+  /*--------------------------操作的样式--*/
   .oc-figure{
     width: 42px;
     height: 42px;
@@ -436,7 +590,6 @@
     padding: 30px 13px 0;
   }
   .checkout .address-common-table .address-item-list li{
-    position: relative;
     overflow: hidden;
     float: left;
     width: 276px;
@@ -444,7 +597,7 @@
     margin: 0 0 30px 16px;
     border: 1px solid #E5E5E5;
     border-radius: 3px;
-    background: #FAFAFA;
+    /*background: #FAFAFA;*/
     line-height: 14px;
     text-align: left;
     word-wrap: break-word;
@@ -452,10 +605,15 @@
     color: #626262;
     cursor: pointer;
     user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+  .checkout .address-common-table .address-item-list li:hover{
+    background: none !important;
   }
   .checkout .address-common-table .address-item-list li.selected-address-item{
     background: #FFF;
-    border-color: #6A8FE5;
+    border-color: #D5001C;
   }
   .checkout .address-common-table .address-item-list .address-item{
     padding: 19px 14px 0 19px;

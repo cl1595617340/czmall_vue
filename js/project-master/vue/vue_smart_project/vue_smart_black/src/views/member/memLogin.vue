@@ -1,5 +1,5 @@
 <template>
-    <div id="main">
+    <div id="main" v-loading.fullscreen.lock="fullscreenLoading">
       <div class="box_header">
         <ul class="box_header_ul">
           <li>Mall官网</li>
@@ -28,16 +28,16 @@
             密码登录
           </div>
           <div style="font-family: OPPOfont4;font-size: 15px;margin-top: 20px">
-            <input placeholder="请输入手机号" class="input_sb">
+            <input placeholder="请输入手机号" class="input_sb" v-model="ipone">
           </div>
           <div style="font-family: OPPOfont4;font-size: 15px;margin-top: 20px">
-            <input placeholder="请输入密码" class="input_sb">
+            <input placeholder="请输入密码" class="input_sb" v-model="pwd">
           </div>
           <div style="font-family: OPPOfont4;font-size: 12px;margin-top: 10px;margin-left: -250px">
             忘记密码
           </div>
           <div style="font-family: OPPOfont4;margin-top: 10px">
-            <button class="login_btn">登陆</button>
+            <button class="login_btn" @click="submit">登陆</button>
           </div>
           <div style="font-family: OPPOfont4;font-size: 12px;margin-top: 10px;margin-left: -250px">
             <label style="margin-left: 70px">账号隐私声明</label>
@@ -63,14 +63,73 @@
 </template>
 
 <script>
+  import { f_memlogin } from '../../api/member'
   export default {
     created() {
       this.$store.commit('changNav');
+      this.openFullScreen1();
+    },
+    data(){
+      return{
+        ipone:"",
+        pwd:"",
+
+        fullscreenLoading: false,
+        sbtime:1000,
+      }
     },
     methods:{
       loginsb(){
         location.href='http://localhost:8088/zhifubao';
-      }
+      },
+      /*登录的按钮*/
+      submit(){
+        let formDatas = new FormData();
+        formDatas.append("ipone", this.ipone);
+        formDatas.append("pwd", this.pwd);
+        f_memlogin(formDatas).then(res => {
+          if (res.res!=null){
+            if (res.res.memberState==1){
+              this.$message({
+                message: '此账号已被封禁',
+                type: 'warning'
+              });
+            }else {
+              this.sbtime = 3000;
+              this.$store.state.memberinfo = res.res;
+              setTimeout(() => {
+                location.href=this.$store.state.memberloginUrl;
+              }, 2000);
+              this.openFullScreen2();
+            }
+
+          } else{
+            this.$message({
+              message: '登录失败',
+              type: 'warning'
+            });
+          }
+
+        })
+      },
+      openFullScreen1() {
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, this.sbtime);
+      },
+
+      openFullScreen2() {
+        const loading = this.$loading({
+          lock: true,
+          text: '正在登录',
+          spinner: 'el-icon-loading',
+          background: 'rgba(255,255,255, 0.6)'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 2600);
+      },
     },
     mounted() {
       this.$store.commit('changheaderStyle',0);
@@ -217,7 +276,6 @@
   }
 #main{
   position: absolute;
-  z-index: 1000000;
   background: url(../../../static/images/shuchai/背景图.jpg) no-repeat;
   background-size: 100% 100%;
   left:0;

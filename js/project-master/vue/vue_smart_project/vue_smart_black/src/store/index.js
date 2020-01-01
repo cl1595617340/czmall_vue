@@ -3,12 +3,23 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 let state={
+  //判断用户是购物车进的清单还是直接购买进入的清单,0是购物车,1是购买
+  isCarOrOne:-1,
   //存放购物车的数据
   carPanelData: [],
+  //直接购买商品存放的数据
+  carPanelDataOne:[],
   /*登录的用户信息*/
   memberinfo: {
 
   },
+  //保存用户登录前的页面路径
+  memberloginUrl:"",
+  //保存用户退出前的页面路径
+  memberExitUrl:"",
+
+  /*商品名，给路由title的*/
+  goodsname:"1233",
   //地址的数据
   receiveInfo: [{
     'name': '王某某',
@@ -86,6 +97,7 @@ let mutations ={
     }
 
   },
+
   //加入购物车
   addCarPanelData (state,data) {
     // data[0] = 表示存入的数据,data[1]表示存入的数量
@@ -198,7 +210,7 @@ let mutations ={
     }
   },
   sumbitReceive(state,data){
-         //把所有的默认状态都取消掉
+    //把所有的默认状态都取消掉
     if(data.default){
             state.receiveInfo.forEach((item,index)=>{
                item.default = false
@@ -209,6 +221,7 @@ let mutations ={
   //提交订单数据
   submitOrder(state,data){
        state.orderData.unshift(data); //订单
+    if (state.isCarOrOne==0){
       //提交之后吧，购物车选中的数据清除，
       let i = state.carPanelData.length; //判断选中结算的清除
       while(i--){
@@ -216,6 +229,15 @@ let mutations ={
           state.carPanelData.splice(i,1)
         }
       }
+    }else {
+      /*let i = state.carPanelDataOne.length; //判断选中结算的清除
+      while(i--){
+        if(state.carPanelDataOne[i].checked){
+          state.carPanelDataOne.splice(i,1)
+        }
+      }*/
+    }
+
   }
 }
 

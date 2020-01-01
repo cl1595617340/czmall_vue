@@ -119,7 +119,7 @@
               <li class="shp-col" style="width: 200px">
                 <div class="name hide-row">
                   <div class="name-table shp-col-sb">
-                    <a href="javascript:;" target="_blank" class="shp-col-name">{{item.sub_title}}</a>
+                    <a href="javascript:;" target="_blank" class="shp-col-name" @click="goGoodsinfo(item.sku_id)">{{item.sub_title}}</a>
                     <ul class="attribute" style="margin-top: 5px">
                       <li>{{item.spec_json.show_name}} - {{item.title}}</li>
                     </ul>
@@ -227,11 +227,20 @@
       created() {
         this.$store.commit('changNav');
         $('html,body').animate({scrollTop: 0}, 10);
+        /*拦截器，没有登录的话去到登录页面*/
+        if (this.$store.state.memberinfo.avatar==undefined) {
+          this.$router.push({path: '/memLogin'});
+        }
       },
       methods:{
+        /*点击去到购物车的商品信息*/
+        goGoodsinfo(id){
+          let routeData = this.$router.resolve({ path: '/ShopInfo', query: {  id: id } });
+          window.open(routeData.href, '_blank');
+        },
         gocheckout(){
           this.$router.push({path: '/checkout'});
-          this.$router.go(0);
+          this.$store.state.isCarOrOne = 0;//赋值给状态管理是怎么买的判断
         },
         /*删除购物车商品*/
         delCarPanelHandle (id) {

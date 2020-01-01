@@ -1,5 +1,5 @@
 <template>
-<div id="mainsb">
+<div id="mainsb" v-loading.fullscreen.lock="fullscreenLoading">
   <!--<div class="main_div">
     <div style="padding-top: 20px;padding-left: 72px">
       <div style="margin-top: -5px">
@@ -92,10 +92,14 @@
         showgoodss:true,
         /*如果查询条件是手机就查所有*/
         searchValuesb:"",
+
+        fullscreenLoading: false,
+        sbtime:2000,
       }
     },
     created() {
       this.$store.commit('changNav');
+      this.openFullScreen1();
     },
     methods:{
       getData(){
@@ -142,6 +146,13 @@
           })
         }
       },
+      openFullScreen1() {
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, this.sbtime);
+      },
+
       goBuyGoods(id){
         /*跳转页面并传值*/
         this.$router.push({path: '/BuyGoods',query:{ id:id}});
@@ -163,6 +174,7 @@
       },
       /*查询*/
       goQueryGoods(e){
+       /* alert(123)*/
         var that = this;
         var val = e.target.value;
         this.searchValue = val;

@@ -15,6 +15,7 @@
       </CarouselItem>
     </Carousel>
   </div>-->
+
   <div id="home_div">
     <div class="block">
       <el-carousel trigger="click" height="615px" >
@@ -55,6 +56,9 @@
 
 
 <style scoped>
+
+
+
   .el-carousel__item h3 {
     color: #475669;
     font-size: 14px;

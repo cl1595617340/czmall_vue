@@ -1,6 +1,6 @@
 import http from '../api/public'
 
-/*3表查询分类信息*/
+/**/
 export const list = (params) => {
     return http.fetchPost('/admin/goods/goods/list', params)
 }

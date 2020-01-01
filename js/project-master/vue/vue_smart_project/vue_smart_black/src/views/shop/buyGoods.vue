@@ -140,7 +140,7 @@
           <div class="main_right_item_div01sb">
             <div class="main_right_item_div01_btn">
               <button @click="addCarPanelHandle" v-show="!isloans" class="color_btn" style="background:#353434;color: white">加入购物车</button>
-              <button class="color_btn" style="background:#EA0041;color: white">购买</button>
+              <button @click="buyGoods" class="color_btn" style="background:#EA0041;color: white">购买</button>
             </div>
           </div>
 
@@ -310,6 +310,37 @@
         })
 
       },
+      /*--------------------------直接购买商品的方法---*/
+      buyGoods(){
+        /*购买需要的数据格式*/
+        let datalist = [];
+        let data = {
+          good_id:this.goodszh.goodsId,
+          checked: true,
+          count: this.num,
+          limit_num: 5,
+          price: this.priceGoodsb,
+          sku_id: this.activeGodos.goodsid,
+          sub_title:  this.goodszh.goodsName,//这个标题改名字
+          title: this.activeGodos.versions,//这个标题改版本
+          spec_json:{
+            image: this.activeimglist.goodscolorPicture,
+            show_name: this.activeimglist.goodscolorName,
+          },
+          /*赠品*/
+          complimentary:{
+            compName:this.complimentaryCar.name,
+            img:this.complimentaryCar.img,
+          }
+        };
+        datalist.push(data);
+        this.$store.state.carPanelDataOne = datalist;//赋值给状态管理
+        this.$store.state.isCarOrOne = 1;//赋值给状态管理是怎么买的判断
+        console.log(this.$store.state.carPanelDataOne);
+        this.$router.push({path: '/checkout'});
+        this.$router.go(0);
+
+      },
       /*计算花呗的通用方法*/
       countloans(){
         /*分期的金额*/
@@ -326,6 +357,7 @@
       addCarPanelHandle(){
         /*购物车需要的数据格式*/
         let data = {
+          good_id:this.goodszh.goodsId,
           checked: true,
           count: 1,
           limit_num: 5,
@@ -337,6 +369,7 @@
             image: this.activeimglist.goodscolorPicture,
             show_name: this.activeimglist.goodscolorName,
           },
+          /*赠品*/
           complimentary:{
             compName:this.complimentaryCar.name,
             img:this.complimentaryCar.img,
@@ -427,7 +460,7 @@
         if (scrollTop>=100){
           this.main_left = "position: fixed;top:0px;";
           this.main_left_item = "padding-top: 100px;";
-          this.main_right = "left:675px;";
+          this.main_right = "left:680px;";
         }else {
           this.main_left = "position: relative;";
           this.main_left_item = "padding-top: 50px;";

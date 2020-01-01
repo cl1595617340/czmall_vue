@@ -1,70 +1,223 @@
 <template>
-  <div id="main">
+  <div id="main" style="background: #F5F5F5">
     <div class="content page-order-payment">
-      <div class="gray-box clear">
-        <div class="title">
-          <h2>支付订单</h2>
-        </div>
-        <div class="box-inner order-info">
-          <h3>提交订单成功</h3>
-          <p class="payment-detail">请在 <span>24 小时内</span>完成支付，超时订单将自动取消。</p>
-          <p class="payment-detail">我们将在您完成支付后的 72 小时内发货</p>
-        </div>
-        <div class="box-inner payment-checkout-panel clear">
-                    <span class="jianguo-blue-main-btn big-main-btn js-payment-order" v-if="!orderInfo.isPay" @click="payNowHandle(orderInfo.orderId)">
-    	                <a>现在支付</a>
-	    	            </span>
-          <span v-else class="is-pay">已完成</span>
-          <span class="prices"> 应付金额：   <em><span>¥ </span>{{orderInfo.price+orderInfo.freight}}.00</em>
-                    </span>
-        </div>
-      </div>
-      <div class="confirm-detail">
-        <div class="info-title">订单编号</div>
-        <p class="info-detail">{{orderInfo.orderId}}</p>
-      </div>
-      <div class="confirm-detail">
-        <div class="info-title">收货信息</div>
-        <p class="info-detail">姓名：{{orderInfo.receiveInfo.name}}</p>
-        <p class="info-detail">联系电话：{{orderInfo.receiveInfo.phone}}</p>
-        <p class="info-detail">详细地址：{{orderInfo.receiveInfo.province}} {{orderInfo.receiveInfo.city}} {{orderInfo.receiveInfo.county}} {{orderInfo.receiveInfo.add}}</p>
-      </div>
-      <div class="confirm-detail">
-        <div class="info-title">发票信息</div>
-        <p class="info-detail">发票类型：电子发票</p>
-        <p class="info-detail">发票抬头：{{orderInfo.invoiceTitle}}</p>
-        <p class="info-detail">发票内容：购买商品明细</p>
-      </div>
-      <div class="confirm-table-title clear">
-        <span class="name fn-left">商品信息</span>
-        <span class="subtotal fn-right">小计</span>
-        <span class="num fn-right">数量</span>
-        <span class="price fn-right">单价</span>
-      </div>
-      <div class="confirm-goods-table">
-        <div class="cart-items clear" v-for="item,index in orderInfo.goodsData">
-          <div class="name fn-left hide-row">
-            <div class="name-cell">
-              <a href="javascript:;" :title="item.title+'（'+item.spec_json.show_name+'）'" target="_blank">{{item.title}}（{{item.spec_json.show_name}}）</a><br>
-            </div>
+
+
+      <div class="gray-box clear" style="position: relative;top: 40px;">
+        <div style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto">
+          <!--支付的图片-->
+          <div class="pay_img">
+            <img src="../../static/images/shuchai/支付模板.png">
           </div>
-          <div class="subtotal fn-right">
-            <div class="subtotal-cell">¥ {{item.price*item.count}}.00</div>
+          <div class="box-inner order-info">
+            <h2 style="font-size: 23px">订单已提交,等待付款￥1699.00</h2>
+            <p class="payment-detail">请在  <span>{{minutesb}}:{{secondsb}}</span>完成支付，超时订单将自动取消。</p>
           </div>
-          <div class="goods-num fn-right">{{item.count}}</div>
-          <div class="price fn-right">¥ {{item.price}}.00</div>
+          <!--  <div class="box-inner payment-checkout-panel clear">
+                        <span class="jianguo-blue-main-btn big-main-btn js-payment-order" v-if="!orderInfo.isPay" @click="payNowHandle(orderInfo.orderId)">
+                            <a>现在支付</a>
+                            </span>
+              <span v-else class="is-pay">已完成</span>
+              <span class="prices"> 应付金额：   <em><span>¥ </span>{{orderInfo.price+orderInfo.freight}}.00</em>
+                        </span>
+            </div>-->
         </div>
       </div>
-      <div class="order-discount-line">
-        <p> 商品总计： <span>¥ {{orderInfo.price}}.00</span> </p>
-        <p> 运费： <span>+ ¥ {{orderInfo.freight}}.00</span> </p>
+
+      <!--订单详情-->
+      <div class="gray-box clear" style="position: relative;top: -20px;">
+        <div style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto">
+          <div class="order-info" style="padding-top: 30px;text-align: left;
+          padding-left: 50px;font-family: OPPOfont1;display: flex">
+            <label class="orders-content-title">订单详情</label>
+            <ul class="address-decrypt">
+              <li>
+                <label style="width: 120px">支付单号:</label>
+                <label style="width: 200px">1564564654</label>
+              </li>
+              <li>
+                <label style="width: 120px">收货信息:</label>
+                <label style="width: 200px">请问</label>
+                <label style="width: 200px">17520417377</label>
+                <label style="width: 260px">河南省 郑州市 中原区 西流湖街道第三方</label>
+              </li>
+              <li>
+                <label style="width: 120px">商品信息:</label>
+                <label style="width: 200px">A9 6G+128G 云母绿</label>
+                <label style="width: 200px">赠品：3.5mm接口耳机</label>
+              </li>
+              <li>
+                <label style="width: 120px">交易金额:</label>
+                <label style="width: 200px">￥999.00</label>
+              </li>
+              <li>
+                <label style="width: 120px">交易时间:</label>
+                <label style="width: 200px">2019-02-02 21：12：02</label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!--支付方法-->
+      <div class="gray-box clear" style="position: relative;top: -80px;">
+        <div style="width: 92%;height: 100px;border-bottom: 1px solid #EDEDED;margin: 0 auto;position: relative">
+          <div class="order-info" style="padding-top: 30px;text-align: left;
+          padding-left: 50px;font-family: OPPOfont1;display: flex">
+            <label class="orders-content-title">支付平台</label>
+            <ul class="address-decrypt pay_ul">
+              <li @click="clickLi(0)" :style="jiantouindex==0?activeli:activelisb">
+                <b class="img01">
+                  <img src="../../static/images/shuchai/花呗 (1).png">
+                </b>
+                <a>
+                  <span>花呗分期</span>
+                </a>
+                <strong>
+                  <label class="oc-label">免息</label>
+                </strong>
+                <!--选中li的钩-->
+                <i class="yesi" :style="jiantouindex==0?activejiantou:activejiantousb"></i>
+                <i class="el-icon-check yesib" :style="jiantouindex==0?activejiantou:activelisb"></i>
+              </li>
+
+              <li @click="clickLi(1)" :style="jiantouindex==1?activeli:activelisb">
+                <b class="img01">
+                  <img src="../../static/images/shuchai/支付宝 (1).png">
+                </b>
+                <a>
+                  <span>支付宝</span>
+                </a>
+                <strong>
+                  <label class="oc-label">推荐</label>
+                </strong>
+                <!--选中li的钩-->
+                <i class="yesi" :style="jiantouindex==1?activejiantou:activejiantousb"></i>
+                <i class="el-icon-check yesib" style="left:218px" :style="jiantouindex==1?activejiantou:activejiantousb"></i>
+              </li>
+
+              <li @click="clickLi(2)" :style="jiantouindex==2?activeli:activelisb">
+                <b class="img01">
+                  <img src="../../static/images/shuchai/微信支付.png">
+                </b>
+                <a style="margin-left: 0px">
+                  <span>微信支付</span>
+                </a>
+                <!--选中li的钩-->
+                <i class="yesi" :style="jiantouindex==2?activejiantou:activejiantousb"></i>
+                <i class="el-icon-check yesib" style="left: 218px" :style="jiantouindex==2?activejiantou:activejiantousb"></i>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!--支付的详情01-->
+      <div class="gray-box clear" style="position: relative;top: -140px;" :style="jiantouindex==0?activejiantou:activejiantousb">
+        <div style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto;min-height: 100px;padding-bottom: 40px">
+          <div class="order-info" style="padding-top: 30px;text-align: left;
+          padding-left: 50px;font-family: OPPOfont1;display: flex">
+            <ul class="address-decrypt paysb" style="width: 760px;margin: 0 auto;">
+              <li style="width: 230px" >
+                <a class="sba">
+                  <section>
+                    <p style="position: relative;top: 10px">￥1539.33 x 3期</p>
+                    <p>
+                      <span>共￥4618</span>
+                      <strong style="color: #FF763D">手续费 ￥0 / 期 </strong>
+                    </p>
+                  </section>
+                </a>
+              </li>
+
+              <li style="width: 230px">
+                <a class="sba">
+                  <section>
+                    <p style="position: relative;top: 10px">￥1539.33 x 3期</p>
+                    <p>
+                      <span>共￥4618</span>
+                      <strong style="color: #FF763D">手续费 ￥0 / 期 </strong>
+                    </p>
+                  </section>
+                </a>
+              </li>
+
+              <li style="width: 230px">
+                <a class="sba">
+                  <section>
+                    <p style="position: relative;top: 10px">￥1539.33 x 3期</p>
+                    <p>
+                      <span>共￥4618</span>
+                      <strong style="color: #FF763D">手续费 ￥0 / 期 </strong>
+                    </p>
+                  </section>
+                </a>
+              </li>
+
+            </ul>
+          </div>
+
+          <!--支付二维码-->
+          <div class="payma">
+            <img src="../../static/images/shuchai/背景图.jpg">
+            <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
+          </div>
+        </div>
+      </div>
+
+      <!--支付的详情02-->
+      <div class="gray-box clear" style="position: relative;top: -140px;" :style="jiantouindex==1?activejiantou:activejiantousb">
+        <div style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto;min-height: 100px;padding-bottom: 40px">
+          <div class="order-info" style="padding-top: 30px;text-align: left;
+          padding-left: 50px;font-family: OPPOfont1;display: flex">
+          </div>
+
+          <!--支付二维码-->
+          <div class="payma">
+            <img src="../../static/images/shuchai/背景图.jpg">
+            <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
+          </div>
+        </div>
+      </div>
+
+      <!--支付的详情03-->
+      <div class="gray-box clear" style="position: relative;top: -140px;" :style="jiantouindex==2?activejiantou:activejiantousb">
+        <div style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto;min-height: 100px;padding-bottom: 40px">
+          <div class="order-info" style="padding-top: 30px;text-align: left;
+          padding-left: 50px;font-family: OPPOfont1;display: flex">
+          </div>
+
+          <!--支付二维码-->
+          <div class="payma">
+            <img src="../../static/images/shuchai/背景图.jpg">
+            <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!--箭头-->
+    <div class="jiantoui" :style="jiantouindex==0?activejiantou:activejiantousb"></div>
+    <div class="jiantoui" style="left: 680px;" :style="jiantouindex==1?activejiantou:activejiantousb"></div>
+    <div class="jiantoui" style="left: 940px;" :style="jiantouindex==2?activejiantou:activejiantousb"></div>
   </div>
 </template>
 
 <script>
   export default {
+    data () {
+      return {
+        minutesb: 3,
+        secondsb: 0,
+        /*控制箭头*/
+        jiantouindex:0,
+        activejiantou:"display:block;",
+        activejiantousb:"display: none;",
+        /*li的样式*/
+        activeli:"border: 1px #05B570 solid;",
+        activelisb:"",
+      }
+    },
     computed: {
       orderInfo () {
         let orderInfo = this.$store.state.orderData.filter((order) => {
@@ -73,16 +226,210 @@
         return orderInfo
       }
     },
+    mounted () {
+      this.timer();
+      $('html,body').animate({scrollTop: 0}, 10);
+    },
+    watch: {
+      second: {
+        handler (newVal) {
+          console.log(newVal+"==============")
+          this.num(newVal)
+        },
+        deep: true
+      },
+      minute: {
+        handler (newVal) {
+          this.num(newVal)
+        },
+        deep: true
+      },
+    },
     methods: {
+      /*点击li出现箭头*/
+      clickLi(index){
+        this.jiantouindex = index;
+      },
+      // 倒计时
+      num(n) {
+        return n < 10 ? '0' + n : '' + n
+      },
+      timer () {
+        var _this = this
+        var time = window.setInterval(function () {
+          if (_this.secondsb === 0 && _this.minutesb !== 0) {
+            _this.secondsb = 59
+            _this.minutesb -= 1
+          } else if (_this.minutesb === 0 && _this.secondsb === 0) {
+            _this.secondsb = 0
+            window.clearInterval(time)
+          } else {
+            _this.secondsb -= 1
+          }
+        }, 1000)
+      },
       payNowHandle (id) {
-        this.$store.commit('payNow',id)
-        alert('成功支付'+(this.orderInfo.price+this.orderInfo.freight)+'元')
+        this.$store.commit('payNow', id)
+        alert('成功支付' + (this.orderInfo.price + this.orderInfo.freight) + '元')
       }
     }
   }
 </script>
 
 <style>
+  .payma img{
+    width: 115px;
+    height: 115px;
+    margin: 0 auto;
+    position: relative;
+    top: -20px;
+  }
+  .payma{
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    font-family: OPPOfont1;
+    text-align: center;
+  }
+  /*--------------------------支付二维码--*/
+  .sba{
+
+  }
+
+  .paysb li{
+    float: left;
+    position: relative;
+    width: 236px;
+    height: 68px;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px #EDEDED solid;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #333;
+    text-align: center;
+    margin-left: 20px;
+  }
+
+
+  .yesib{
+    display: none;
+    position: absolute;
+    left: 220px;
+    top: 28px;
+    color: white;
+  }
+  .yesi{
+    width: 30px;
+    height: 30px;
+    background: #05B570;
+    position: absolute;
+    transform: rotate(45deg);
+    top: 27px;
+    left: 218px;
+    text-align: center;
+    font-size: 15px;
+    color: white;
+  }
+  /*-选中li的钩*/
+  .jiantoui{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    /*background: red;*/
+    transform:rotate(45deg);
+    border-left: 1px solid #EDEDED;
+    border-top: 1px solid #EDEDED;
+    top: 690px;
+    left: 410px;
+    background: white;
+  }
+  /*箭头*/
+  .img01 img{
+    position: absolute;
+    width: 25px;
+    height:auto;
+    left: 50px;
+    top: 8px;
+  }
+  .oc-label{
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    padding: 0 .4em;
+    height: 20px;
+    line-height: 1.5;
+    text-align: center;
+    margin-right: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #333;
+    border: 1px #666 solid;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .pay_ul a{
+    margin-left: 40px;
+  }
+  .pay_ul li{
+    display: inline-block;
+    position: relative;
+    margin: 10px;
+    display: inline-block;
+    position: relative;
+    width: 236px;
+    height: 44px;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px #EDEDED solid;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    line-height: 44px;
+    cursor: pointer;
+
+
+  }
+  .pay_ul{
+
+  }
+  /*-------------------------------支付平台的ul----*/
+  .address-decrypt label{
+    display: inline-block;
+  }
+  .address-decrypt li{
+    margin-top: 10px;
+  }
+.address-decrypt{
+  margin-left: 9.25px;
+  line-height: 30px;
+  color: #5E5E5E;
+  margin-top: -8px;
+}
+  .orders-content-title{
+    width: 115px;
+    height: 44px;
+    line-height: 30px;
+    font-size: 18px;
+  }
+  .shp-pmmethod-orders{
+
+  }
+  /*------------------------------------------------订单详情1--------*/
+  .pay_img{
+    position: absolute;
+    top: 66px;
+    left: 370px;
+  }
+  .pay_img>img{
+    width: 83px;
+    height: auto;
+  }
+  /*-----------------------------------------------上面是我的样式------*/
   .header-desktop{
     display: none;
   }
@@ -98,9 +445,7 @@
   }
   .gray-box{
     overflow: hidden;
-    border: 1px solid #D1D1D1;
-    border-color: rgba(0,0,0,.14);
-    border-radius: 8px;
+
     box-shadow: 0 3px 8px -6px rgba(0,0,0,.1);
     background: #fff;
   }
@@ -110,28 +455,40 @@
   .gray-box .title{
     height: 60px;
     padding: 0 10px 0 28px;
-    background: linear-gradient(#FFF,#F5F5F5);
-    border-bottom: 1px solid #DCDCDC;
-    border-radius: 10px 10px 0 0;
-    box-shadow: 0 1px 7px rgba(0,0,0,.06);
+    /* background: #F5F5F5;
+     background: linear-gradient(#FFF,#F5F5F5);*/
+    /* border-bottom: 1px solid #DCDCDC;*/
+    /*   border-radius: 10px 10px 0 0;
+       box-shadow: 0 1px 7px rgba(0,0,0,.06);*/
     line-height: 60px;
     color: #646464;
+    font-family: OPPOfont1;
   }
   .gray-box .title h2{
     font-size: 18px;
     font-weight: 400;
     color: #626262;
   }
+  .page-order-payment p{
+    font-family: OPPOfont2;
+  }
   .page-order-payment .order-info{
     padding: 60px 0 55px;
     color: #333;
+    text-align: center;
+    /*font-family: OPPOfont2;*/
   }
-  .page-order-payment .order-info h3{
+  .page-order-payment .order-info h2{
     padding-bottom: 14px;
     line-height: 36px;
     text-align: center;
-    font-size: 36px;
-    color: #212121;
+    font-size: 26px;
+    color: #333;
+    font-family: OPPOfont1;
+    font-size: 26px;
+    position: relative;
+    left: 30px;
+    top: 15px;
   }
   .page-order-payment .order-info .payment-detail{
     text-align: center;
@@ -148,10 +505,13 @@
     line-height: 24px;
     font-size: 14px;
     color: #999;
+    position: relative;
+    left: 21px;
+    top: 10px
   }
   .page-order-payment .payment-checkout-panel{
     padding: 10px 10px 10px 0;
-    line-height: 60px;
+    line-height: 61px;
     background: #f9f9f9;
     border-top: 1px solid #e5e5e5;
     box-sizing: border-box;

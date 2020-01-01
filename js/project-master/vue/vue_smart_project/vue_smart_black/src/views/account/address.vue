@@ -129,7 +129,9 @@
           receive.checked = false
         }
       })
-      this.receiveInfo = this.$store.state.receiveInfo
+      /*地址数据*/
+      this.receiveInfo = addressPop.addresslist;
+      /*console.log(this.receiveInfo)*/
     },
     components: {
       addressPop

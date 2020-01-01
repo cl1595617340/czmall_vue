@@ -1,8 +1,11 @@
 <template>
 <div id="App_main">
-     <header-nav v-show="this.$store.state.headerStyle"></header-nav>
-     <router-view></router-view>
-     <v-footer v-show="this.$store.state.footerStyle"></v-footer>
+
+  <header-nav v-show="this.$store.state.headerStyle"></header-nav>
+  <router-view></router-view>
+  <v-footer v-show="this.$store.state.footerStyle"></v-footer>
+
+
 </div>
 </template>
 
@@ -33,6 +36,24 @@ export default {
 </script>
 
 <style>
+
+
+  /* 滚动槽 */
+  ::-webkit-scrollbar-track {
+    border-radius:10px;
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    background: rgba(255,255,255, 0.5);
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #C1C1C1;
+    cursor: pointer;
+  }
 #App_main{
   background: white;
 }

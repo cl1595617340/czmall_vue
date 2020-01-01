@@ -60,17 +60,35 @@ export default {
                 },
                 {
                     icon: 'el-icon-shopping-bag-1',
-                    index: '',
+                    index: '10',
                     title: '商品管理',
                     subs: [
                         {
-                            index: 'goodstype',
-                            title: '-----分类管理-----'
-                        },
-                        {
                             index: 'allgoods',
-                            title: '-----商品列表-----'
+                            title: '商品列表'
                         }
+                    ]
+                },
+                {
+                    icon: 'el-icon-menu',
+                    index: '11',
+                    title: '分类管理',
+                    subs: [
+                        {
+                            index: 'goodstype',
+                            title: '商品类目'
+                        },
+                    ]
+                },
+                {
+                    icon: 'el-icon-s-custom',
+                    index: '12',
+                    title: '用户管理',
+                    subs: [
+                        {
+                            index: 'member',
+                            title: '会员管理'
+                        },
                     ]
                 },
                 {

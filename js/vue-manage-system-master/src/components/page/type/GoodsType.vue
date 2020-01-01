@@ -604,7 +604,7 @@
     }
 </script>
 
-<style>
+<style >
 
     .goodstype_mian_div{
         width: 100%;

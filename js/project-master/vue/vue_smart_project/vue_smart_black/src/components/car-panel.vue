@@ -22,8 +22,8 @@
                     </div>
                     <div class="item-desc">
                       <div class="cart-cell">
-                        <h4>
-                          <a href="#/item/100027401">{{item.sub_title}} </a>
+                        <h4 @click="goGoodsinfo(item.sku_id)">
+                          <a >{{item.sub_title}} </a>
                           <label class="oc-label" v-if="item.complimentary.compName!=''">
                             <em> 赠品</em>
                           </label>
@@ -93,9 +93,19 @@
          return this.$store.state.ball
        }
      },
+      created() {
+        this.hideCarHandle();
+      },
       methods:{
+        /*点击去到购物车的商品信息*/
+        goGoodsinfo(id){
+          let routeData = this.$router.resolve({ path: '/ShopInfo', query: {  id: id } });
+          window.open(routeData.href, '_blank');
+        },
         goCart(){
+
           this.$router.push({path: '/cart'});
+          this.hideCarHandle();
           this.$router.go(0);
         },
         delCarPanelHandle (id) {

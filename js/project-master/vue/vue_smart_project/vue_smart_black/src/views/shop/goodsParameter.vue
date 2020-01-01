@@ -506,7 +506,7 @@
   }
   .main_divsb{
     width: 1364px;
-    min-height: 300px;
+    min-height: 1000px;
     position: relative;
     top: -5px;
     /*background: wheat;*/

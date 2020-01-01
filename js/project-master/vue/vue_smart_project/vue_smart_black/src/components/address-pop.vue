@@ -16,15 +16,13 @@
                 <div class="address-form">
                   <div class="module-form-row">
                     <div class="form-item-v3">
-                      <i>收货人姓名</i>
-                      <input type="text" class="js-verify" v-model="receive.name">
+                      <input placeholder="收货人姓名" type="text" class="js-verify" v-model="receive.name">
                       <div class="verify-error"></div>
                     </div>
                   </div>
                   <div class="module-form-row">
                     <div class="form-item-v3" :class="{'form-invalid-item':phoneError}">
-                      <i>手机号</i>
-                      <input type="text" class="js-verify" v-model="receive.phone" @blur="inspectPhone">
+                      <input placeholder="手机号" type="text" class="js-verify" v-model="receive.phone" @blur="inspectPhone">
                       <div class="verify-error"></div>
                     </div>
                   </div>
@@ -85,32 +83,58 @@
 
 <script>
   import addList from "../lib/addList"
+  import { addAddress } from "../api/member"
+  import { f_getMemIdByavatar } from "../api/member"
+  import { f_updateOtherdef } from "../api/member"
+  import { updateAddress } from "../api/member"
     export default {
         //默认暴露一个模块
       data(){
         return {
           // addlist 添加地方一个列表
           addList,
-          receive: { //搜集表单的数据
-            "name": "",
-            "phone": "",
-            "areaCode": "",
-            "landLine": "",
-            "provinceId": 0,
-            "province": "",
-            "cityId": 0,
-            "city": "",
-            "countyId": 0,
-            "county": "",
-            "add": "",
-            "default": false,
-            "checked": false
-          },
+          receive: this.gridData
+          ,
          // cityList: [],
         //  couontyList: [],
           phoneError: false,
-          right:false
+          right:false,
+          /*发送到后台的地址对象*/
+          addressmem:{
+            addressId:"",
+            memberId:"",
+            addressName:"",
+            addressIpone:"",
+            provinceId:"",
+            addressProvince:"",
+            cityId:"",
+            addressCity:"",
+            countyId:"",
+            addressCounty:"",
+            addressinfo:"",
+            addressDefault:"",
+          },
+          addresslist:[],
+
         }
+      },
+      props: {
+        gridData:{
+          "addressId": 0,
+          "name": "",
+          "phone": "",
+          "areaCode": "",
+          "landLine": "",
+          "provinceId": 0,
+          "province": "",
+          "cityId": 0,
+          "city": "",
+          "countyId": 0,
+          "county": "",
+          "add": "",
+          "default": false,
+          "checked": false
+        },
       },
       watch:{
         //自动更新区域的信息
@@ -129,6 +153,16 @@
           },
           deep: true
         },
+        /*vue 父组件在created中传值给子组件，子组件去监听props变化*/
+        gridData: {
+          handler:(val,oldval) => {
+            this.receive = val;
+            console.log(val.addressId+"--------------")
+          },
+          deep: true,  //对象内部的属性监听，也叫深度监听
+          immediate: true //immediate表示在watch中首次绑定/的时候，是否执行handler，值为true则表示在watch中声明的时候，就立即执行handler方法，值为false，则和一般使用watch一样，在数据发生变化的时候才执行handler
+        }  
+
       },
       computed:{
         //城市列表
@@ -165,9 +199,103 @@
           return  countyList;
         }
       },
+      created() {
+        this.getData();
+      },
       methods:{
+        getData(){
+          //得到登录的用户id
+          let formDatas = new FormData();
+          formDatas.append("avater",this.$store.state.memberinfo.avatar);
+          f_getMemIdByavatar(formDatas).then(res => {
+            //得到登录的用户id
+            this.addressmem.memberId = res.res.memberId;
+            /*//-------------------------查看用户的地址*/
+            /*let formDatas2 = new FormData();
+            formDatas2.append("id",this.addressmem.memberId);
+            f_memAddressBuId(formDatas2).then(resb => {
+              this.addresslist = resb.res;
+              console.log(this.addresslist);
+            })*/
+          })
+        },
+        //提交表单
+        sumbitReceive(){
+          let defaddress = "";
+          this.addressmem.addressName = this.receive.name;
+          this.addressmem.addressName = this.receive.name;
+          this.addressmem.addressIpone = this.receive.phone;
+          this.addressmem.addressProvince = this.receive.province;
+          this.addressmem.addressCity = this.receive.city;
+          this.addressmem.addressCounty = this.receive.county;
+          this.addressmem.addressinfo = this.receive.add;
+          /*前端回显修改的地区id**/
+          this.addressmem.provinceId = this.receive.provinceId;
+          this.addressmem.cityId = this.receive.cityId;
+          this.addressmem.countyId = this.receive.countyId;
+          this.addressmem.addressId = this.receive.addressId;
+          if (this.receive.default){
+            defaddress = 0;
+            let formDatas = new FormData();
+            formDatas.append("id",this.addressmem.memberId );
+            f_updateOtherdef(formDatas).then(res => {
+            })
+          } else {
+            defaddress = 1;
+          }
+          this.addressmem.addressDefault = defaddress;
+          let formDatas = new FormData();
+          formDatas.append("obj",JSON.stringify(this.addressmem));
+
+          alert(this.receive.addressId)
+          /*如果是地址id不等于0就是修改，否则就是添加*/
+          if (this.receive.addressId==0||this.receive.addressId==undefined){
+            addAddress(formDatas).then(res => {
+              if (res.res){
+                this.$emit('close');
+                // 触发父组件中的事件，并传递参数
+                this.$emit('getDatasb',"");
+                this.clearFrom();
+              }else {
+                this.$message.error('错了o1');
+              }
+            })
+
+          }else{
+            updateAddress(formDatas).then(res => {
+              if (res.res){
+                this.$emit('close');
+                // 触发父组件中的事件，并传递参数
+                this.$emit('getDatasb',"");
+                this.clearFrom();
+              }else {
+                this.$message.error('错了o1');
+              }
+            })
+          }
+
+          /*if(this.right){
+            //添加
+            this.$store.commit("sumbitReceive",this.receive);
+            this.$emit('close');
+          }*/
+        },
+        /*清除表单数据的方法*/
+        clearFrom(){
+          this.receive.name = "";
+          this.receive.phone = "";
+          this.receive.provinceId = 0;
+          this.receive.cityId = 0;
+          this.receive.countyId = 0;
+          this.receive.add = "";
+          this.receive.default = false;
+          this.receive.addressId = false;
+
+          this.receive.addressId=0;
+        },
         //弹出层
         closePop ()　{
+          this.clearFrom();
           this.$emit('close')
         },
         //检查电话号码
@@ -190,15 +318,6 @@
             this.right = false
           }
         },
-        //添加到个人地址栏
-        sumbitReceive(){
-           if(this.right){
-             //添加
-             this.$store.commit("sumbitReceive",this.receive);
-             this.$emit('close');
-           }
-        }
-
       }
     }
 </script>
@@ -215,6 +334,8 @@
   .js-dialog-title{
     font-size: 15px;
     font-family: OPPOfont1;
+    position: relative;
+    top: 20px;
   }
 
   /*-----------------------------------------------上面是我的样式-----*/
@@ -460,7 +581,7 @@
   #pop .dialog-blue-btn{
     padding: 1px;
     background: #6383C6;
-    background: linear-gradient(#6383C6,#4262AF);
+   /* background: linear-gradient(#6383C6,#4262AF);*/
     border-radius: 6px;
     text-align: center;
     color: #FFF;

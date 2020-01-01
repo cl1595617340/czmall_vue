@@ -44,23 +44,17 @@ export default {
     },
     methods: {
         submitForm() {
-            let param = new URLSearchParams();
-            param.append("name", this.param.name);
-            param.append("pwd", this.param.pwd);
-
-            this.$axios.post('/login', param)
-                .then(resp => {
-                    if (resp.data.res=='sb'){
-                        this.$message.success('登录成功');
-                        localStorage.setItem('ms_username', this.param.name);
-                        this.$router.push('/dashboard');
-                    }else {
-                        alert("0000")
-                    }
-
-                })
-                .catch(failResponse => {})
-
+            this.$refs.login.validate(valid => {
+                if (valid) {
+                    this.$message.success('登录成功');
+                    localStorage.setItem('ms_username', this.param.username);
+                    this.$router.push('/');
+                } else {
+                    this.$message.error('请输入账号和密码');
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
     },
 };

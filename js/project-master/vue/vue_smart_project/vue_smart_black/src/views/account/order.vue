@@ -63,7 +63,7 @@
 									</div>
 									<div class="operation">
 										<div class="operation-list">
-	
+
 										</div>
 									</div>
 									<div class="num">{{item.count}}</div>

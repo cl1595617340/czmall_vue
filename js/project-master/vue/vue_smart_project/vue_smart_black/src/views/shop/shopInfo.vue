@@ -37,6 +37,7 @@
 <script>
   import { f_getGoodsByid } from '../../api/goods'
 
+
   export default {
     data(){
       return {
@@ -59,6 +60,18 @@
         noneBtnsb:"margin-left: 0px;",
       }
     },
+    mounted() {
+      window.addEventListener('scroll', this.windowScroll);
+
+      this.$store.commit('changNav');
+      let id = this.$route.query.id;
+      this.goodsid = id;
+      this.getData();
+      $('html,body').animate({scrollTop: 0}, 10);
+
+
+    },
+
     methods:{
       getData(){
         let formDatas = new FormData();
@@ -67,6 +80,7 @@
           this.goods = res.goods;
           this.goodstypeid = res.goods.goodsType3Id;
           console.log(this.goods)
+
         })
       },
       /*去到手机的其他页面*/
@@ -103,15 +117,7 @@
 
       },
     },
-    mounted() {
-      window.addEventListener('scroll', this.windowScroll);
 
-      this.$store.commit('changNav');
-      let id = this.$route.query.id;
-      this.goodsid = id;
-      this.getData();
-      $('html,body').animate({scrollTop: 0}, 10);
-    },
   }
 </script>
 

@@ -7,7 +7,6 @@ export default new Router({
     routes: [
         {
             path: '/',
-            meta: { title: '登陆' },
             redirect: '/dashboard'
         },
         {
@@ -45,6 +44,17 @@ export default new Router({
                         {
                             path: '/updateGoods',
                             component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/goods/updateGoods.vue'),
+                        },
+                    ]
+                },
+                {
+                    path: '/member',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/member/AllMember.vue'),
+                    meta: { title: '会员管理' },
+                    children: [
+                        {
+                            path: '/address',
+                            component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/member/address.vue'),
                         },
                     ]
                 },

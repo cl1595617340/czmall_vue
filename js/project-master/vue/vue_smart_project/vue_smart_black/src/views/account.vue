@@ -1,11 +1,11 @@
 <template>
-	<div id="main">
+	<div id="main" style="background: #F5F5F5;padding-top: 40px">
 		<div class="content clear">
 			<div class="account-wrapper">
 				<div class="account-sidebar">
 					<div class="avatar gray-box clear">
 						<div class="js-account-sidebar-info">
-							<img src="http://static.smartisanos.cn/account/asset/img/default-user-avatar.png">
+              <img :src="this.$store.state.memberinfo.avatar">
 						</div>
 						<div class="box-inner">
 							<ul class="account-nav">
@@ -13,7 +13,13 @@
 						        <a>我的订单</a>
 						    </router-link>
 								<router-link :to="{name: 'Address'}" tag="li" activeClass="current">
-                    <a>收货地址</a>
+                    <a>配送地址</a>
+                </router-link>
+                <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                  <a>优惠卷</a>
+                </router-link>
+                <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                  <a>账户管理</a>
                 </router-link>
 							</ul>
 						</div>
@@ -54,13 +60,13 @@
 	overflow: hidden;
     border: 1px solid #D1D1D1;
     border-color: rgba(0,0,0,.14);
-    border-radius: 8px;
+   /* border-radius: 8px;*/
     box-shadow: 0 3px 8px -6px rgba(0,0,0,.1);
 }
 .account-sidebar .avatar{
 	padding-top: 20px;
     margin: 0 0 20px;
-    border-radius: 10px;
+   /* border-radius: 10px;*/
     text-align: center;
 }
 .account-sidebar .avatar img{
@@ -70,11 +76,12 @@
 }
 .account-sidebar .account-nav{
 	padding-top: 15px;
+  font-family: OPPOfont1;
 }
 .account-sidebar .account-nav li{
 	position: relative;
     height: 48px;
-    border-top: 1px solid #EBEBEB;
+   /* border-top: 1px solid #EBEBEB;*/
     line-height: 48px;
 }
 .account-sidebar .account-nav .current{
@@ -94,9 +101,9 @@
     top: -1px;
     z-index: 1;
     height: 50px;
-    background-color: #98AFEE;
+   /* background-color: #98AFEE;*/
     line-height: 50px;
-    color: #FFF;
+    color: #D5001C;
 }
 .account-content{
 	margin-left: 230px;
@@ -105,7 +112,7 @@
 	height: 60px;
     padding: 0 10px 0 28px;
     background: #F5F5F5;
-    background: linear-gradient(#FFF,#F5F5F5);
+   /* background: linear-gradient(#FFF,#F5F5F5);*/
     border-bottom: 1px solid #DCDCDC;
     border-radius: 10px 10px 0 0;
     box-shadow: 0 1px 7px rgba(0,0,0,.06);

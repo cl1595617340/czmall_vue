@@ -23,8 +23,11 @@ import  shopsb from "../views/shopsb"
 /*会员*/
 import memLogin from '../views/member/memLogin'
 import memUser from '../views/member/memUser'
+
+
 Vue.use(Router)
 
+console.log(ShopInfo.linamesb)
 export default new Router({
   routes: [
     {
@@ -36,6 +39,9 @@ export default new Router({
       path: '/Shop',
       name:"Shop",
       component: Shop,
+      meta:{
+        title:'全部机型-ZH(中国大陆)'
+      }
     },
     {
       path: '/shopsb',
@@ -46,32 +52,50 @@ export default new Router({
       path: '/queryGoods',
       name:"QueryGoods",
       component: QueryGoods,
+      meta:{
+        title:'搜索结果-ZH(中国大陆)'
+      }
     },
     {
       path: '/ShopInfo',
       name:"ShopInfo",
       component: ShopInfo,
+      meta:{
+        title:'商品详情-Apple(中国大陆)'
+      }
     },
     {
       path: '/GoodsParameter',
       name:"GoodsParameter",
       component: GoodsParameter,
+      meta:{
+        title:'商品参数-Apple(中国大陆)'
+      }
     },
     {
       path: '/BuyGoods',
       name:"BuyGoods",
       component: BuyGoods,
+      meta:{
+        title:'购买'
+      }
     },
     /*会员登录*/
     {
       path: '/memLogin',
       name:"memLogin",
-      component: memLogin
+      component: memLogin,
+      meta:{
+        title:'登录'
+      }
     },
     {
       path: '/memUser',
       name:"memUser",
-      component: memUser
+      component: memUser,
+      meta:{
+        title:'绑定安全手机'
+      }
     },
 
 
@@ -84,17 +108,26 @@ export default new Router({
     {
       path: '/cart',
       name:"Cart",
-      component: Cart
+      component: Cart,
+      meta:{
+        title:'购物车'
+      }
     },
     {
       path: '/checkout',
       name:"Checkout",
-      component: Checkout
+      component: Checkout,
+      meta:{
+        title:'清单'
+      }
     },
     {
       path: '/payment',
       name:"Payment",
-      component: Payment
+      component: Payment,
+      meta:{
+        title:'支付'
+      }
     },
 
     {

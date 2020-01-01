@@ -59,17 +59,25 @@
               <div class="nav-user-wrapper" >
                 <div class="nav-user-list">
                   <dl class="nav-user-avatar">
-                    <dd><span class="ng-scope"></span></dd>
-                    <dt class="ng-binding">+86 138****9453</dt>
+                    <dd v-if="this.$store.state.memberinfo.avatar==undefined"><span class="ng-scope"></span></dd>
+                    <dd v-if="this.$store.state.memberinfo.avatar!=undefined"><img :src="this.$store.state.memberinfo.avatar" class="memImg"></dd>
                   </dl>
-                  <ul>
+                  <!--如果登录就出现这个-->
+                  <ul v-if="this.$store.state.memberinfo.avatar!=undefined">
                     <li class="order">  <router-link :to="{ path: 'account' }">现在结算</router-link></li>
                     <li class="support"><a href="javascript:;">售后服务</a></li>
                     <li class="coupon"><a href="javascript:;">我的优惠</a></li>
                     <li class="information"><a href="javascript:;">账户资料</a></li>
                     <li class="address"><a href="javascript:;">收货地址</a></li>
-                    <li class="logout"><a href="javascript:;">退出</a></li>
+                    <li class="logout"><a href="javascript:;" @click="exitmem">退出</a></li>
                   </ul>
+
+                  <!--如果没有登录就出现这个-->
+                  <div v-if="this.$store.state.memberinfo.avatar==undefined" class="logindiv">
+                    <p @click="gpLogin"><i class="el-icon-news" style="margin-left: -5px"></i>
+                      <label style="margin-left: 5px">登录</label>
+                    </p>
+                  </div>
                 </div>
               </div>
             </li>
@@ -167,6 +175,7 @@
   import { getGoodstypeTo23ByF } from '../api/goodtype'
   import { f_getGoodsListToType } from '../api/goods'
   import { getType3AndGoods } from '../api/goods'
+  import $ from 'jquery'
   export default {
         //默认暴露一个模块
       components:{
@@ -201,11 +210,17 @@
           nav_search:true,
           isnav_search:false,
           isnav_searchNone:false,
+
+          /*退出登录给store里的用户信息赋值为空*/
+          memberNone:{},
+          /*退出登录给store里的购物车信息赋值为空*/
+          catNone:[],
         }
       },
 
       created() {
         this.getData();
+        console.log(this.$store.state.memberinfo+"-----------------");
       },
 
       methods:{
@@ -220,6 +235,38 @@
           f_getGoodsListToType(formDatas).then(res => {
             this.goodslist = res.goodsList;
           })
+        },
+        /*退出登录*/
+        exitmem(){
+          //保存用户退出前的页面路径
+          this.$store.state.memberExitUrl = window.location.href;
+          /*存储到store的用户删除*/
+          this.$store.state.memberinfo = this.memberNone;
+       /*   this.$store.state.carPanelData = this.catNone;*/
+          setTimeout(() => {
+            location.href=this.$store.state.memberExitUrl;
+          }, 2000);
+          this.openFullScreen2();
+        },
+        /*全屏加载动画*/
+        openFullScreen2() {
+          const loading = this.$loading({
+            lock: true,
+            text: '正在退出',
+            spinner: 'el-icon-loading',
+            background: 'rgba(255,255,255, 0.8)'
+          });
+          setTimeout(() => {
+            loading.close();
+          }, 2600);
+        },
+        /*去到登录页面*/
+        gpLogin(){
+          //保存用户登录前的页面路径
+          this.$store.state.memberloginUrl = window.location.href;
+          this.$router.push({path: '/memLogin'});
+          this.$router.go(0);
+
         },
         /*输入提示点击查询进入商品*/
         goqueryGoods(id){
@@ -358,6 +405,39 @@
 </script>
 
 <style>
+
+  .memImg{
+    width: 50px;
+    height: auto;
+    border-radius: 50% 50%;
+    margin: 0 auto;
+    position: relative;
+    top: -10px;
+  }
+  .logindiv p:hover{
+    color: white;
+    background: #D5001C;
+    cursor: pointer;
+  }
+  .logindiv p{
+    width: 80%;
+    height: 40px;
+    background: whitesmoke;
+    cursor: pointer;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 40px;
+    position: relative;
+    top: 20px;
+    transition: all 0.3s ease;
+  }
+  .logindiv{
+    width: 100%;
+    height: 80px;
+
+    font-family: OPPOfont2;
+  }
+  /*----------------------------上面的没有登录的div---*/
 .nav-list{
 
 }
@@ -469,7 +549,7 @@
     z-index: 1000;
     left: 310px;
     border-radius: 0px 0px 20px 20px;
-    max-height: 310px;
+    min-height: 50px;
     font-weight: 300;
   }
   /*--------------------------------2级头---*/

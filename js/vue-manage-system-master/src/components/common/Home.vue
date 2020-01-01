@@ -54,7 +54,7 @@ export default {
         margin-left: -50px;
     }
     .content{
-        margin-left: 3px;
+        margin-left: 5px;
     }
     /*左侧导航的宽度*/
     .content-collapse {
