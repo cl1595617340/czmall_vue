@@ -37,7 +37,7 @@
                       </div>
                     </div>
                     <div @click="delCarPanelHandle(item.sku_id)">
-                      <a class="shp-col-del"><i style="font-size: 20px" class="el-icon-delete" @click="delCarPanelHandle(item.sku_id)"></i></a>
+                      <a class="shp-col-del"><i style="font-size: 20px" class="el-icon-delete" @click="delCarPanelHandle(item)"></i></a>
                     </div>
                   </div>
                 </div>
@@ -103,13 +103,20 @@
           window.open(routeData.href, '_blank');
         },
         goCart(){
+          if (this.$store.state.memberinfo.avatar==undefined) {
+            this.$store.state.memberloginUrl = 'http://localhost:8080/#/cart';
+            this.$router.push({path: '/memLogin'});
+          }else{
+            this.$router.push({path: '/cart'});
+            this.hideCarHandle();
+            this.$router.go(0);
+          }
 
-          this.$router.push({path: '/cart'});
-          this.hideCarHandle();
-          this.$router.go(0);
         },
-        delCarPanelHandle (id) {
-          this.$store.commit('delCarPanelData',id)
+        delCarPanelHandle (item) {
+         /* alert(show_name)*/
+          this.$store.commit('delCarPanelData',item)
+
         },
         showCarHandle () {
           clearTimeout(this.iTimer)

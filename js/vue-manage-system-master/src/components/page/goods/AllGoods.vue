@@ -13,7 +13,7 @@
                             align="right"
                             unlink-panels
                             range-separator="至"
-                            start-placeholder="开始日期"
+                            start-placeholder="创建日期"
                             end-placeholder="结束日期"
                             :picker-options="pickerOptions">
                     </el-date-picker>
@@ -99,11 +99,11 @@
                 </el-table-column>
 
 
-                <el-table-column prop="goodsRepertory" label="库存" width="90"></el-table-column>
+                <el-table-column prop="goodsRepertory" label="库存" width="80"></el-table-column>
 
                 <el-table-column
                         label="版本信息"
-                        width="100">
+                        width="90">
                     <template slot-scope="scope">
                         <el-tooltip placement="top">
                             <div slot="content">
@@ -118,7 +118,7 @@
 
                 <el-table-column
                         label="展示图"
-                        width="100">
+                        width="90">
                     <template slot-scope="scope">
                         <el-tooltip placement="top">
                             <div slot="content">
@@ -156,14 +156,18 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
 
-                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">更多</el-button>
+                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
+                            <i class="el-icon-zoom-in"></i>
+                            更多</el-button>
 
                         <span v-if="scope.row.goodstype3.goodstype3Id !='137'"></span>
 
-                        <el-button v-if="scope.row.goodstype3.goodstype3Id =='137'"  size="mini" @click="showOtherParameter(scope.$index, scope.row)"  type="warning">参数</el-button>
+                        <el-button v-if="scope.row.goodstype3.goodstype3Id =='137'"  size="mini" @click="showOtherParameter(scope.$index, scope.row)"  type="warning">
+                            <i class="el-icon-postcard"></i>
+                            参数</el-button>
 
 
                     </template>
@@ -325,7 +329,10 @@
                 let formDatas = new FormData();
                 formDatas.append("page", this.pageIndex);
                 formDatas.append("size", this.pageSize);
-                    /*搜索*/
+                if (this.goods.strartDate==null){
+                    this.goods.strartDate="";
+                } ;
+                /*搜索*/
                 formDatas.append("newobj", JSON.stringify(this.goods));
 
                 list(formDatas).then(res => {

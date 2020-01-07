@@ -59,6 +59,22 @@ export default {
                     title: '系统首页'
                 },
                 {
+                    icon: 'el-icon-lx-copy',
+                    index: 'tabs',
+                    title: '消息'
+                },
+                {
+                    icon: 'el-icon-s-home',
+                    index: '100',
+                    title: '推广管理',
+                    subs: [
+                        {
+                            index: 'generalize',
+                            title: '主页设置'
+                        }
+                    ]
+                },
+                {
                     icon: 'el-icon-shopping-bag-1',
                     index: '10',
                     title: '商品管理',
@@ -92,11 +108,18 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-copy',
-                    index: 'tabs',
-                    title: 'tab选项卡'
+                    icon: 'el-icon-news',
+                    index: '13',
+                    title: '订单管理',
+                    subs: [
+                        {
+                            index: 'order',
+                            title: '订单列表'
+                        },
+                    ]
                 },
-                {
+
+               /* {
                     icon: 'el-icon-lx-calendar',
                     index: '3',
                     title: '表单相关',
@@ -174,7 +197,7 @@ export default {
                     icon: 'el-icon-lx-redpacket_fill',
                     index: '/donate',
                     title: '支持作者'
-                }
+                }*/
             ]
         };
     },

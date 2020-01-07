@@ -56,7 +56,7 @@
           <div class="main_right_item_div01sb">
             <p class="P_color">颜色</p>
             <div class="main_right_item_div01_btn">
-              <button @click="clickColor(index,site.goodscolorName)" :style="colorName==index?activeColor:''" class="color_btn" v-for="(site,index) in goodszh.goodscolorList">
+              <button @click="clickColor(index,site.goodscolorName,site.goodscolorId)" :style="colorName==index?activeColor:''" class="color_btn" v-for="(site,index) in goodszh.goodscolorList">
                 <i class="main_right_item_div01_btn_i" :style="{background: 'linear-gradient(to right bottom, '+site.goodscolor_linearS+', '+site.goodscolor_linearE+')'}"></i>
                  {{site.goodscolorName}}
               </button>
@@ -66,7 +66,7 @@
           <div class="main_right_item_div01sb">
             <p class="P_color">版本</p>
             <div class="main_right_item_div01_btn">
-              <button @click="clickVersion(index,site.versionsPrice,site.versionsName)" :style="versionsName==index?activeVersions:''" class="color_btn" v-for="(site,index) in goodszh.versionsList">
+              <button @click="clickVersion(index,site.versionsPrice,site.versionsName,site.versionsId)" :style="versionsName==index?activeVersions:''" class="color_btn" v-for="(site,index) in goodszh.versionsList">
                 {{site.versionsName}}
               </button>
             </div>
@@ -76,7 +76,7 @@
             <p class="P_color">选择赠品</p>
             <div class="main_right_item_div01_btn main_right_item_div01_complimentary">
 
-              <p class="complimentary_p"  v-for="(site,index) in complimentarylist">
+              <p class="complimentary_p"  v-for="(site,index) in complimentarylist" v-if="index<4">
                 <img @click="gocomplimentary(site.goodsId)" v-for="(siteimg,indeximg) in site.goodscolorList" v-if="indeximg==0" :src='siteimg.goodscolorPicture'>
                 <label @click="getcomplimentary(index,site.goodsName,site.goodscolorList)"  style="color: #ABABAB">{{site.goodsName}}</label>
                 <br>
@@ -241,6 +241,10 @@
         /*当前商品的图片对象集合*/
         imglist:{},
         activeimglist:"",//用户选中的商品图片对象
+
+        /*1.2订单需要的各种id*/
+        goodscolor_id:-1,
+        versions_id:-1,
       }
     },
     created() {
@@ -268,6 +272,7 @@
               this.countloans();
               this.activeGodos.versions=formDatum.versionsName;
               this.goodszh.versions = formDatum.versionsName;
+              this.versions_id = formDatum.versionsId;
             }
 
           }
@@ -278,6 +283,7 @@
               this.activeGodos.color=formDatum.goodscolorName;
               this.activeGodos.nums = this.num;
               this.activeimglist = formDatum;//默认第一个用户选中的商品图片对象
+              this.goodscolor_id = formDatum.goodscolorId;
             }
           }
 
@@ -322,8 +328,10 @@
           price: this.priceGoodsb,
           sku_id: this.activeGodos.goodsid,
           sub_title:  this.goodszh.goodsName,//这个标题改名字
-          title: this.activeGodos.versions,//这个标题改版本
+          title: this.activeGodos.versions,//这个标题改版本名字
+          versionsid:this.versions_id,
           spec_json:{
+            color_id:this.goodscolor_id,
             image: this.activeimglist.goodscolorPicture,
             show_name: this.activeimglist.goodscolorName,
           },
@@ -359,18 +367,21 @@
         let data = {
           good_id:this.goodszh.goodsId,
           checked: true,
-          count: 1,
+          count: this.num,
           limit_num: 5,
           price: this.priceGoodsb,
           sku_id: this.activeGodos.goodsid,
           sub_title:  this.goodszh.goodsName,//这个标题改名字
-          title: this.activeGodos.versions,//这个标题改版本
+          title: this.activeGodos.versions,//这个标题改版本名字
+          versionsid:this.versions_id,
           spec_json:{
+            color_id:this.goodscolor_id,
             image: this.activeimglist.goodscolorPicture,
             show_name: this.activeimglist.goodscolorName,
           },
           /*赠品*/
           complimentary:{
+
             compName:this.complimentaryCar.name,
             img:this.complimentaryCar.img,
           }
@@ -412,7 +423,7 @@
         this.noisloans = "";
 
       },
-      clickVersion(index,price,name){
+      clickVersion(index,price,name,versionsId){
         this.versionsName = index;
         this.versionsPrice = index;
         this.priceGoods = price;
@@ -420,12 +431,16 @@
         this.num = 1;//切换版本，数量回到1
         this.countloans();
         this.activeGodos.versions=name;
+        this.versions_id = versionsId;
       },
-      clickColor(index,name){
+      clickColor(index,name,goodscolor_id){
         this.colorName = index;
         this.colorImg = index;
         this.activeGodos.color=name;
         this.activeimglist = this.imglist[index];
+        /*订单需要id*/
+        this.goodscolor_id = goodscolor_id;
+      /*  alert(goodscolor_id)*/
       },
       /*计算数量的方法*/
       handleChange(value) {

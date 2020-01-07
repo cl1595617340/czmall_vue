@@ -1,101 +1,337 @@
 <template>
-	<div class="account-content">
+	<div class="account-content" >
 		<div class="account-order">
-			<div class="gray-box">
-				<div class="title columns-title pre-title">
-					<h2>我的订单</h2>
-					<div class="gray-btn-menu sort-status-menu">
-						<span class="label"><i class="arrow"></i> 全部状态 </span>
-						<ul class="menu-list">
-							<li class="selected">
-								<a href="javascript:;">全部状态</a>
-							</li>
-							<li class="">
-								<a href="javascript:;">未完成</a>
-							</li>
-							<li class="">
-								<a href="javascript:;">已完成</a>
-							</li>
-							<li class="">
-								<a href="javascript:;">已关闭</a>
-							</li>
-						</ul>
-					</div>
-					<div class="gray-btn-menu sort-time-menu -gray-btn-menu-on">
-						<span class="label"><i class="arrow"></i> 最近三个月 </span>
-						<ul class="menu-list">
-							<li class="selected">
-								<a href="javascript:;">最近三个月</a>
-							</li>
-							<li class="">
-								<a href="javascript:;">今年内</a>
-							</li>
-							<li class="">
-								<a href="javascript:;">2016年</a>
-							</li>
-							<li class="">
-								<a href="javascript:;">2015年</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="js-list-inner">
-					<div class="box-inner order-cart order-list-cart clear" v-for="order,index in orderData">
-						<div class="gray-sub-title cart-title">
-							<span class="date">{{order.iDate}}</span>
-							<span class="order-id"> 订单号： <a href="javascript:;">{{order.orderId}}</a> </span>
-							<span class="order-detail"><router-link :to="{name: 'Payment', query: {orderId:order.orderId}}">查看详情&gt;</router-link> </span> <span class="sub-total">应付总额</span>
-							<span class="operation">商品操作</span>
-							<span class="num">数量</span>
-							<span class="price">单价</span>
-						</div>
-						<div class="cart">
-							<div class="cart-items clear" v-for="item,index in order.goodsData">
-								<div class="prod-info clear">
-									<div class="items-thumb">
-										<a href="javascript:;" target="_blank"><img :src="item.ali_image+'?x-oss-process=image/resize,w_80/quality,Q_100/format,webp'"></a>
-									</div>
-									<div class="items-params clear">
-										<div class="name vh-center">
-											<a href="javascript:;" target="_blank" :title="item.title+'（'+item.spec_json.show_name+'）'">{{item.title}}（{{item.spec_json.show_name}}）</a>
-										</div>
-										<div class="detail"></div>
-									</div>
-									<div class="operation">
-										<div class="operation-list">
+			<div class="gray-box" style="background: #F5F5F5">
 
-										</div>
-									</div>
-									<div class="num">{{item.count}}</div>
-									<div class="price">¥ {{item.price}}.00</div>
-								</div>
-							</div>
-						</div>
-						<div class="prod-operation">
-							<div class="total">¥ {{order.price+order.freight}}.00</div>
-							<div class="status">
-								<router-link :to="{name: 'Payment', query: {orderId:order.orderId}}" class="blue-small-btn js-payment-order" v-if="!order.isPay">现在付款</router-link>
-								<span v-else>已完成</span>
-							</div>
-						</div>
-					</div>
-				</div>
+        <div style="background: #F5F5F5;min-height: 10px;width: 100%;margin-top: -20px;">
+
+          <!--查询-->
+          <div class="order_query">
+            <ul >
+              <li :style="jiantouindex==0?activejiantou:activejiantousb" @click="clickQueryli(0)">
+                <label>待付款</label>
+              </li>
+              <li :style="jiantouindex==1?activejiantou:activejiantousb" @click="clickQueryli(1)">
+                <label >待收货</label>
+              </li>
+              <li :style="jiantouindex==2?activejiantou:activejiantousb" @click="clickQueryli(2)">
+                <label >已完成</label>
+              </li>
+              <li :style="jiantouindex==3?activejiantou:activejiantousb" @click="clickQueryli(3)">
+                <label >已关闭</label>
+              </li>
+            </ul>
+          </div>
+          <div class="js-list-inner order_main"  v-for="(site,index) in orderlist">
+
+            <!--订单头部-->
+            <div class="order_header">
+              <span>订单号:<a style="color: #D5001C" @click="goOrderInfo(site.orderId)"> {{site.orderNum}}</a></span>
+              <span class="order_found"> {{site.orderFound}}</a></span>
+              <strong class="order_state" style="display: flex" v-if="site.orderState==0">
+                待付款
+                <!--待付款出现的付款按钮-->
+                <span  class="order_found" style="position: relative;top: -10px;;border: none;left: -5px;">
+                  <el-button round @click="gopay(site.orderNum,site.orderPrice)">去付款</el-button>
+                </span>
+              </span>
+              </strong>
+              <strong class="order_state" v-if="site.orderState==1">待收货</strong>
+              <strong class="order_state" v-if="site.orderState==2">已完成</strong>
+              <strong class="order_state" v-if="site.orderState==3">已取消</strong>
+
+
+
+            </div>
+            <!--订单商品-->
+            <div class="order_content" :style="index2==0?goodsstyle:goodsstylesb" v-for="(site2,index2) in site.orderRelationList">
+              <label v-if="index2==0">商品清单</label>
+              <label v-if="index2!=0" style="opacity: 0">商品清单</label>
+              <div class="order_item">
+                <ul class="shp-row">
+                  <li class="shp-col order_img">
+                    <img style="width: 60px;height: 60px;" :src="site2.goodscolor.goodscolorPicture">
+                  </li>
+                  <li class="shp-col order_goodsname" style="width: 230px;">
+                    <label>{{site2.goods.goodsName}} {{site2.versions.versionsName}} {{site2.goodscolor.goodscolorName}}</label>
+                  </li>
+                  <li class="shp-col">
+                    <label>×{{site2.relation_count}}</label>
+                  </li>
+                </ul>
+                <!--赠品ul-->
+                <ul class="shp-row" :style="site2.relationCompname!=''?compstyle:compstylesb" style="line-height: 10px;height: 10px">
+                  <li class="shp-col order_img" style="opacity: 0">
+                    <!--这个背景图是占位置的-->
+                    <img style="width: 60px;height: 60px;" src="../../../static/images/shuchai/背景图.jpg">
+                  </li>
+                  <li class="shp-col order_goodsname" style="width: 230px;">
+                    <label>{{site2.relationCompname}}</label>
+                  </li>
+                 <!-- <li class="shp-col">
+                    <label>×1</label>
+                  </li>-->
+                </ul>
+              </div>
+            </div>
+            <!--订单底部金额-->
+            <div class="order_fooder">
+              <span>订单金额</span>
+              <span class="order_fooder_price">￥{{site.orderPrice}}.00</span>
+            </div>
+            <!--	<div class="box-inner order-cart order-list-cart clear" v-for="order,index in orderData">
+                            <div class="gray-sub-title cart-title">
+                                <span class="date">{{order.iDate}}</span>
+                                <span class="order-id"> 订单号： <a href="javascript:;">{{order.orderId}}</a> </span>
+                                <span class="order-detail"><router-link :to="{name: 'Payment', query: {orderId:order.orderId}}">查看详情&gt;</router-link> </span> <span class="sub-total">应付总额</span>
+                                <span class="operation">商品操作</span>
+                                <span class="num">数量</span>
+                                <span class="price">单价</span>
+                            </div>
+                            <div class="cart">
+                                <div class="cart-items clear" v-for="item,index in order.goodsData">
+                                    <div class="prod-info clear">
+                                        <div class="items-thumb">
+                                            <a href="javascript:;" target="_blank"><img :src="item.ali_image+'?x-oss-process=image/resize,w_80/quality,Q_100/format,webp'"></a>
+                                        </div>
+                                        <div class="items-params clear">
+                                            <div class="name vh-center">
+                                                <a href="javascript:;" target="_blank" :title="item.title+'（'+item.spec_json.show_name+'）'">{{item.title}}（{{item.spec_json.show_name}}）</a>
+                                            </div>
+                                            <div class="detail"></div>
+                                        </div>
+                                        <div class="operation">
+                                            <div class="operation-list">
+
+                                            </div>
+                                        </div>
+                                        <div class="num">{{item.count}}</div>
+                                        <div class="price">¥ {{item.price}}.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prod-operation">
+                                <div class="total">¥ {{order.price+order.freight}}.00</div>
+                                <div class="status">
+                                    <router-link :to="{name: 'Payment', query: {orderId:order.orderId}}" class="blue-small-btn js-payment-order" v-if="!order.isPay">现在付款</router-link>
+                                    <span v-else>已完成</span>
+                                </div>
+                            </div>
+                        </div>-->
+          </div>
+
+          <!--查询为空-->
+          <div class="order_query_none" v-if="orderlist.length==0">
+            <div style="position: relative;top: 100px">
+              <img src="/static/images/shuchai/order_none.png">
+              <label>您还没有订单</label>
+            </div>
+          </div>
+        </div>
+
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+  import { f_memOrderList } from '../../api/order';
+  import { f_getMemIdByavatar } from '../../api/member';
 	export default {
+    data(){
+      return{
+        orderlist:[],
+        goodsstyle:"",
+        goodsstylesb:"margin-top: -50px;",
+        compstyle:"",
+        compstylesb:" opacity: 0;",
+        /*查询条件点击样式*/
+        jiantouindex:-1,
+        activejiantou:" border-bottom: 2px silver solid;height: 25px;",
+        activejiantousb:"",
+        //传到后台的订单状态
+        order_stae:"",
+        //用户id
+        memid:0,
+      }
+    },
+    created(){
+      $('html,body').animate({scrollTop: 0}, 10);
+      this.initmem();
+      this.$store.commit('changNav');
+    },
 	  computed: {
 	    orderData () {
 	      return this.$store.state.orderData
 	    }
-	  }
+	  },
+    methods:{
+      //拿到会员id的方法
+      initmem(){
+        //得到登录的用户id
+        let formDatas2 = new FormData();
+        formDatas2.append("avater",this.$store.state.memberinfo.avatar);
+        f_getMemIdByavatar(formDatas2).then(res => {
+          this.memid = res.res.memberId;
+          this.getData();
+        })
+
+      },
+      getData(){
+        let formDatas = new FormData();
+        formDatas.append("id",this.memid)
+        formDatas.append("state",this.order_stae)
+        f_memOrderList(formDatas).then(res => {
+          this.orderlist = res.res;
+          console.log(this.orderlist)
+        })
+      },
+      /*去付款的按钮*/
+      gopay(ordernum,price){
+        location.href='http://localhost:8088/goAlipay?price='+price+"&ordernumsb="+ordernum;
+
+      },
+      clickQueryli(index){
+        this.jiantouindex = index;
+        this.order_stae = index;
+        this.getData();
+      },
+      //去到订单的详细信息
+      goOrderInfo(id){
+        this.$router.push({path: 'orderInfo',query:{ id:id}});
+      /*  this.$router.go(0);*/
+      },
+    },
 	}
 </script>
 
-<style>
+<style >
+  .order_query_none label{
+    font-family: OPPOfont1;
+  }
+  .order_query_none img{
+    width: 130px;
+    height: auto;
+    margin: 0 auto;
+  }
+  .order_query_none{
+    width: 100%;
+    height: 500px;
+    background: white;
+    text-align: center;
+  }
+  /*-----------------------查询为空------*/
+  .order_query ul{
+    position: relative;
+    top: 35px;
+    font-family: OPPOfont2;
+
+  }
+  .order_query li label{
+    cursor: pointer;
+  }
+  .order_query li{
+    float: left;
+    margin-left: 60px;
+
+  }
+  .order_query{
+    width: 100%;
+    height: 60px;
+    background: white;
+  }
+  /*--------------------------------------查询的样式--*/
+  .order_fooder_price{
+    margin-left: 20px;
+    font-size: 17px;
+    font-family: OPPOfont2;
+
+  }
+  .order_fooder{
+    width: 91%;
+    box-sizing: border-box;
+    border-top: 1px #EDEDED solid;
+    position: relative;
+    padding-top: 20px;
+    margin: 0 auto;
+    margin-top: -30px;
+  }
+  .order_goodsname label{
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transition: color 0.35s ease;
+    transition: color 0.35s ease;
+  }
+  .order_img{
+    padding: 0 20px 0 0;
+    width: 60px;
+    height: auto;
+  }
+  .shp-col{
+    padding: 0 20px 0 0;
+    width: 60px;
+    height: auto;
+    float: left;
+  }
+  /*shp-row就是ul*/
+  .shp-row{
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 6px 0;
+    height: 60px;
+   line-height: 60px;
+    margin-top: 2px;
+  }
+  .order_item{
+    min-height: 10px;
+    width: 700px;
+    margin-left: 50px;
+  }
+  .order_content>label{
+    position: relative;
+    top: 28px;
+  }
+  .order_content{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 91%;
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+  .order_state{
+    font-weight: normal;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+  }
+  .order_found{
+    position: relative;
+    padding-left: 20px;
+    color: #A0A0A0;
+    border-left: 1px #EDEDED solid;
+    left: 18px;
+  }
+  .order_header{
+    width: 91%;
+    box-sizing: border-box;
+    border-bottom: 1px #EDEDED solid;
+    position: relative;
+    padding-bottom: 20px;
+    margin: 0 auto;
+  }
+  .order_main{
+    width: 100%;
+    min-height: 200px;
+    background: white;
+    padding-bottom: 28px;
+    padding-top: 40px;
+    font-family: OPPOfont1;
+    margin-top: 20px;
+  }
+  /*----------------上面是我的样式-------------*/
 .account-order .gray-box{
 	margin-bottom: 20px;
 }

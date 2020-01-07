@@ -236,10 +236,7 @@
           this.addressmem.addressId = this.receive.addressId;
           if (this.receive.default){
             defaddress = 0;
-            let formDatas = new FormData();
-            formDatas.append("id",this.addressmem.memberId );
-            f_updateOtherdef(formDatas).then(res => {
-            })
+
           } else {
             defaddress = 1;
           }
@@ -247,31 +244,52 @@
           let formDatas = new FormData();
           formDatas.append("obj",JSON.stringify(this.addressmem));
 
-          alert(this.receive.addressId)
+        /*  alert(this.receive.addressId)*/
           /*如果是地址id不等于0就是修改，否则就是添加*/
           if (this.receive.addressId==0||this.receive.addressId==undefined){
-            addAddress(formDatas).then(res => {
-              if (res.res){
-                this.$emit('close');
-                // 触发父组件中的事件，并传递参数
-                this.$emit('getDatasb',"");
-                this.clearFrom();
-              }else {
-                this.$message.error('错了o1');
-              }
+            let formDatas2 = new FormData();
+            formDatas2.append("id",this.addressmem.memberId );
+            f_updateOtherdef(formDatas2).then(resb => {
+              addAddress(formDatas).then(res => {
+                if (res.res){
+                  this.$emit('close');
+                  // 触发父组件中的事件，并传递参数
+                  this.$emit('getDatasb',"");
+                  this.clearFrom();
+                }else {
+                  this.$message.error('错了o1');
+                }
+              })
             })
-
           }else{
-            updateAddress(formDatas).then(res => {
-              if (res.res){
-                this.$emit('close');
-                // 触发父组件中的事件，并传递参数
-                this.$emit('getDatasb',"");
-                this.clearFrom();
-              }else {
-                this.$message.error('错了o1');
-              }
-            })
+            if (defaddress==0){
+              let formDatas2 = new FormData();
+              formDatas2.append("id",this.addressmem.memberId );
+              f_updateOtherdef(formDatas2).then(resb => {
+                updateAddress(formDatas).then(res => {
+                  if (res.res){
+                    this.$emit('close');
+                    // 触发父组件中的事件，并传递参数
+                    this.$emit('getDatasb',"");
+                    this.clearFrom();
+                  }else {
+                    this.$message.error('错了o1');
+                  }
+                })
+              })
+            }else {
+              updateAddress(formDatas).then(res => {
+                if (res.res){
+                  this.$emit('close');
+                  // 触发父组件中的事件，并传递参数
+                  this.$emit('getDatasb',"");
+                  this.clearFrom();
+                }else {
+                  this.$message.error('错了o1');
+                }
+              })
+            }
+
           }
 
           /*if(this.right){

@@ -37,3 +37,12 @@ export const f_getParameterinfo = (params) => {
 export const sbzfb = (params) => {
   return http.fetchPost(hostUrl+'/sbzfb', params)
 }
+
+/*点击一级分类显示旗下的所有手机*/
+export const f_typeGoods = (params) => {
+  return http.fetchPost(hostUrl+'/front/goods/goods/f_typeGoods', params)
+}
+
+export const goAlipay = (params) => {
+  return http.fetchPost(hostUrl+'/goAlipay', params)
+}

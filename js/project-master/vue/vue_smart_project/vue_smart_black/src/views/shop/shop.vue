@@ -774,6 +774,7 @@
   position: relative;
   top: -30px;
   opacity: 0;
+  font-family: OPPOfont1;
 }
   /*------------------颜色--------------*/
   #openall{
@@ -781,7 +782,7 @@
     width: 20px;
     height: 30px;
     top: 380px;
-    right:20px;
+    right:1px;
     padding-left: 10px;
     padding-right: 30px;
 

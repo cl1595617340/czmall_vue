@@ -10,7 +10,7 @@
             <img src="../../static/images/shuchai/支付模板.png">
           </div>
           <div class="box-inner order-info">
-            <h2 style="font-size: 23px">订单已提交,等待付款￥1699.00</h2>
+            <h2 style="font-size: 23px">订单已提交,等待付款￥{{orderInfo.order_price}}.00</h2>
             <p class="payment-detail">请在  <span>{{minutesb}}:{{secondsb}}</span>完成支付，超时订单将自动取消。</p>
           </div>
           <!--  <div class="box-inner payment-checkout-panel clear">
@@ -33,26 +33,33 @@
             <ul class="address-decrypt">
               <li>
                 <label style="width: 120px">支付单号:</label>
-                <label style="width: 200px">1564564654</label>
+                <label style="width: 200px">{{orderInfo.order_num}}</label>
               </li>
               <li>
                 <label style="width: 120px">收货信息:</label>
-                <label style="width: 200px">请问</label>
-                <label style="width: 200px">17520417377</label>
-                <label style="width: 260px">河南省 郑州市 中原区 西流湖街道第三方</label>
+                <label style="width: 250px">{{orderInfo.addressinfo.addressName}}</label>
+                <label style="width: 130px">{{orderInfo.addressinfo.addressIpone}}</label>
+                <label style="width: 400px">
+                  {{orderInfo.addressinfo.addressProvince}}
+                  {{orderInfo.addressinfo.addressCity}}
+                  {{orderInfo.addressinfo.addressCounty}}
+                  {{orderInfo.addressinfo.addressinfo}}
+                </label>
               </li>
-              <li>
-                <label style="width: 120px">商品信息:</label>
-                <label style="width: 200px">A9 6G+128G 云母绿</label>
-                <label style="width: 200px">赠品：3.5mm接口耳机</label>
+              <li  v-for="(site,index) in orderInfo.goodsinfo">
+                <label style="width: 120px" v-if="index==0">商品信息:</label>
+                <label style="width: 120px;opacity: 0" v-if="index!=0">商品信息:</label>
+                <label style="width:250px">{{site.sub_title}} {{site.title}} {{site.spec_json.show_name}}</label>
+                <label style="width: 200px" v-if="site.complimentary.compName!=''">赠品：{{site.complimentary.compName}}</label>
               </li>
+
               <li>
                 <label style="width: 120px">交易金额:</label>
-                <label style="width: 200px">￥999.00</label>
+                <label style="width: 200px">￥{{orderInfo.order_price}}.00</label>
               </li>
               <li>
                 <label style="width: 120px">交易时间:</label>
-                <label style="width: 200px">2019-02-02 21：12：02</label>
+                <label style="width: 200px">{{orderInfo.order_found}}</label>
               </li>
             </ul>
           </div>
@@ -118,37 +125,13 @@
           <div class="order-info" style="padding-top: 30px;text-align: left;
           padding-left: 50px;font-family: OPPOfont1;display: flex">
             <ul class="address-decrypt paysb" style="width: 760px;margin: 0 auto;">
-              <li style="width: 230px" >
-                <a class="sba">
-                  <section>
-                    <p style="position: relative;top: 10px">￥1539.33 x 3期</p>
-                    <p>
-                      <span>共￥4618</span>
-                      <strong style="color: #FF763D">手续费 ￥0 / 期 </strong>
-                    </p>
-                  </section>
-                </a>
-              </li>
 
-              <li style="width: 230px">
+              <li @click="clickLoans(index,site.loansprice)" style="width: 230px"  v-for="(site,index) in loanslist" :style="loansindex==index?loansstyle:''">
                 <a class="sba">
                   <section>
-                    <p style="position: relative;top: 10px">￥1539.33 x 3期</p>
+                    <p style="position: relative;top: 10px">￥{{site.loansprice}} x {{(index+1)*3+3}}期</p>
                     <p>
-                      <span>共￥4618</span>
-                      <strong style="color: #FF763D">手续费 ￥0 / 期 </strong>
-                    </p>
-                  </section>
-                </a>
-              </li>
-
-              <li style="width: 230px">
-                <a class="sba">
-                  <section>
-                    <p style="position: relative;top: 10px">￥1539.33 x 3期</p>
-                    <p>
-                      <span>共￥4618</span>
-                      <strong style="color: #FF763D">手续费 ￥0 / 期 </strong>
+                      <strong style="color: #FF763D">手续费 ￥{{site.interest}} / 期 </strong>
                     </p>
                   </section>
                 </a>
@@ -159,7 +142,7 @@
 
           <!--支付二维码-->
           <div class="payma">
-            <img src="../../static/images/shuchai/背景图.jpg">
+            <img @click="gopay" src="../../static/images/shuchai/二维码.jpg">
             <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
           </div>
         </div>
@@ -174,7 +157,7 @@
 
           <!--支付二维码-->
           <div class="payma">
-            <img src="../../static/images/shuchai/背景图.jpg">
+            <img @click="gopay" src="../../static/images/shuchai/二维码.jpg">
             <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
           </div>
         </div>
@@ -189,7 +172,7 @@
 
           <!--支付二维码-->
           <div class="payma">
-            <img src="../../static/images/shuchai/背景图.jpg">
+            <img @click="gopay" src="../../static/images/shuchai/二维码.jpg">
             <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
           </div>
         </div>
@@ -204,10 +187,13 @@
 </template>
 
 <script>
+  import { f_updateOrderState } from '../api/order';
+  import { f_getOrderIdBynum } from '../api/order';
+  import { f_updatePayType } from '../api/order';
   export default {
     data () {
       return {
-        minutesb: 3,
+        minutesb: 2,
         secondsb: 0,
         /*控制箭头*/
         jiantouindex:0,
@@ -216,6 +202,30 @@
         /*li的样式*/
         activeli:"border: 1px #05B570 solid;",
         activelisb:"",
+        //订单号
+        order_num:0,
+
+        orderend:"sb",
+
+        //计算花呗利息的容器
+        loanslist:[
+          {
+            loansprice:213,
+            interest:6.4,
+          },
+          {
+            loansprice:112,
+            interest:1.2,
+          },
+          {
+            loansprice:213,
+            interest:6.4,
+          }
+        ],
+        loansindex:-1,
+        loansstyle:"border: 1px #05B570 solid;",
+        /*如果是花呗支付传到后台的金额*/
+        loanspricesb:0,
       }
     },
     computed: {
@@ -226,32 +236,101 @@
         return orderInfo
       }
     },
+    created(){
+      this.order_num = this.orderInfo.order_num;
+      this.countloans();
+    },
     mounted () {
       this.timer();
       $('html,body').animate({scrollTop: 0}, 10);
+
     },
     watch: {
-      second: {
+
+      secondsb: {
         handler (newVal) {
-          console.log(newVal+"==============")
+         /* console.log(newVal+"==============")*/
           this.num(newVal)
         },
         deep: true
       },
-      minute: {
+      minutesb: {
         handler (newVal) {
           this.num(newVal)
+        /*  console.log(newVal+"==============")*/
         },
         deep: true
       },
     },
     methods: {
+      getData(){
+        /*根据订单编号查询订单*/
+        let formDatas2 = new FormData();
+        formDatas2.append("num",this.order_num);
+        f_getOrderIdBynum(formDatas2).then(res2 => {
+          /* this.orderId = res2.res.orderId;*/
+          /*计时器结束，修改订单成已取消状态*/
+          let formDatas = new FormData();
+          formDatas.append("id",res2.res.orderId)
+          formDatas.append("state",3)
+          f_updateOrderState(formDatas).then(res => {
+            this.openFullScreen2();
+          })
+        })
+      },
+      /*点击花呗*/
+      clickLoans(index,loansprice){
+        this.loansindex = index;
+        this.loanspricesb = loansprice;
+      },
+      /*计算花呗的通用方法*/
+      countloans(){
+        /*分期的金额*/
+        this.loanslist[0].loansprice = (this.orderInfo.order_price/3).toFixed(2);
+        this.loanslist[1].loansprice = (this.orderInfo.order_price/6).toFixed(2);
+        this.loanslist[2].loansprice = (this.orderInfo.order_price/12).toFixed(2);
+        /*分期的利息*/
+        this.loanslist[0].interest = (this.loanslist[0].loansprice*0.02).toFixed(2);
+        this.loanslist[1].interest = (this.loanslist[1].loansprice*0.02).toFixed(2);
+        this.loanslist[2].interest = (this.loanslist[2].loansprice*0.02).toFixed(2);
+      },
+      /*点击二维码支付*/
+      gopay(){
+        /*判断是花呗支付还是支付宝支付*/
+        if (this.loansindex != -1){
+          /*花呗*/
+
+          /*根据订单编号查询订单*/
+          let formDatas2 = new FormData();
+          formDatas2.append("num",this.order_num);
+          f_getOrderIdBynum(formDatas2).then(res2 => {
+            /* this.orderId = res2.res.orderId;*/
+            /*修改订单的支付方式（花呗）*/
+            let formDatas = new FormData();
+            formDatas.append("id",res2.res.orderId)
+            formDatas.append("type",1)
+            f_updatePayType(formDatas).then(res => {
+              location.href='http://localhost:8088/goAlipay?price='+this.loanspricesb+"&ordernumsb="+this.order_num;
+            })
+          })
+        } else {
+          /*支付宝*/
+          location.href='http://localhost:8088/goAlipay?price='+this.orderInfo.order_price+"&ordernumsb="+this.order_num;
+        }
+
+      },
       /*点击li出现箭头*/
       clickLi(index){
         this.jiantouindex = index;
+        this.loansindex = -1;
+      /*  console.log(this.orderInfo.addressinfo);*/
       },
       // 倒计时
       num(n) {
+        /*如果分和秒都为0就修改此订单状态为取消，并且跳转到用户订单页面*/
+        if (this.secondsb==0 && this.minutesb==0){
+          // this.getData();
+        }
         return n < 10 ? '0' + n : '' + n
       },
       timer () {
@@ -268,6 +347,20 @@
           }
         }, 1000)
       },
+      openFullScreen2() {
+        const loading = this.$loading({
+          lock: true,
+          text: '订单已取消...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(255,255,255, 0.6)'
+        });
+        setTimeout(() => {
+          loading.close();
+          this.$router.push({path: 'Order'});
+        }, 2600);
+      },
+
+
       payNowHandle (id) {
         this.$store.commit('payNow', id)
         alert('成功支付' + (this.orderInfo.price + this.orderInfo.freight) + '元')
@@ -283,6 +376,8 @@
     margin: 0 auto;
     position: relative;
     top: -20px;
+    cursor: pointer;
+
   }
   .payma{
     position: relative;
@@ -441,7 +536,7 @@
     margin: 0 auto;
   }
   .page-order-payment{
-    padding-top: 39px;
+    padding-top: 0px;
   }
   .gray-box{
     overflow: hidden;

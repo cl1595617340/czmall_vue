@@ -64,7 +64,7 @@
                   </dl>
                   <!--如果登录就出现这个-->
                   <ul v-if="this.$store.state.memberinfo.avatar!=undefined">
-                    <li class="order">  <router-link :to="{ path: 'account' }">现在结算</router-link></li>
+                    <li class="order">  <router-link :to="{ path: 'Order' }">现在结算</router-link></li>
                     <li class="support"><a href="javascript:;">售后服务</a></li>
                     <li class="coupon"><a href="javascript:;">我的优惠</a></li>
                     <li class="information"><a href="javascript:;">账户资料</a></li>
@@ -107,7 +107,7 @@
                     <a  @click="gohomepage">首页</a>
                   </li>
                   <li v-for="site in goodstypeList">
-                    <a style="font-size: 5px" @click="goitem()"  @mouseover="showGoodsTypeAll(site.goodstypeId)">{{site.goodstypeName}}</a>
+                    <a style="font-size: 5px" @click="goitem(site.goodstypeId,site.goodstypeName)"  @mouseover="showGoodsTypeAll(site.goodstypeId)">{{site.goodstypeName}}</a>
                   </li>
                   <li>
                     <a href="javascript:;" @mouseover="showServe()">服务</a>
@@ -122,12 +122,12 @@
               <div class="main_div_div" >
 
                 <transition-group name="typelistsb">
-                  <div style="margin-top: 15px" v-for="site in goodstype2List" v-show="sbsb2" :key="site.goodstype2Id">
+                  <div style="margin-top: 25px" v-for="site in goodstype2List" v-show="sbsb2" :key="site.goodstype2Id">
 
                     <!--显示所有的分类信息-->
                     <ul  v-if="site.goodstype2Name!='手机'">
                       <li>
-                        <label>{{site.goodstype2Name}}</label>
+                        <label style="cursor: pointer">{{site.goodstype2Name}}</label>
                       </li>
                       <li v-for="site2 in site.goodstype3">
                         <img :src="site2.goodstype3Picture">
@@ -138,7 +138,7 @@
 
 
                     <!--显示所有的手机-->
-                    <ul v-for="goodlist in goodslist"   v-if="site.goodstype2Name=='手机'" >
+                    <ul v-for="(goodlist,indexsb) in goodslist"   v-if="site.goodstype2Name=='手机'&&indexsb<2" >
                       <li>
                         <label>{{goodlist.goodsName}}</label>
                       </li>
@@ -236,15 +236,16 @@
             this.goodslist = res.goodsList;
           })
         },
+
         /*退出登录*/
         exitmem(){
-          //保存用户退出前的页面路径
-          this.$store.state.memberExitUrl = window.location.href;
+         /* //保存用户退出前的页面路径
+          this.$store.state.memberExitUrl = window.location.href;*/
           /*存储到store的用户删除*/
           this.$store.state.memberinfo = this.memberNone;
        /*   this.$store.state.carPanelData = this.catNone;*/
           setTimeout(() => {
-            location.href=this.$store.state.memberExitUrl;
+            this.$router.push({path: '/'});
           }, 2000);
           this.openFullScreen2();
         },
@@ -322,9 +323,13 @@
           this.$router.go(0);
         },
         /*----------------点击2级头跳转页面*/
-        goitem(){
+        goitem(id,name){
           this.show = false;
-          this.$router.push("/shop");
+          if (name=="手机"){
+            this.$router.push("/shop");
+          }else {
+            this.$router.push({path: '/AllOtherGoods',query:{ id:id,name:name}});
+          }
           this.$router.go(0);
         },
 

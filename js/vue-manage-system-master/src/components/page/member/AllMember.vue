@@ -262,14 +262,14 @@
                         if (res){
                             this.$message({
                                 type: 'success',
-                                message: '停用成功!',
+                                message: '操作成功!',
                                 duration:2000
                             });
                             this.getData();
                         } else {
                             this.$message({
                                 type: 'error',
-                                message: '停用失败!',
+                                message: '操作失败!',
                                 duration:2000
                             });
                             this.getData();

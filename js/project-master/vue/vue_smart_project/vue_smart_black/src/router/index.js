@@ -24,10 +24,15 @@ import  shopsb from "../views/shopsb"
 import memLogin from '../views/member/memLogin'
 import memUser from '../views/member/memUser'
 
+/*订单详细信息*/
+import orderInfo from '../views/account/orderInfo'
+/*除了手机之外的商品*/
+import AllOtherGoods from '../views/shop/AllOtherGoods'
 
+import pay from '../views/pay'
 Vue.use(Router)
 
-console.log(ShopInfo.linamesb)
+
 export default new Router({
   routes: [
     {
@@ -129,15 +134,48 @@ export default new Router({
         title:'支付'
       }
     },
-
+    /*----------------------除了手机之外的商品--*/
+    {
+      path: '/AllOtherGoods',
+      name:"AllOtherGoods",
+      component: AllOtherGoods,
+      meta:{
+        title:'全部商品'
+      }
+    },
+    {
+      path: '/pay',
+      name:"pay",
+      component: pay,
+      meta:{
+        title:'支付成功'
+      }
+    },
     {
       path: '/account',
       component: Account,
+      meta:{
+        title:'个人中心'
+      },
       children: [
         {
-          path: '',
-          name: 'Account',
-          component: Order
+          path: '/Order',
+          name: 'Order',
+          component: Order,
+          meta:{
+            title:'个人中心-订单'
+          },
+          children:[
+
+          ]
+        },
+        {
+          path: '/orderInfo',
+          name: 'orderInfo',
+          component: orderInfo,
+          meta:{
+            title:'个人中心-订单详细信息'
+          },
         },
         {
           path: '/address',

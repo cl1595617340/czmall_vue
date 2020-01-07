@@ -9,7 +9,7 @@
           <div class="box-inner js-checkout-address-panel ">
             <div class="address-common-table js-multiple-address-panel">
               <ul class="address-item-list clear js-address-item-list">
-                <li class="js-choose-address " :class="{'selected-address-item':receiveIndex==index}" v-for="(info,index) in addresslist" @click="chooseReceive(index)">
+                <li class="js-choose-address " :class="{'selected-address-item':receiveIndex==index}" v-for="(info,index) in addresslist" @click="chooseReceive(index,info)">
                   <div class="address-item">
                     <div class="name-section">
                       {{info.addressName}}
@@ -101,7 +101,7 @@
               <li class="shp-col" style="margin-top: 10px;margin-left: 100px;width: 50px">
                 <div class="shp-col-sb">¥ {{item.price}}</div>
               </li>
-              <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
+              <li class="shp-col" style="margin-top: 20px;margin-left: 200px">
                 <div class="item-cols-num">
                   <div class="select js-select-quantity">
                     <span class="num">{{item.count}} 件</span>
@@ -109,7 +109,7 @@
                 </div>
               </li>
               <!--单个商品共-->
-              <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
+              <li class="shp-col" style="margin-top: 20px;margin-left: 200px">
                 <div class="item-cols-num">
                   <div class="select js-select-quantity">
                     <span class="num">¥ {{item.price * item.count}}.00</span>
@@ -145,7 +145,9 @@
         </div>
         <div class="box-inner" style="font-family: OPPOfont1">
           <div class="last-payment clear">
-            <span class="jianguo-blue-main-btn big-main-btn payment-blue-bt fn-right js-checkout" @click="submitOrderHandle"> <a>提交订单</a> </span> <span class="prices fn-right">应付金额： <em>¥  {{checkedPrice + freight}}.00</em></span>
+            <span class="jianguo-blue-main-btn big-main-btn payment-blue-bt fn-right js-checkout" @click="submitOrderHandle">
+              <a>{{btntext}}</a> </span>
+            <span class="prices fn-right">应付金额： <em>¥  {{checkedPrice + freight}}.00</em></span>
           </div>
         </div>
       </div>
@@ -159,6 +161,9 @@
   import { f_getMemIdByavatar } from '../api/member';
   import { f_memAddressBuId } from '../api/member';
   import { delAddress } from '../api/member';
+  import { addOrder } from '../api/order';
+  import { addOrderRelation } from '../api/order';
+  import { f_getOrderIdBynum } from '../api/order';
     export default {
         //默认暴露一个模块
       data(){
@@ -185,11 +190,23 @@
               "county": "",
               "add": "",
               "default": false,
-
               "provinceId": 0,
               "cityId": 0,
               "countyId": 0,
             },
+            /*当前时间*/
+            create_time:"",
+            /*选中的地址id*/
+            addressid:-1,
+            /*当前提交的订单id*/
+            orderId:-1,
+            /*按钮文字*/
+            btntext:"提交订单",
+            /*提交订单后显示在页面的*/
+            addressinfo:{},
+            goodsinfo:{},
+            //用户名字，1.7做订单添加用
+            mmebername:"",
           }
       },
       components:{
@@ -198,9 +215,9 @@
       created(){
         this.getData();
         /*拦截器，没有登录的话去到登录页面*/
-        if (this.$store.state.memberinfo.avatar==undefined) {
+       /* if (this.$store.state.memberinfo.avatar==undefined) {
           this.$router.push({path: '/memLogin'});
-        }
+        }*/
         $('html,body').animate({scrollTop: 0}, 10);
         //页面创建的时候确定当前被选中的index数值
         this.$store.state.receiveInfo.forEach((item,index)=>{
@@ -222,7 +239,12 @@
 
         },
         checkedPrice(){
-          return this.$store.getters.checkedPrice;
+          if (this.$store.state.isCarOrOne==0){
+            return this.$store.getters.checkedPrice;
+          } else {
+
+            return this.$store.getters.getBuyGoodsPrice;
+          }
         },
         //运费
         freight () {
@@ -244,6 +266,7 @@
           f_getMemIdByavatar(formDatas).then(res => {
             //得到登录的用户id
             this.addressmem.memberId = res.res.memberId;
+            this.mmebername = res.res.memberName;
             /*//-------------------------查看用户的地址*/
             let formDatas2 = new FormData();
             formDatas2.append("id",this.addressmem.memberId);
@@ -255,6 +278,9 @@
               for (const argument of this.addresslist) {
                 if (argument.addressDefault==0){
                  this.receiveIndex = i;
+                  this.invoice.name = argument.addressName;
+                  this.addressid = argument.addressId;
+                  this.addressinfo = argument;
                 }
                 i++;
               }
@@ -309,7 +335,10 @@
           this.getData();
         },
         //用来地址的选中
-         chooseReceive(index){
+         chooseReceive(index,address){
+          this.addressinfo = address;
+          this.addressid = address.addressId;
+           this.invoice.name = address.addressName;
            this.receiveIndex = index;
          },
         //关闭窗口，子类调用
@@ -330,43 +359,126 @@
         checkedInvoice (boole) {
           this.invoice.personal = boole
         },
-        //提交订单
-        submitOrderHandle () {
-           //判断
-          if(!this.invoice.personal&&!this.invoice.name) return
-          if(this.invoice.personal){
-            this.invoice.name = "个人"
-          }
-          let receiveInfo = this.receiveInfo[this.receiveIndex] //当前被选中的默认的地址栏
-          let iDate = new Date(); //提交订单的日期
-          let month = iDate.getMonth() + 1;
-          let strDate = iDate.getDate();
-          if (month >= 1 && month <= 9) {
-            month = "0" + month;
-          }
-          if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-          }
-          console.log(this.$store.state.carPanelDataOne);
-          let goodsdata={};
+        /*提交订单后添加订单关系表*/
+        submitOrderRelation(){
+          /*判断是直接购买还是购物车购买的*/
+          let goodsdata = [];
           if (this.$store.state.isCarOrOne==0){
             goodsdata = this.carPanelData;
           }else {
             goodsdata = this.$store.state.carPanelDataOne;
           }
-          let data = {
-            orderId: iDate.getTime(), //订单号
-            goodsData: goodsdata, //商品
-            price: this.checkedPrice, //价格
-            freight: this.freight, //运费
-            invoiceName: this.invoice.name, //发票信息
-            receiveInfo: receiveInfo, //地址
-            iDate: iDate.getFullYear() + '-' + month + '-' + strDate, //提交订单的实际
-            isPay: false //是否付款
+          for (const obj of goodsdata) {
+            let data = {
+              relation_order_id:this.orderId,
+              relation_member_id:this.addressmem.memberId,
+              relation_goods_id:obj.good_id,
+              relation_address_id:this.addressid,
+              relation_color_id:obj.spec_json.color_id,
+              relation_versions_id:obj.versionsid,
+              relation_compName:obj.complimentary.compName,
+              relation_compimg:obj.complimentary.img,
+              relation_count:obj.count,
+            }
+            let formDatas2 = new FormData();
+            formDatas2.append("obj",JSON.stringify(data));
+            addOrderRelation(formDatas2).then(res2 => {
+
+            })
           }
-          this.$store.commit('submitOrder',data)
-      /*    this.$router.push({name: 'Payment', query: {orderId:data.orderId}}) //路由跳转*/
-          console.log(data);
+        },
+
+        //提交订单
+        submitOrderHandle () {
+          if (this.carPanelData.length==0&&this.$store.state.carPanelDataOne.length==0){
+            this.$message({
+              message: '没有商品',
+              type: 'warning'
+            });
+            return;
+          }
+          this.btntext = '提交订单中...';
+          /* //判断
+          if(!this.invoice.personal&&!this.invoice.name) return
+          if(this.invoice.personal){
+            this.invoice.name = "个人"
+          }*/
+          let receiveInfo = this.receiveInfo[this.receiveIndex] //当前被选中的默认的地址栏
+          let iDate = new Date();
+
+          //获取当前时间
+          this.create_time = this.timeFormat(new Date());
+
+          /*判断是直接购买还是购物车购买的*/
+          let goodsdata=[];
+          if (this.$store.state.isCarOrOne==0){
+            goodsdata = this.carPanelData;
+            this.goodsinfo = this.carPanelData;
+          }else {
+            goodsdata = this.$store.state.carPanelDataOne;
+            this.goodsinfo = this.$store.state.carPanelDataOne;
+          }
+         /* console.log(goodsdata)*/
+
+          /*订单的商品数量*/
+          let count = 0;
+          for (const obj of goodsdata) {
+            count+=obj.count;
+          }
+
+          /*发票类型*/
+          let order_invoicetypes = -1;
+          if (this.invoice.personal) {
+            order_invoicetypes = 0;
+          }else{
+            order_invoicetypes = 1;
+          }
+
+            let data = {
+              order_num: iDate.getTime(), //订单号
+              memberName:this.mmebername,
+            /*  goodsData: goodsdata, //商品*/
+              order_price: this.checkedPrice, //总价格
+              order_logistics:iDate.getFullYear(),//物流号
+              order_found: this.create_time, //创建时间
+            /*  freight: this.freight, //运费*/
+              order_invoicetype: order_invoicetypes, //发票类型
+              order_company: this.invoice.name, //发票抬头,个人就是他地址的名字，公司的话就是this.invoice.name
+            /*  receiveInfo: receiveInfo, //地址
+              isPay: false,//是否付款*/
+              order_count:count,//订单的商品数量
+              addressinfo:this.addressinfo,
+              goodsinfo:this.goodsinfo,
+          }
+          /*-----------------------------------------------------------添加订单到数据库-----*/
+          let formDatas = new FormData();
+          formDatas.append("obj",JSON.stringify(data));
+          addOrder(formDatas).then(res => {
+            /*根据订单编号查询订单，做添加订单编号用*/
+            let formDatas2 = new FormData();
+            formDatas2.append("num",data.order_num);
+            f_getOrderIdBynum(formDatas2).then(res2 => {
+                this.orderId = res2.res.orderId;
+                this.submitOrderRelation();
+                setTimeout(() => {
+                  this.$router.push({name: 'Payment', query: {orderId:data.orderId}}) //路由跳转
+                }, 2000);
+                this.$store.commit('submitOrder',data);//里面有清空购物车数据的操作
+            })
+          })
+        /*  console.log(data);*/
+
+        },
+
+        //获取系统时间函数
+        timeFormat(timeStamp) {
+          let year = new Date(timeStamp).getFullYear();
+          let month =new Date(timeStamp).getMonth() + 1 < 10? "0" + (new Date(timeStamp).getMonth() + 1): new Date(timeStamp).getMonth() + 1;
+          let date =new Date(timeStamp).getDate() < 10? "0" + new Date(timeStamp).getDate(): new Date(timeStamp).getDate();
+          let hh =new Date(timeStamp).getHours() < 10? "0" + new Date(timeStamp).getHours(): new Date(timeStamp).getHours();
+          let mm =new Date(timeStamp).getMinutes() < 10? "0" + new Date(timeStamp).getMinutes(): new Date(timeStamp).getMinutes();
+          let ss =new Date(timeStamp).getSeconds() < 10? "0" + new Date(timeStamp).getSeconds(): new Date(timeStamp).getSeconds();
+          return  year + "-" + month + "-" + date +" "+hh+":"+mm +":"+ss;
         },
 
         openFullScreen1() {
@@ -444,7 +556,6 @@
     border-top: 1px #EDEDED solid;
     margin-left: 270px;
     display: block;
-
   }
   /*---------------------------------赠品的样式--*/
   .shp-col-del:hover{
@@ -490,6 +601,7 @@
     position: relative;
     min-height: 120px;
     padding-top: 30px;
+    /* border-top: 1px #EDEDED solid;*/
   }
   .cart_content_div_sec{
     width: 97%;

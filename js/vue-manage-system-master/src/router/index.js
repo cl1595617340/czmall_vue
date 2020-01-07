@@ -20,6 +20,11 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
+                    path: '/generalize',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/generalize/generalize.vue'),
+                    meta: { title: '推广管理' },
+                },
+                {
                     path: '/goodstype',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/type/GoodsType.vue'),
                     meta: { title: '分类管理' }
@@ -57,6 +62,11 @@ export default new Router({
                             component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/member/address.vue'),
                         },
                     ]
+                },
+                {
+                    path: '/order',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/order/memOrder.vue'),
+                    meta: { title: '订单管理' },
                 },
                 {
                     path: '/icon',
@@ -145,7 +155,8 @@ export default new Router({
         },
         {
             path: '/login',
-            component: () => import(/* webpackChunkName: "login" */ '../components/page/Login.vue')
+            component: () => import(/* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            meta: { title: '登录' }
         },
         {
             path: '*',

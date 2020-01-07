@@ -3,6 +3,12 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 let state={
+
+  /*定时器的分*/
+  secondsbb:0,
+  /*定时器的秒*/
+  minutesbb:0,
+
   //判断用户是购物车进的清单还是直接购买进入的清单,0是购物车,1是购买
   isCarOrOne:-1,
   //存放购物车的数据
@@ -62,7 +68,6 @@ let state={
   },
   orderData:[],
 
-
   navStyle:'position: fixed',
 
   /*显示头部*/
@@ -71,6 +76,15 @@ let state={
   footerStyle:true,
 }
 let mutations ={
+
+  /*订单的定时器*/
+  changsecondsbb(state){
+    if (state.secondsbb==0&&state.minutesbb==0){
+      alert("取消")
+    }
+  },
+
+
 
   changNav(state){
     state.navStyle = 'position: relative';
@@ -104,7 +118,7 @@ let mutations ={
     let bOff = true
     //判断是否是第一次加入
     state.carPanelData.forEach((goods) => {
-      if(goods.sku_id === data[0].sku_id){
+      if(goods.sku_id === data[0].sku_id && goods.spec_json.show_name === data[0].spec_json.show_name){
         goods.count += data[1]
         if(goods.count>goods.limit_num){
           goods.count -= data[1]
@@ -137,9 +151,10 @@ let mutations ={
     }
   },
   //删除购物车功能(id相同的时候把购物车数据删除)
-  delCarPanelData (state,id) {
+  delCarPanelData (state,item) {
+
     state.carPanelData.forEach((goods,index) => {
-      if(goods.sku_id === id){
+      if(goods.sku_id === item.sku_id && goods.spec_json.show_name === item.spec_json.show_name){
         state.carPanelData.splice(index,1)
         return
       }
@@ -297,6 +312,16 @@ let getters ={
     })
     return total
   },
+  /*拿到直接购买商品的价钱*/
+  getBuyGoodsPrice(state){
+    let price = 0;
+    state.carPanelDataOne.forEach((goods) => {
+      if(goods.checked)
+        price += goods.price * goods.count
+    })
+    return price
+  },
+
   checkedCarPanelData (state) {
     let checkedCarPanelData = []
     state.carPanelData.forEach((goods) => {

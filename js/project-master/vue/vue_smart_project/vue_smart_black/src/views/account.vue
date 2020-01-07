@@ -5,11 +5,11 @@
 				<div class="account-sidebar">
 					<div class="avatar gray-box clear">
 						<div class="js-account-sidebar-info">
-              <img :src="this.$store.state.memberinfo.avatar">
+              <img :src="this.$store.state.memberinfo.avatar" style="border-radius: 50% 50%;width: 130px;height: 130px">
 						</div>
 						<div class="box-inner">
 							<ul class="account-nav">
-						    <router-link :to="{name: 'Account'}" exact tag="li" activeClass="current">
+						    <router-link :to="{name: 'Order'}" exact tag="li" activeClass="current">
 						        <a>我的订单</a>
 						    </router-link>
 								<router-link :to="{name: 'Address'}" tag="li" activeClass="current">
@@ -58,8 +58,8 @@
 }
 .gray-box{
 	overflow: hidden;
-    border: 1px solid #D1D1D1;
-    border-color: rgba(0,0,0,.14);
+   /* border: 1px solid #D1D1D1;
+    border-color: rgba(0,0,0,.14);*/
    /* border-radius: 8px;*/
     box-shadow: 0 3px 8px -6px rgba(0,0,0,.1);
 }
@@ -68,6 +68,7 @@
     margin: 0 0 20px;
    /* border-radius: 10px;*/
     text-align: center;
+  padding-bottom: 20px;
 }
 .account-sidebar .avatar img{
 	width: 168px;

@@ -69,13 +69,16 @@
           this.$store.state.memberinfo = resb.sb;
        /*   console.log(this.$store.state.memberinfo);*/
           this.member = this.$store.state.memberinfo;
+          alert(123)
+          console.log( this.member);
           this.openFullScreen1();
 
           /*根基名字查询用户是否已经支付宝注册过了*/
           let formDatas = new FormData();
           formDatas.append("name",this.$store.state.memberinfo.nickName);
           f_getMemByName(formDatas).then(res => {
-           /* console.log(res.member);*/
+            alert(1231)
+            console.log(res.member);
             if (res.res){
               setTimeout(() => {
                 location.href=this.$store.state.memberloginUrl;

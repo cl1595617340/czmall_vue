@@ -12,7 +12,7 @@ import 'babel-polyfill';
 import qs from 'qs';
 import axios from 'axios';
 import moment from 'moment'
-
+import animated from 'animate.css'
 
 //Vue全局对象可用
 Vue.prototype.$axios = axios;
@@ -27,6 +27,7 @@ Vue.filter("dateFilter", function(date, formatPattern){
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
 Vue.use(moment);
+Vue.use(animated)
 Vue.use(ElementUI, {
     size: 'small'
 });
