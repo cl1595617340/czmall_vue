@@ -1,5 +1,5 @@
 <template>
-	<div class="account-content" >
+	<div class="account-content" style="position: relative;top: 5px">
 		<div class="account-order">
 			<div class="gray-box" style="background: #F5F5F5">
 
@@ -9,16 +9,16 @@
           <div class="order_query">
             <ul >
               <li :style="jiantouindex==0?activejiantou:activejiantousb" @click="clickQueryli(0)">
-                <label>待付款</label>
+                <label>待付款 {{orderState00}}</label>
               </li>
               <li :style="jiantouindex==1?activejiantou:activejiantousb" @click="clickQueryli(1)">
-                <label >待收货</label>
+                <label>待收货 {{orderState01}}</label>
               </li>
               <li :style="jiantouindex==2?activejiantou:activejiantousb" @click="clickQueryli(2)">
-                <label >已完成</label>
+                <label>已完成 {{orderState02}}</label>
               </li>
               <li :style="jiantouindex==3?activejiantou:activejiantousb" @click="clickQueryli(3)">
-                <label >已关闭</label>
+                <label>已取消 {{orderState03}}</label>
               </li>
             </ul>
           </div>
@@ -26,7 +26,7 @@
 
             <!--订单头部-->
             <div class="order_header">
-              <span>订单号:<a style="color: #D5001C" @click="goOrderInfo(site.orderId)"> {{site.orderNum}}</a></span>
+              <span>订单号:<a class="goOrderInfo" style="color: #D5001C" @click="goOrderInfo(site.orderId)"> {{site.orderNum}}</a></span>
               <span class="order_found"> {{site.orderFound}}</a></span>
               <strong class="order_state" style="display: flex" v-if="site.orderState==0">
                 待付款
@@ -50,9 +50,9 @@
               <div class="order_item">
                 <ul class="shp-row">
                   <li class="shp-col order_img">
-                    <img style="width: 60px;height: 60px;" :src="site2.goodscolor.goodscolorPicture">
+                    <img class="order_img_img"  :src="site2.goodscolor.goodscolorPicture">
                   </li>
-                  <li class="shp-col order_goodsname" style="width: 230px;">
+                  <li class="shp-col order_goodsname order_goodsname01" >
                     <label>{{site2.goods.goodsName}} {{site2.versions.versionsName}} {{site2.goodscolor.goodscolorName}}</label>
                   </li>
                   <li class="shp-col">
@@ -60,12 +60,12 @@
                   </li>
                 </ul>
                 <!--赠品ul-->
-                <ul class="shp-row" :style="site2.relationCompname!=''?compstyle:compstylesb" style="line-height: 10px;height: 10px">
+                <ul class="shp-row relationCompname" :style="site2.relationCompname!=''?compstyle:compstylesb" >
                   <li class="shp-col order_img" style="opacity: 0">
                     <!--这个背景图是占位置的-->
                     <img style="width: 60px;height: 60px;" src="../../../static/images/shuchai/背景图.jpg">
                   </li>
-                  <li class="shp-col order_goodsname" style="width: 230px;">
+                  <li class="shp-col order_goodsname order_goodsname02">
                     <label>{{site2.relationCompname}}</label>
                   </li>
                  <!-- <li class="shp-col">
@@ -123,7 +123,7 @@
           <!--查询为空-->
           <div class="order_query_none" v-if="orderlist.length==0">
             <div style="position: relative;top: 100px">
-              <img src="/static/images/shuchai/order_none.png">
+              <img src="http://118.178.187.197:888/static/shuchai/orderNone.png">
               <label>您还没有订单</label>
             </div>
           </div>
@@ -134,7 +134,7 @@
 	</div>
 </template>
 
-<script>
+<script scoped>
   import { f_memOrderList } from '../../api/order';
   import { f_getMemIdByavatar } from '../../api/member';
 	export default {
@@ -153,12 +153,23 @@
         order_stae:"",
         //用户id
         memid:0,
+
+        /*3.1得到4个订单状态各自的数量*/
+        orderState00:0,
+        orderState01:0,
+        orderState02:0,
+        orderState03:0,
+
+        /*只会在进入页面计算一次订单的数量*/
+        orderCounts:0,
       }
     },
     created(){
       $('html,body').animate({scrollTop: 0}, 10);
       this.initmem();
       this.$store.commit('changNav');
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
     },
 	  computed: {
 	    orderData () {
@@ -183,12 +194,32 @@
         formDatas.append("state",this.order_stae)
         f_memOrderList(formDatas).then(res => {
           this.orderlist = res.res;
+
+          if (this.orderCounts==0){
+            /*循环集合得到各自订单的状态数量*/
+            for (const re of this.orderlist) {
+              if (re.orderState == 0){
+                this.orderState00++;
+              }
+              if (re.orderState == 1){
+                this.orderState01++;
+              }
+              if (re.orderState == 2){
+                this.orderState02++;
+              }
+              if (re.orderState == 3){
+                this.orderState03++;
+              }
+            }
+            this.orderCounts++;
+          }
+
           console.log(this.orderlist)
         })
       },
       /*去付款的按钮*/
       gopay(ordernum,price){
-        location.href='http://localhost:8088/goAlipay?price='+price+"&ordernumsb="+ordernum;
+        location.href='http://118.178.187.197:8088/goAlipay?price='+price+"&ordernumsb="+ordernum;
 
       },
       clickQueryli(index){
@@ -205,7 +236,32 @@
 	}
 </script>
 
-<style >
+<style scoped>
+
+  .order_img_img{
+    width: 60px;height: 60px;
+  }
+
+
+  .relationCompname{
+   line-height: 10px !important;
+    height: 10px !important;
+  }
+
+  .order_goodsname01{
+    width: 350px !important;
+  }
+
+
+.goOrderInfo{
+  transition: all 0.4s ease 0s;
+}
+  .goOrderInfo:hover{
+
+    opacity: 0.5;
+
+  }
+  /*上面是3,.6鼠标悬浮变半透明*/
   .order_query_none label{
     font-family: OPPOfont1;
   }
@@ -256,6 +312,12 @@
     margin: 0 auto;
     margin-top: -30px;
   }
+
+.order_goodsname02{
+  width: 230px !important;
+}
+
+
   .order_goodsname label{
     display: inline-block;
     vertical-align: middle;

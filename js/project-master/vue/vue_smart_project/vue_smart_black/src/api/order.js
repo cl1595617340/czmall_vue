@@ -1,6 +1,6 @@
 import http from '../api/public'
 
-let hostUrl = "http://localhost:8088";
+let hostUrl = "http://118.178.187.197:8088";
 
 /*添加订单*/
 export const addOrder = (params) => {

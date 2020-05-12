@@ -42,7 +42,7 @@
     }
 </script>
 
-<style>
+<style scoped>
   .sku-box{
     position: relative;
   }

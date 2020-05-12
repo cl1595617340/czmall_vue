@@ -11,7 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      target: 'http://localhost:8088/',
+      target: 'http://118.178.187.197/:8088/',
       changeOrigin: true,  //是否跨域
       pathRewrite: {
         '/':''   //重写接口
@@ -56,7 +56,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/front/',
 
     /**
      * Source Maps

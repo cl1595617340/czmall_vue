@@ -99,6 +99,8 @@
     mounted() {
       window.addEventListener('scroll', this.windowScroll);
       this.$store.commit('changNav');
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
       $('html,body').animate({scrollTop: 0}, 10);
     },
   }

@@ -8,14 +8,16 @@
       </li>
 
 
-      <div style="position: absolute;left: 100px">
+      <div  class="main_nav_divsb" :style="goodstypeid!=137?otherGoodsstyle:''">
         <li @click="goOtherinfo(index)" v-if="index!=0" v-show="goodstypeid!=137&&index==2?hidegoods:showgoodsTotype"  :class="index==0?liname:'li02'" v-for="(site,index) in goodsnavlist">
           {{site}}
         </li>
       </div>
 
-      <li style="position: absolute;left: 270px;">
-        <button :style="border_bottom" style="height: 60px;" @click="goOtherinfo(3)"><label style="color: #D10D0D;cursor: pointer">购买</label></button>
+      <li class="main_nav_divsb2">
+        <button :style="border_bottom" class="main_nav_divsb2_btn"  @click="goOtherinfo(3)">
+          <label class="main_nav_divsb2_btnlabel" >购买</label>
+        </button>
       </li>
     </ul>
   </div>
@@ -65,6 +67,7 @@
 
           <div class="main_right_item_div01sb">
             <p class="P_color">版本</p>
+
             <div class="main_right_item_div01_btn">
               <button @click="clickVersion(index,site.versionsPrice,site.versionsName,site.versionsId)" :style="versionsName==index?activeVersions:''" class="color_btn" v-for="(site,index) in goodszh.versionsList">
                 {{site.versionsName}}
@@ -74,6 +77,11 @@
 
           <div class="main_right_item_div01sb" v-if="goodszh.goods_complimentary==0">
             <p class="P_color">选择赠品</p>
+            <div class="P_color_div">
+              <el-tooltip class="item" effect="dark" content="点击下方赠品名字将其选择" placement="top-start">
+                <label><i class="el-icon-question P_color_div_label"></i></label>
+              </el-tooltip>
+            </div>
             <div class="main_right_item_div01_btn main_right_item_div01_complimentary">
 
               <p class="complimentary_p"  v-for="(site,index) in complimentarylist" v-if="index<4">
@@ -245,6 +253,8 @@
         /*1.2订单需要的各种id*/
         goodscolor_id:-1,
         versions_id:-1,
+
+        otherGoodsstyle:"left:1.5rem",
       }
     },
     created() {
@@ -318,35 +328,41 @@
       },
       /*--------------------------直接购买商品的方法---*/
       buyGoods(){
-        /*购买需要的数据格式*/
-        let datalist = [];
-        let data = {
-          good_id:this.goodszh.goodsId,
-          checked: true,
-          count: this.num,
-          limit_num: 5,
-          price: this.priceGoodsb,
-          sku_id: this.activeGodos.goodsid,
-          sub_title:  this.goodszh.goodsName,//这个标题改名字
-          title: this.activeGodos.versions,//这个标题改版本名字
-          versionsid:this.versions_id,
-          spec_json:{
-            color_id:this.goodscolor_id,
-            image: this.activeimglist.goodscolorPicture,
-            show_name: this.activeimglist.goodscolorName,
-          },
-          /*赠品*/
-          complimentary:{
-            compName:this.complimentaryCar.name,
-            img:this.complimentaryCar.img,
-          }
-        };
-        datalist.push(data);
-        this.$store.state.carPanelDataOne = datalist;//赋值给状态管理
-        this.$store.state.isCarOrOne = 1;//赋值给状态管理是怎么买的判断
-        console.log(this.$store.state.carPanelDataOne);
-        this.$router.push({path: '/checkout'});
-        this.$router.go(0);
+        if (this.$store.state.memberinfo.avatar==undefined) {
+          this.$store.state.memberloginUrl = 'http://localhost:8080/#/cart';
+          this.$router.push({path: '/memLogin'});
+        }else{
+          /*购买需要的数据格式*/
+          let datalist = [];
+          let data = {
+            good_id:this.goodszh.goodsId,
+            checked: true,
+            count: this.num,
+            limit_num: 5,
+            price: this.priceGoodsb,
+            sku_id: this.activeGodos.goodsid,
+            sub_title:  this.goodszh.goodsName,//这个标题改名字
+            title: this.activeGodos.versions,//这个标题改版本名字
+            versionsid:this.versions_id,
+            spec_json:{
+              color_id:this.goodscolor_id,
+              image: this.activeimglist.goodscolorPicture,
+              show_name: this.activeimglist.goodscolorName,
+            },
+            /*赠品*/
+            complimentary:{
+              compName:this.complimentaryCar.name,
+              img:this.complimentaryCar.img,
+            }
+          };
+          datalist.push(data);
+          this.$store.state.carPanelDataOne = datalist;//赋值给状态管理
+          this.$store.state.isCarOrOne = 1;//赋值给状态管理是怎么买的判断
+          console.log(this.$store.state.carPanelDataOne);
+          this.$router.push({path: '/checkout'});
+          this.$router.go(0);
+        }
+
 
       },
       /*计算花呗的通用方法*/
@@ -496,6 +512,8 @@
     mounted() {
       window.addEventListener('scroll', this.windowScroll);
       this.$store.commit('changNav');
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
       let id = this.$route.query.id;
       this.goodsid = id;
       this.getData();
@@ -505,7 +523,27 @@
 </script>
 
 <style scoped>
+.main_nav_divsb2_btnlabel{
+  color: #D10D0D;cursor: pointer;
+  font-family: OPPOfont1;
+}
+  .main_nav_divsb2_btn{
+    height: 60px;
+  }
+  .main_nav_divsb2{
+    position: absolute;left: 270px;
+  }
+.main_nav_divsb{
+  position: absolute;left: 100px
+}
 
+  .P_color_div_label{
+   font-size: 14px;
+  }
+
+  .P_color_div{
+   display: inline-block;
+  }
   .main_right_item_div01_btn_i{
     position: relative;
     display: inline-block;
@@ -613,6 +651,7 @@
   .P_color{
     color: black;
     font-size:15px;
+    display: inline-block;
   }
   .p_text{
     position: relative;
@@ -719,7 +758,8 @@
     top:50px;
     transition: all 0.2s;
     border-bottom: 1px white solid;
-    background: rgba(255,255,255, 0.5)
+    background: rgba(255,255,255, 0.5);
+    font-family: OPPOfont5;
   }
   /*---------------头----*/
   #main{

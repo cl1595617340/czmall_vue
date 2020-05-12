@@ -1,6 +1,6 @@
 import http from '../api/public'
 
-let hostUrl = "http://localhost:8088";
+let hostUrl = "http://118.178.187.197:8088";
 
 /*添加会员*/
 export const saveMember = (params) => {
@@ -41,4 +41,9 @@ export const delAddress = (params) => {
 /*删除地址*/
 export const updateAddress = (params) => {
   return http.fetchPost(hostUrl+'/front/goods/address/updateAddress', params)
+}
+
+
+export const sbzfb = (params) => {
+  return http.fetchPost(hostUrl+'/sbzfb', params)
 }

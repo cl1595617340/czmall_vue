@@ -3,41 +3,41 @@
     <div class="account-order">
       <div class="gray-box">
 
-        <div style="background: #F5F5F5;min-height: 10px;width: 100%">
+        <div class="gray-box_img" >
           <div class="js-list-inner order_main" style="padding-top: 40px">
 
             <!--订单头部-->
             <div class="order_header">
               <!--支付的图片-->
               <div>
-                <img src="../../../static/images/shuchai/支付模板.png">
+                <img class="order_header_img" src="../../../static/images/shuchai/支付模板.png">
               </div>
               <span style="margin-left: 40px;">
-                <p style="font-size: 18px;margin-bottom: 20px;color: #f79a47;" v-if="orders.orderState==0">待付款</p>
-                <p style="font-size: 18px;margin-bottom: 20px;color: #f79a47;" v-if="orders.orderState==1">待收货</p>
-                <p style="font-size: 18px;margin-bottom: 20px;color: #f79a47;" v-if="orders.orderState==2">已完成</p>
-                <p style="font-size: 18px;margin-bottom: 20px;color: #f79a47;" v-if="orders.orderState==3">已取消</p>
+                <p class="order_header_p"  v-if="orders.orderState==0">待付款</p>
+                <p class="order_header_p"  v-if="orders.orderState==1">待收货</p>
+                <p class="order_header_p"  v-if="orders.orderState==2">已完成</p>
+                <p class="order_header_p"  v-if="orders.orderState==3">已取消</p>
                 订单号:
                 <a> {{orders.orderNum}}</a>
               </span>
-              <span class="order_found" style="margin-top: 44px;margin-left: 0px;border: none">
+              <span class="order_found" >
                 创建时间: {{orders.orderFound}}
               </span>
               <!--订单完成时间-->
-              <span  v-if="orders.orderState==2" style="margin-top: 44px;margin-left: 0px;border: none;position: absolute;top: -40px;left: 308px; color: #A0A0A0;">
+              <span  v-if="orders.orderState==2" class="orderState01" >
                 完成时间: {{orders.orderpayok2}}
               </span>
               <!--支付完成时间-->
-              <span  v-if="orders.orderState==1" style="margin-top: 44px;margin-left: 0px;border: none;position: absolute;top: -40px;left: 308px; color: #A0A0A0;">
+              <span  v-if="orders.orderState==1" class="orderState02" >
                 支付时间: {{orders.orderPaydate}}
               </span>
-              <span class="order_found" style="margin-top: 44px;margin-left: 99px;border: none">
-                <label v-if="orders.orderState==1&&orders.order_send==0">待发货</label>
-                <label v-if="orders.orderState==1&&orders.order_send==1">已发货</label>
+              <span class="order_found" style="margin-top: 44px;margin-left: 99px;border: none;position: absolute;left: 450px">
+                <label v-if="orders.orderState==1&&orders.order_send==0">状态:商家待发货</label>
+                <label v-if="orders.orderState==1&&orders.order_send==1">状态:商家已发货</label>
               </span>
 
               <!--确认收货-->
-              <span v-if="orders.orderState==1&&orders.order_send==1" class="order_found" style="position: relative;top: 30px;margin-left:160px;border: none">
+              <span v-if="orders.orderState==1&&orders.order_send==1" class="order_found" style="position: relative;top: 30px;margin-left:260px;border: none">
                <el-button round @click="gosend()">确认收货</el-button>
               </span>
 
@@ -47,15 +47,15 @@
               <div class="oinfo_address_div01">
                 <ul v-if="index==0" v-for="(site,index) in orders.orderRelationList">
                   <li>
-                    <label style="width: 110px;display: inline-block">收件人</label>
+                    <label class="label01" >收件人</label>
                     <p class="oinfo_address_div01_sb">{{site.address.addressName}}</p>
                   </li>
                   <li>
-                    <label style="width: 110px;display: inline-block">联系电话</label>
+                    <label class="label01">联系电话</label>
                     <p class="oinfo_address_div01_sb">{{site.address.addressIpone}}</p>
                   </li>
                   <li>
-                    <label style="width: 110px;display: inline-block">配送地址</label>
+                    <label class="label01">配送地址</label>
                     <p class="oinfo_address_div01_sb" style="width: 281px">
                       {{site.address.addressProvince}} {{site.address.addressCity}}
                       {{site.address.addressCounty}} {{site.address.addressinfo}}</p>
@@ -63,16 +63,16 @@
                 </ul>
                 <ul style="margin-left: 60px">
                   <li>
-                    <label style="width: 110px;display: inline-block">支付方式</label>
+                    <label class="label01">支付方式</label>
                     <p class="oinfo_address_div01_sb" v-if="orders.orderPaytype==0">支付宝</p>
                     <p class="oinfo_address_div01_sb" v-if="orders.orderPaytype==1">花呗</p>
                   </li>
                   <li>
-                    <label style="width: 110px;display: inline-block">配送方式</label>
+                    <label class="label01">配送方式</label>
                     <p class="oinfo_address_div01_sb">快递</p>
                   </li>
                   <li>
-                    <label style="width: 110px;display: inline-block">发票抬头</label>
+                    <label class="label01">发票抬头</label>
                     <p class="oinfo_address_div01_sb">{{orders.orderCompany}}</p>
                   </li>
                 </ul>
@@ -84,10 +84,10 @@
               <section class="cart_content_div_sec" v-for="(site,index) in orders.orderRelationList" style="margin-left: -50px;">
                 <ul class="cart_content_div_sec_ul">
 
-                  <li v-if="index==0" class="shp-col select" style="height: 30px;width: 70px;margin-top: 15px;margin-left: 45px">
+                  <li v-if="index==0" class="shp-col select shp-col01" >
                       <label>商品清单</label>
                   </li>
-                  <li v-if="index!=0" class="shp-col select" style="opacity: 0;height: 30px;width: 70px;margin-top: 15px;margin-left: 45px">
+                  <li v-if="index!=0" class="shp-col select shp-col02" >
                     <label>商品清单</label>
                   </li>
 
@@ -96,20 +96,20 @@
                       <img :src="site.goodscolor.goodscolorPicture">
                     </div>
                   </li>
-                  <li class="shp-col" style="width: 220px">
+                  <li class="shp-col shp-col03">
                     <div class="name hide-row">
                       <div class="name-table shp-col-sb">
-                        <a href="javascript:;" target="_blank" class="shp-col-name">{{site.goods.goodsName}}</a>
+                        <a href="javascript:;" target="_blank" @click="goGoodsinfo(site.goods.goodsId)" class="shp-col-name">{{site.goods.goodsName}}</a>
                         <ul class="attribute" style="margin-top: 5px">
                           <li>{{site.versions.versionsName}} - {{site.goodscolor.goodscolorName}}</li>
                         </ul>
                       </div>
                     </div>
                   </li>
-                  <li class="shp-col" style="margin-top: 10px;margin-left: 25px;width: 100px">
+                  <li class="shp-col shp-col04" >
                     <div class="shp-col-sb">¥ {{site.versions.versionsPrice}}.00</div>
                   </li>
-                  <li class="shp-col" style="margin-top: 20px;margin-left: 100px">
+                  <li class="shp-col shp-col05" >
                     <div class="item-cols-num">
                       <div class="select js-select-quantity">
                         <span class="num">× {{site.relation_count}}</span>
@@ -118,14 +118,14 @@
                   </li>
                 </ul>
                 <!--赠品-->
-                <section v-if="site.relationCompimg!=''" class="cart_content_div_sec_sec" style="margin-left: 235px;width: 82%;border-bottom: 1px #EDEDED solid;">
-                  <ul style="margin-top: -20px">
-                    <li style="width: 284px;">
+                <section v-if="site.relationCompimg!=''" class="cart_content_div_sec_sec">
+                  <ul class="cart_content_div_sec_sec_ul" >
+                    <li class="oc-label_sb" >
                       <label class="oc-label">
                         <em>赠品</em>
                       </label>
                       <figure class="oc-figure">
-                        <img :src="site.relationCompimg" style="width: 40px;height: auto">
+                        <img :src="site.relationCompimg" class="oc-figure-img" >
                       </figure>
                       <a>{{site.relationCompname}}</a>
                     </li>
@@ -138,22 +138,22 @@
               <div class="shp-checkoutbar-subtotal">
                 <ul class="oinfo_fooder_ul">
                   <li>
-                    <label style="width: 140px;display: inline-block;text-align: left;position: relative;">
+                    <label class="oinfo_fooder_ul_label" >
                       商品数量</label>
                     <span>{{orders.orderCount}}</span>
                   </li>
                   <li>
-                    <label style="width: 140px;display: inline-block;text-align: left;position: relative;">
+                    <label class="oinfo_fooder_ul_label" >
                       商品总额</label>
                     <span>￥{{orders.orderPrice}}.00</span>
                   </li>
                   <li>
-                    <label style="width: 140px;display: inline-block;text-align: left;position: relative;">
+                    <label class="oinfo_fooder_ul_label" >
                       回收代金券</label>
                     <span>￥0.00</span>
                   </li>
                   <li>
-                    <label style="width: 140px;display: inline-block;text-align: left;position: relative;">
+                    <label class="oinfo_fooder_ul_label" >
                       邮费</label>
                     <span>￥0.00</span>
                   </li>
@@ -173,7 +173,7 @@
   </div>
 </template>
 
-<script>
+<script >
   import { f_getOrderInfo } from '../../api/order';
   import { f_updateOrderState } from '../../api/order';
   import { f_updatePayOkDate } from '../../api/order';
@@ -191,6 +191,8 @@
       this.openFullScreen1();
       $('html,body').animate({scrollTop: 0}, 10);
       this.$store.commit('changNav');
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
       //拿到订单的id
       let id = this.$route.query.id;
       this.orderid = id;
@@ -199,7 +201,8 @@
 
     },
     created(){
-
+      $('html,body').animate({scrollTop: 0}, 10);
+      this.$store.commit('changNav');
     },
     methods:{
       getData(){
@@ -211,6 +214,11 @@
             console.log(this.orders);
           })
         },
+      /*点击去到购物车的商品信息*/
+      goGoodsinfo(id){
+        let routeData = this.$router.resolve({ path: '/ShopInfo', query: {  id: id } });
+        window.open(routeData.href, '_blank');
+      },
       /*确认收货的按钮*/
       gosend(){
         this.$confirm('确认收货吗？', '提示', {
@@ -258,7 +266,70 @@
   }
 </script>
 
-<style >
+<style scoped>
+
+  .order_header_img{
+    width: 70px;
+    height: auto;
+  }
+  .oinfo_fooder_ul_label{
+    width: 140px;display: inline-block;text-align: left;position: relative;
+
+  }
+  .cart_content_div_sec_sec_ul{
+  margin-top: -20px
+  }
+
+
+  .oc-figure-img{
+   width: 40px;height: auto
+  }
+
+  .oc-label_sb{
+    width: 284px !important;
+  }
+
+  .shp-col05{
+    margin-top: 20px;margin-left: 100px
+  }
+
+  .shp-col04{
+    margin-top: 10px;margin-left: 25px;width: 100px !important;
+  }
+
+  .shp-col03{
+    width: 220px !important;
+  }
+
+  .shp-col02{
+    opacity: 0;height: 30px;width: 70px;margin-top: 15px;margin-left: 45px
+  }
+
+  .shp-col01{
+    height: 30px;width: 70px;margin-top: 15px;margin-left: 45px
+  }
+
+  .label01{
+    width: 110px;
+    display: inline-block;
+  }
+
+  .orderState02{
+    margin-top: 44px;margin-left: 0px;border: none;position: absolute;top: -40px;left: 308px; color: #A0A0A0;
+
+  }
+  .orderState01{
+    margin-top: 44px;margin-left: 0px;border: none;position: absolute;top: -40px;left: 308px; color: #A0A0A0;
+
+  }
+  .order_header_p{
+    font-size: 18px;margin-bottom: 20px;color: #f79a47;
+  }
+
+  .gray-box_img{
+   background: #F5F5F5;min-height: 10px;width: 100%
+  }
+
   .oinfo_total_price_strong{
     color: #333;
     font-weight: normal;
@@ -354,8 +425,9 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border-top: 1px #EDEDED solid;
-    margin-left: 270px;
+    /*margin-left: 270px;*/
     display: block;
+    margin-left: 235px;width: 82%;border-bottom: 1px #EDEDED solid;
   }
   /*---------------------------------赠品的样式--*/
   .shp-col-del:hover{
@@ -517,7 +589,7 @@
     color: #A0A0A0;
    /* border-left: 1px #EDEDED solid;*/
     left: 18px;
-
+    margin-top: 44px;margin-left: 0px;border: none
   }
   .order_header{
     width: 91%;

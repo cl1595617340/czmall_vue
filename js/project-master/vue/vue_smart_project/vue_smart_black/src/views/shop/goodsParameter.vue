@@ -7,14 +7,14 @@
 
       </li>
 
-      <div style="position: absolute;left: 100px">
-        <li  @click="goOtherinfo(index)" v-if="index!=0"  :style="index==2?border_bottom:''" :class="index==0?liname:'li02'" v-for="(site,index) in goodsnavlist">
+      <div  class="main_nav_divsb" :style="goodstypeid==137?otherGoodsstyle:''">
+        <li  @click="goOtherinfo(index)" v-if="index!=0"   :style="index==2?border_bottom:''" :class="index==0?liname:'li02'" v-for="(site,index) in goodsnavlist">
           {{site}}
         </li>
       </div>
 
-      <li style="position: absolute;left: 270px;">
-        <button @click="goOtherinfo(3)"><label style="color: #D10D0D;cursor: pointer">购买</label></button>
+      <li class="main_nav_divsb2">
+        <button @click="goOtherinfo(3)"><label style="color: #D10D0D;cursor: pointer;font-family: OPPOfont1">购买</label></button>
       </li>
     </ul>
   </div>
@@ -316,7 +316,7 @@
     </div>
 
     <!--正常的项 ，有右边的详细信息-->
-    <div class="main_divsb_item">
+    <div class="main_divsb_item" style="border-bottom: none">
       <!--左边的标题-->
       <label class="main_divsb_item_label">内置应用</label>
       <!--右边的信息-->
@@ -369,6 +369,7 @@
         border_bottom:"border-bottom: 3px  #D10D0D solid;",
         /*数据对象*/
         goodszh:{},
+        otherGoodsstyle:"left:1.5rem",
       }
     },
     methods:{
@@ -416,6 +417,8 @@
     mounted() {
       window.addEventListener('scroll', this.windowScroll);
       this.$store.commit('changNav');
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
       let id = this.$route.query.id;
       this.goodsid = id;
       this.getData();
@@ -425,6 +428,12 @@
 </script>
 
 <style scoped>
+  .main_nav_divsb2{
+    position: absolute;left: 270px;
+  }
+  .main_nav_divsb{
+    position: absolute;left: 100px
+  }
 
   .main_divsb_item_div p{
     margin-left: 300px;
@@ -506,12 +515,13 @@
   }
   .main_divsb{
     width: 1364px;
-    min-height: 1000px;
+    min-height: 700px;
     position: relative;
     top: -5px;
     /*background: wheat;*/
     padding-top: 3px;
     transition: all 0.5s;
+
 
   }
   /*-------------------------------------------------主要部分--*/
@@ -548,11 +558,12 @@
     top:50px;
     transition: all 0.2s;
     border-bottom: 1px silver solid;
-    background: rgba(255,255,255, 0.5)
+    background: rgba(255,255,255, 0.5);
+    font-family: OPPOfont5;
   }
 
   #main{
-    min-height: 500px;
+    min-height: 650px;
     width: 100%;
     background: white;
     position: relative;

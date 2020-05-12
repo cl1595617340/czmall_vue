@@ -4,6 +4,9 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 let state={
 
+
+  /*分辨率提示*/
+  Resolutionprompt:true,
   /*定时器的分*/
   secondsbb:0,
   /*定时器的秒*/
@@ -17,7 +20,8 @@ let state={
   carPanelDataOne:[],
   /*登录的用户信息*/
   memberinfo: {
-
+    memberName:"",
+    sex:"",
   },
   //保存用户登录前的页面路径
   memberloginUrl:"",
@@ -70,12 +74,19 @@ let state={
 
   navStyle:'position: fixed',
 
+
   /*显示头部*/
   headerStyle:true,
   /*显示底部*/
   footerStyle:true,
 }
 let mutations ={
+
+
+  /*提示分辨率的提示只提示一次*/
+  changResolutionprompt(state){
+    state.Resolutionprompt = false;
+  },
 
   /*订单的定时器*/
   changsecondsbb(state){
@@ -84,14 +95,16 @@ let mutations ={
     }
   },
 
-
-
   changNav(state){
     state.navStyle = 'position: relative';
   },
   changNav2(state){
-    state.navStyle = 'position: fixed';
+    state.navStyle = 'position: fixed;display:block';
   },
+  changNav3(state){
+    state.navStyle = 'z-index: 100; display: block;';
+  },
+
 
   /*使头部消失*/
   changheaderStyle(state,i){

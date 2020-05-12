@@ -1,6 +1,6 @@
 import http from '../api/public'
 
-let hostUrl = "http://localhost:8088";
+let hostUrl = "http://118.178.187.197:8088";
 
 /*查询所有的1级分类*/
 export const getAllGoodsTypeByF = (params) => {

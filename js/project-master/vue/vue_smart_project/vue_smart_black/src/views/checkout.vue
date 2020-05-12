@@ -79,7 +79,7 @@
           <section class="cart_content_div_sec" :key="index" v-for="(item,index) in carPanelData">
             <ul class="cart_content_div_sec_ul">
 
-              <li class="shp-col select" style="height: 30px;width: 30px;margin-top: 15px;margin-left: 32px">
+              <li class="shp-col select shp-col01" >
                 {{index+1}}
               </li>
 
@@ -88,20 +88,20 @@
                   <img :src="item.spec_json.image">
                 </div>
               </li>
-              <li class="shp-col" style="width: 200px">
+              <li class="shp-col shp-col02" >
                 <div class="name hide-row">
                   <div class="name-table shp-col-sb">
-                    <a href="javascript:;" target="_blank" class="shp-col-name">{{item.sub_title}}</a>
+                    <a href="javascript:;"  class="shp-col-name">{{item.sub_title}}</a>
                     <ul class="attribute" style="margin-top: 5px">
                       <li>{{item.spec_json.show_name}} - {{item.title}}</li>
                     </ul>
                   </div>
                 </div>
               </li>
-              <li class="shp-col" style="margin-top: 10px;margin-left: 100px;width: 50px">
+              <li class="shp-col shp-col03">
                 <div class="shp-col-sb">¥ {{item.price}}</div>
               </li>
-              <li class="shp-col" style="margin-top: 20px;margin-left: 200px">
+              <li class="shp-col" style="margin-top: 20px;margin-left: 170px">
                 <div class="item-cols-num">
                   <div class="select js-select-quantity">
                     <span class="num">{{item.count}} 件</span>
@@ -109,7 +109,7 @@
                 </div>
               </li>
               <!--单个商品共-->
-              <li class="shp-col" style="margin-top: 20px;margin-left: 200px">
+              <li class="shp-col" style="margin-top: 20px;margin-left: 160px">
                 <div class="item-cols-num">
                   <div class="select js-select-quantity">
                     <span class="num">¥ {{item.price * item.count}}.00</span>
@@ -120,12 +120,12 @@
             <!--赠品-->
             <section class="cart_content_div_sec_sec" v-if="item.complimentary.compName!=''">
               <ul style="margin-top: -20px">
-                <li style="width: 284px;">
+                <li class="shp-col04" >
                   <label class="oc-label">
                     <em>赠品</em>
                   </label>
                   <figure class="oc-figure">
-                    <img :src="item.complimentary.img" style="width: 40px;height: auto">
+                    <img :src="item.complimentary.img" class="shp-col05"  >
                   </figure>
                   <a>{{item.complimentary.compName}}</a>
                 </li>
@@ -136,7 +136,7 @@
 
 
 
-        <div class="box-inner" style="font-family: OPPOfont1">
+        <div class="box-inner box-innersb">
           <div class="order-discount-line">
             <p> 商品总计： <span>¥ {{checkedPrice + freight}}.00</span> </p>
             <p> 运费： <span>+ ¥ {{freight}}.00</span> </p>
@@ -219,6 +219,8 @@
           this.$router.push({path: '/memLogin'});
         }*/
         $('html,body').animate({scrollTop: 0}, 10);
+        this.$store.commit('changheaderStyle',1);
+        this.$store.commit('changfooterStyle',1);
         //页面创建的时候确定当前被选中的index数值
         this.$store.state.receiveInfo.forEach((item,index)=>{
            if(item.default){
@@ -277,7 +279,7 @@
               let i = 0;
               for (const argument of this.addresslist) {
                 if (argument.addressDefault==0){
-                 this.receiveIndex = i;
+                  this.receiveIndex = i;
                   this.invoice.name = argument.addressName;
                   this.addressid = argument.addressId;
                   this.addressinfo = argument;
@@ -314,6 +316,7 @@
         /*删除地址*/
         delAddressb(id){
           let formDatas = new FormData();
+          formDatas.append("state",1);
           formDatas.append("id",id);
           this.$confirm('确认删除此地址吗？', '提示', {
             confirmButtonText: '确定',
@@ -390,6 +393,13 @@
 
         //提交订单
         submitOrderHandle () {
+          if (this.addressid==-1){
+            this.$message({
+              message: '没有写地址哦',
+              type: 'warning'
+            });
+            return;
+          }
           if (this.carPanelData.length==0&&this.$store.state.carPanelDataOne.length==0){
             this.$message({
               message: '没有商品',
@@ -492,7 +502,40 @@
 </script>
 
 
-<style>
+<style scoped>
+  .box-innersb{
+    font-family: OPPOfont1;
+    font-size: 15px;
+  }
+  .shp-col06img{
+    width: 40px;height: auto
+  }
+
+  .shp-col06{
+    width: 284px;
+  }
+
+  .shp-col04{
+    width: 400px
+  }
+
+  .shp-col05{
+    width: 40px;height: auto
+  }
+
+  .shp-col03{
+    margin-top: 10px;margin-left: 100px;width: 50px
+  }
+  .shp-col02{
+    width: 200px
+  }
+
+  .shp-col01{
+   height: 30px;width: 30px;margin-top: 15px;margin-left: 32px
+  }
+  /*响应性*/
+
+
   .closesb:hover{
     color: #D5001C;
   }
@@ -619,6 +662,7 @@
     /* background: gainsboro;*/
     margin-top: 10px;
    /* border-bottom:1px #EDEDED solid;*/
+    font-size: 14px;
   }
   .oc-label{
     color: #f79a47 !important;

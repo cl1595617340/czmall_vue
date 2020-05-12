@@ -7,7 +7,8 @@
         <div class="nav_search" v-if="show_search">
           <div class="nav_search_div">
             <img src="../assets/img/搜索.png" class="nav_search_div_img01">
-            <input @keyup.enter="goQueryGoods($event)" placeholder="搜索appom.com.cn" @input="specifiName($event)"/>
+            <input @keyup.enter="goQueryGoods($event)" placeholder="搜索appom.com.cn - 回车显示搜索的更详细内容"
+                   @input="specifiName($event)"/>
             <img @click="show_searchs()" src="../assets/img/叉.png" class="nav_search_div_img02">
           </div>
 
@@ -15,11 +16,11 @@
           <div class="nav_search_div02" v-show="nav_search">
             <label>快速链接</label>
             <ul>
-              <li>查找零售店</li>
-              <li>佳节好礼</li>
-              <li>配件</li>
-              <li>服务网店查询</li>
-              <li>关于我们</li>
+              <li @click="Todevelop" >查找零售店</li>
+              <li @click="Todevelop" >佳节好礼</li>
+              <li @click="Todevelop" >配件</li>
+              <li @click="Todevelop" >服务网店查询</li>
+              <li @click="Todevelop" >关于我们</li>
             </ul>
           </div>
 
@@ -45,13 +46,13 @@
 
       <transition name="show_nav">
         <div class="container" style="top: 0px" v-if="show_nav">
-          <h1 class="nav-logo">
+          <h1 class="nav-logo" @click="gohomepage">
             <a href="javascript:;"></a>
           </h1>
           <!--个人信息-->
           <ul class="nav-aside" >
             <li>
-              <img @click="show_searchs()" src="../assets/img/搜索.png" style="width: 18px;margin-top: 2px;cursor: pointer">
+              <img @click="show_searchs()" src="../assets/img/搜索.png" class="sbwenhao">
             </li>
             <li class="nav-user" style="z-index: 101">
               <a href="javascript:;">个人中心</a>
@@ -63,10 +64,10 @@
                     <dd v-if="this.$store.state.memberinfo.avatar!=undefined"><img :src="this.$store.state.memberinfo.avatar" class="memImg"></dd>
                   </dl>
                   <!--如果登录就出现这个-->
-                  <ul v-if="this.$store.state.memberinfo.avatar!=undefined">
-                    <li class="order">  <router-link :to="{ path: 'Order' }">现在结算</router-link></li>
-                    <li class="support"><a href="javascript:;">售后服务</a></li>
-                    <li class="coupon"><a href="javascript:;">我的优惠</a></li>
+                  <ul v-if="this.$store.state.memberinfo.avatar!=undefined" style="font-family: OPPOfont1">
+                    <li class="order">  <router-link :to="{ path: 'Order' }">我的订单</router-link></li>
+                    <li class="support" @click="Todevelop"><a href="javascript:;">售后服务</a></li>
+                    <li class="coupon" @click="Todevelop"><a href="javascript:;">我的优惠</a></li>
                     <li class="information"><a href="javascript:;">账户资料</a></li>
                     <li class="address"><a href="javascript:;">收货地址</a></li>
                     <li class="logout"><a href="javascript:;" @click="exitmem">退出</a></li>
@@ -84,12 +85,11 @@
             <!--active-->
             <car-panel></car-panel>
           </ul>
-          <ul class="nav-list" style="font-family: OPPOfont5">
+          <ul class="nav-list nav-listsb" style="font-family: OPPOfont5;position: relative;left:-40px">
             <li><a href="javascript:;" @click="gohomepage">在线商城</a></li>
-            <li><a href="javascript:;">坚果 Pro</a></li>
-            <li><a href="javascript:;">Smartisan M1 / M1L</a></li>
-            <li><a href="javascript:;">Smartisan OS</a></li>
-            <li><a href="javascript:;">应用下载</a></li>
+            <li><a href="javascript:;" @click="Todevelop">智能硬件</a></li>
+            <li><a href="javascript:;" @click="goiponeinfo02">Youth Dream Forward</a></li>
+            <li><a href="javascript:;" @click="goiponeinfo03">关于C-ZMall</a></li>
             <li><a href="javascript:;" @click="show_nav_subs()" style="color: #F06F9A">更多</a></li>
           </ul>
         </div>
@@ -102,12 +102,12 @@
           <div class="nav-sub">
             <div class="nav-sub-wrapper">
               <div class="container">
-                <ul class="nav-list" style="margin-left:270px">
+                <ul class="nav-list" style="margin-left: 270px">
                   <li>
                     <a  @click="gohomepage">首页</a>
                   </li>
                   <li v-for="site in goodstypeList">
-                    <a style="font-size: 5px" @click="goitem(site.goodstypeId,site.goodstypeName)"  @mouseover="showGoodsTypeAll(site.goodstypeId)">{{site.goodstypeName}}</a>
+                    <a class="goodstypeListfont"  @click="goitem(site.goodstypeId,site.goodstypeName)"  @mouseover="showGoodsTypeAll(site.goodstypeId)">{{site.goodstypeName}}</a>
                   </li>
                   <li>
                     <a href="javascript:;" @mouseover="showServe()">服务</a>
@@ -129,21 +129,19 @@
                       <li>
                         <label style="cursor: pointer">{{site.goodstype2Name}}</label>
                       </li>
-                      <li v-for="site2 in site.goodstype3">
+                      <li v-for="site2 in site.goodstype3" @click="goOtherType(site2.goodstype3Id,site.goodstype2Name,site2.goodstype3Name)">
                         <img :src="site2.goodstype3Picture">
-
                         <span :style="spanStyle">{{site2.goodstype3Name}}</span>
                       </li>
                     </ul>
 
 
                     <!--显示所有的手机-->
-                    <ul v-for="(goodlist,indexsb) in goodslist"   v-if="site.goodstype2Name=='手机'&&indexsb<2" >
+                    <ul v-for="(goodlist,indexsb) in goodslist"   v-if="site.goodstype2Name=='手机'&&indexsb<6" >
                       <li>
                         <label>{{goodlist.goodsName}}</label>
                       </li>
-                      <li class="goodsimgli" v-for="goodcolorList in goodlist.goodscolorList" :key="goodcolorList.goodscolorId">
-
+                      <li class="goodsimgli" @click="goshopinfo(goodlist.goodsId)" v-for="goodcolorList in goodlist.goodscolorList" :key="goodcolorList.goodscolorId">
                         <img class="goodsimgsb"  :src="goodcolorList.goodscolorPicture">
                         <span class="goodsimgsbspan"  :style="spanStyle">{{goodcolorList.goodscolorName}}</span>
                       </li>
@@ -228,15 +226,43 @@
           let formDatas = new FormData();
           formDatas.append("obj", JSON.stringify(this.querylistsb));
           formDatas.append("endGoodsid", 100);
+          /*分类缓存*/
           getAllGoodsTypeByF().then(res => {
             this.goodstypeList = res;
           })
+
 
           f_getGoodsListToType(formDatas).then(res => {
             this.goodslist = res.goodsList;
           })
         },
-
+        goiponeinfo02(){
+          this.$notify.info({
+            title: '',
+            message: '青春 梦想 前进'
+          })
+        },
+        goiponeinfo03(){
+          this.$notify.info({
+            title: '',
+            message: '以梦为马,不负韶华'
+          })
+        },
+        /*通用的待开发*/
+        Todevelop(){
+          this.$toTop()
+        },
+        /*点击分类*/
+        goOtherType(id,name,name2){
+          this.$router.push({path: '/AllOtherGoods',query:{ id:id,name:name,name2:name2}});
+          this.$router.go(0);
+        },
+        /*点击手机进入详细信息*/
+        goshopinfo(id){
+          /*跳转页面并传值*/
+          this.$router.push({path: '/ShopInfo',query:{ id:id}});
+          this.$router.go(0);
+        },
         /*退出登录*/
         exitmem(){
          /* //保存用户退出前的页面路径
@@ -335,7 +361,6 @@
 
         /*悬浮1级分类显示其下的所有分类信息,(id是1级分类的id)*/
         showGoodsTypeAll(id){
-
           this.sbsb2 = true;
           this.show = true;
           let formDatas = new FormData();
@@ -378,6 +403,8 @@
         },
         /*鼠标点击搜索框*/
         show_searchs(){
+          this.show_nav_sub = false;
+          this.sbi2 = 0;
           if (this.sbi==0){
             this.show_search =true;
             this.show_nav=false;
@@ -409,7 +436,18 @@
     }
 </script>
 
-<style>
+<style scoped>
+
+  .nav-listsb{
+    margin-left: 240px!important;
+  }
+  .sbwenhao{
+    width: 18px;margin-top: 2px;cursor: pointer
+  }
+  .goodstypeListfont{
+    font-size: 5px
+  }
+
 
   .memImg{
     width: 50px;

@@ -42,18 +42,18 @@
 
     <div id="content" :style="content">
       <div class="content_left">
-        <div style="padding-top: 30px">
-          <label style="font-size: 31px;font-weight: 400;">机型概述</label>
+        <div class="content_left_divsb">
+          <label class="content_left_divsb_label"  >机型概述</label>
         </div>
 
         <div class="content_left_mian">
 
 
           <!--这个ul是滑块-->
-          <ul style="padding-top: 30px" class="content_left_mian_ul">
+          <ul  class="content_left_mian_ul content_left_mian_ulsb">
             <li>
-              <span style="font-size: 14px;color: black;">制造商建议零售价（含增值税）</span>
-              <div class="block" style="width: 180px">
+              <span class="content_left_mian_ulsb_span" >制造商建议零售价（含增值税）</span>
+              <div class="block content_left_mian_ulsb_span_div" >
                 <el-slider
                   v-model="slidervalue"
                   range
@@ -72,7 +72,7 @@
 
 
           <div style="padding-top: 5px" class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==0">
-            <span style="font-size: 14px;color: black;">{{list.title}}</span>
+            <span class="content_left_mian_div_spansb" >{{list.title}}</span>
             <ul class="content_left_mian_ul">
               <li v-for="(list2,index2) in list.values" >
                 <button :disabled="disabledsb"  :class = "activesb == index2 ? 'addclass' : classsb" @click="goquery(list.title,list2.name,index2)"><i :class="classi == index2 ? 'el-icon-close' : 'el-icon-plus'"></i><label style="margin-left: 10px">{{list2.name}}</label></button>
@@ -81,7 +81,7 @@
           </div>
 
           <div class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==1" style="margin-top: -5px">
-            <span style="font-size: 14px;color: black;">{{list.title}}</span>
+            <span class="content_left_mian_div_spansb">{{list.title}}</span>
             <ul class="content_left_mian_ul">
               <li v-for="(list2,index2) in list.values">
                 <button :disabled="disabledsb2" :class = "activesb2 == index2 ? 'addclass' : classsb2"  @click="goquery(list.title,list2.name,index2)"><i :class="classi2 == index2 ? 'el-icon-close' : 'el-icon-plus'"></i><label style="margin-left: 10px">{{list2.name}}</label></button>
@@ -90,7 +90,7 @@
           </div>
 
           <div class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==2" style="margin-top: -5px">
-            <span style="font-size: 14px;color: black;">{{list.title}}</span>
+            <span class="content_left_mian_div_spansb">{{list.title}}</span>
             <ul class="content_left_mian_ul">
               <li v-for="(list2,index2) in list.values">
                 <button :disabled="disabledsb3" :class = "activesb3 == index2 ? 'addclass' : classsb3"  @click="goquery(list.title,list2.name,index2)"><i :class="classi3 == index2 ? 'el-icon-close' : 'el-icon-plus'"></i><label style="margin-left: 10px">{{list2.name}}</label></button>
@@ -99,7 +99,7 @@
           </div>
 
           <div class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==3" style="margin-top: -5px">
-            <span style="font-size: 14px;color: black;">{{list.title}}</span>
+            <span class="content_left_mian_div_spansb">{{list.title}}</span>
             <ul class="content_left_mian_ul">
               <li v-for="(list2,index2) in list.values">
                 <button :disabled="disabledsb4" :class = "activesb4 == index2 ? 'addclass' : classsb4"  @click="goquery(list.title,list2.name,index2)"><i :class="classi4 == index2 ? 'el-icon-close' : 'el-icon-plus'"></i><label style="margin-left: 10px">{{list2.name}}</label></button>
@@ -108,7 +108,7 @@
           </div>
 
           <div class="content_left_mian_div" v-for="(list,index) in querytypelist" v-if="index==4" style="margin-top: -5px">
-            <span style="font-size: 14px;color: black;">{{list.title}}</span>
+            <span class="content_left_mian_div_spansb">{{list.title}}</span>
             <ul class="content_left_mian_ul">
               <li v-for="(list2,index2) in list.values">
                 <button :disabled="disabledsb5" :class = "activesb5 == index2 ? 'addclass' : classsb5"  @click="goquery(list.title,list2.name,index2)"><i :class="classi5 == index2 ? 'el-icon-close' : 'el-icon-plus'"></i><label style="margin-left: 10px">{{list2.name}}</label></button>
@@ -129,7 +129,7 @@
 
           <transition-group name="queryGoodslist">
             <div v-show="queryGoodslist" :key="goodlist.goodsId" class="content_right_div" v-for="(goodlist,index) in goodslist" >
-            <label  @click="showsb(index,goodlist.goodsId)" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
+            <label title="点击展开机型"  @click="showsb(index,goodlist.goodsId)" @mouseover="showipone(index)" @mouseleave="hideipone(index)">
               <i class="el-icon-arrow-right"></i> {{goodlist.goods_title}}
               <span style="font-weight: 600">{{goodlist.goodsName}}
               </span>
@@ -209,7 +209,7 @@
 
         <!--展开全部-->
         <div id="openall">
-          <button @click="allshow">Catch ME</button>
+          <button @click="allshow" title="点击展开全部机型">Catch ME</button>
         </div>
       </div>
 
@@ -361,6 +361,7 @@
           endGoodsid:2,
           /*解决滚动条到达懒加载会一直请求数据的bug*/
           isendGoodsid:false,
+          isendGoodsid02:false,
           /*滑块的值*/
           slidervalue:[0, 10],
           /*右边的搜索结果提示*/
@@ -397,9 +398,10 @@
 
               if (this.isgoquery==true){
                 this.$notify({
-                  title: "共"+this.goodslist.length+"款机型",
+                  title: "查询结果共"+this.goodslist.length+"款机型",
                   dangerouslyUseHTMLString: true,
                   message:"自 2019 年 4 月 1 日起增值税税率进行调整。因此所列的厂商建议零售价将可能进行调整。请您与相对授权经销商咨询具体的价格信息。",
+                  offset: 120
                 });
               }
 
@@ -699,13 +701,19 @@
             this.goodsnav = "position: relative";
           }
 
-          if (scrollTop>=470){
+          if (scrollTop>=530){
             if (this.isendGoodsid==false){
-              this.endGoodsid = 3;
+              this.endGoodsid = 6;
               this.getData();
               this.isendGoodsid=true;
             }
-          } else{
+          } ;
+          if (scrollTop>=1400) {
+            if (this.isendGoodsid02==false){
+              this.endGoodsid = 20;
+              this.getData();
+              this.isendGoodsid02=true;
+            }
            /* this.endGoodsid = 2;
             this.getData();*/
           }
@@ -723,6 +731,9 @@
       /*监听滚动条*/
       mounted() {
         window.addEventListener('scroll', this.windowScroll)
+        $('html,body').animate({scrollTop: 0}, 10);
+        this.$store.commit('changheaderStyle',1);
+        this.$store.commit('changfooterStyle',1);
       },
 
       computed:{
@@ -741,6 +752,31 @@
   }
 </style>
 <style scoped>
+
+  .content_left_mian_div_spansb{
+   font-size: 14px;color: black;
+  }
+
+  .content_left_mian_ulsb_span_div{
+    width: 180px !important;
+  }
+
+  .content_left_mian_ulsb_span{
+   font-size: 14px;color: black;
+  }
+
+  .content_left_divsb{
+    padding-top: 30px
+  }
+
+  .content_left_divsb{
+   font-size: 31px;font-weight: 400;
+  }
+
+  .content_left_divsb{
+    padding-top: 30px;
+  }
+
 
 #queryGoodslistNone{
 
@@ -848,7 +884,7 @@
     transform: scale(1, 1.1);
     transition: all 0.3s ease;
     cursor: pointer;
-    width: 360px;
+    width: 470px;
     height: 50px;
   }
   .content_right_div>label:hover{
@@ -870,7 +906,7 @@
 
 .content_right{
   width: 970px;
-  height:1800px;
+  min-height:1800px;
    /* background: wheat;*/
   position: relative;
   top: 80px;
@@ -997,7 +1033,7 @@
 
   .content_left{
     width: 240px;
-    height:1800px;
+    min-height:1800px;
   /*  background: whitesmoke;*/
     position: relative;
     top: 80px;
@@ -1007,7 +1043,7 @@
   #content{
 
     width: 1220px;
-    height:1800px;
+    min-height:3100px;
     padding: 0 0 25px;
     margin: 0 auto;
 
@@ -1047,7 +1083,7 @@
   background: #EFF0F1;
   top: 30px;
   height: 50px;
-  z-index: 9999;
+  z-index: 10;
 }
 /*方块*/
   .main_div_divsb{
@@ -1088,6 +1124,7 @@
   /*---------------------------------------------上面是我的样式--*/
   #main{
     transition: all 2s ease 0s;
+    min-height: 1000px;
   }
   .sku-box{
     position: relative;

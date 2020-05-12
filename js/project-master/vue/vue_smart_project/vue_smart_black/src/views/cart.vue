@@ -107,7 +107,7 @@
           <section class="cart_content_div_sec" :key="index" v-for="(item,index) in carGoodsData">
             <ul class="cart_content_div_sec_ul">
 
-              <li class="shp-col select" style="height: 30px;width: 30px;margin-top: 15px;margin-left: 20px">
+              <li class="shp-col select shp-col01">
                 <span class="blue-checkbox-new" @click="checked(item.sku_id)" :class="{' checkbox-on':item.checked}"><a></a></span>
               </li>
 
@@ -116,7 +116,7 @@
                   <img :src="item.spec_json.image">
                 </div>
               </li>
-              <li class="shp-col" style="width: 200px">
+              <li class="shp-col shp-col02" >
                 <div class="name hide-row">
                   <div class="name-table shp-col-sb">
                     <a href="javascript:;" target="_blank" class="shp-col-name" @click="goGoodsinfo(item.sku_id)">{{item.sub_title}}</a>
@@ -126,10 +126,10 @@
                   </div>
                 </div>
               </li>
-              <li class="shp-col" style="margin-top: 10px;margin-left: 100px;width: 50px">
+              <li class="shp-col shp-col03" >
                 <div class="shp-col-sb">¥ {{item.price}}</div>
               </li>
-              <li class="shp-col" style="margin-top: 10px;margin-left: 200px">
+              <li class="shp-col shp-col04" >
                 <div class="item-cols-num">
                   <div class="select js-select-quantity">
                     <span class="down" :class="{' down-disabled':item.count<=1}" @click="subCarPanelHandle(item.sku_id)">-</span>
@@ -138,7 +138,7 @@
                   </div>
                 </div>
               </li>
-              <li class="shp-col" style="margin-top: 20px;margin-left: 140px">
+              <li class="shp-col shp-col05" >
                 <div>
                   <a class="shp-col-del"><i style="font-size: 20px" class="el-icon-delete" @click="delCarPanelHandle(item.sku_id)"></i></a>
                 </div>
@@ -147,12 +147,12 @@
             <!--赠品-->
             <section class="cart_content_div_sec_sec" v-if="item.complimentary.compName!=''">
               <ul style="margin-top: -20px">
-                <li style="width: 284px;">
+                <li class="shp-col06">
                   <label class="oc-label">
                     <em>赠品</em>
                   </label>
                   <figure class="oc-figure">
-                    <img :src="item.complimentary.img" style="width: 40px;height: auto">
+                    <img :src="item.complimentary.img"  class="shp-col06img" >
                   </figure>
                   <a>{{item.complimentary.compName}}</a>
                 </li>
@@ -166,7 +166,7 @@
         <div v-if="count>0" class="cart_bar">
           <section class="cart_bar_sec">
             <i class="el-icon-shopping-cart-2" style="font-size: 22px"></i>
-            <label>继续选购</label>
+            <label><router-link :to="{ path: '/' }">继续选购</router-link></label>
           </section>
 
           <section class="cart_bar_total">
@@ -185,7 +185,7 @@
             </section>
             <!--结算按钮-->
             <section class="cart_bar_total_btn">
-              <a @click="gocheckout">去结算</a>
+              <a @click="gocheckout">{{gobuy}}</a>
             </section>
           </section>
         </div>
@@ -202,6 +202,11 @@
 
 <script>
     export default {
+      data(){
+        return{
+          gobuy:"去结算",
+        }
+      },
         //默认暴露一个模块
       computed:{
         carGoodsData () {
@@ -226,6 +231,8 @@
       },
       created() {
         this.$store.commit('changNav');
+        this.$store.commit('changheaderStyle',1);
+        this.$store.commit('changfooterStyle',1);
         $('html,body').animate({scrollTop: 0}, 10);
         /*拦截器，没有登录的话去到登录页面*/
         if (this.$store.state.memberinfo.avatar==undefined) {
@@ -238,9 +245,16 @@
           let routeData = this.$router.resolve({ path: '/ShopInfo', query: {  id: id } });
           window.open(routeData.href, '_blank');
         },
+        /*去结算*/
         gocheckout(){
-          this.$router.push({path: '/checkout'});
-          this.$store.state.isCarOrOne = 0;//赋值给状态管理是怎么买的判断
+          if (this.checkedprice==0){
+            return;
+          }else {
+            this.$router.push({path: '/checkout'});
+            this.$store.state.isCarOrOne = 0;//赋值给状态管理是怎么买的判断
+          }
+
+
         },
         /*删除购物车商品*/
         delCarPanelHandle (id) {
@@ -264,6 +278,11 @@
        },
         checked(id){
           this.$store.commit('Checked',id)
+          if (this.checkedprice==0){
+            this.gobuy = "请选择购物车里的商品";
+          }else{
+            this.gobuy = "去结算";
+          }
         },
         checkallbtn(checked){
           this.$store.commit('CheckAllbtn',checked);
@@ -272,14 +291,44 @@
           this.$store.commit('delCheckGoods');
         }
       },
-
+      mounted() {
+        this.$store.commit('changNav');
+        this.$store.commit('changNav3');
+      },
 
     }
 </script>
 
 <style scoped>
-  .cart_content_nonediv label{
+  .shp-col06img{
+    width: 40px;height: auto
+  }
 
+  .shp-col06{
+    width: 284px;
+  }
+
+  .shp-col04{
+    margin-top: 10px;margin-left: 130px;width: 115px
+  }
+
+  .shp-col05{
+    margin-top: 20px;margin-left: 80px;position: relative;right: -30px
+  }
+
+  .shp-col03{
+   margin-top: 10px;margin-left: 100px;width: 50px
+  }
+  .shp-col02{
+    width: 200px
+  }
+
+  .shp-col01{
+   height: 30px;width: 30px;margin-top: 15px;margin-left: 20px
+  }
+  /*响应性*/
+
+  .cart_content_nonediv label{
     position: relative;
     top: 70px;
   }
@@ -488,6 +537,7 @@
   }
   /*----------------------------上面是循环的项--*/
   .cart_content_div_mian{
+    font-size: 14px;
     width: 100%;
     min-height: 100px;
    /* background: gainsboro;*/

@@ -5,7 +5,7 @@
         <ul class="c0">
           <h3 class="c1">订单服务</h3>
           <ul>
-            <li class="c2"><router-link to="/thanks"><a class="c3">购买指南</a></router-link></li>
+            <li class="c2"><a class="c3">购买指南</a></li>
             <li class="c2"><a class="c3" @click="open4">支付方式</a></li>
             <li class="c2"><a class="c3" @click="open5">送货政策</a></li>
           </ul>
@@ -13,54 +13,52 @@
         <ul class="c0">
           <h3 class="c1">服务支持</h3>
           <ul>
-            <li class="c2"><a class="c3" target="_blank" href="https://github.com/Exrick">官方开源</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="https://github.com/Exrick/xmall-front">项目前端</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="https://github.com/Exrick/xmall">项目后端</a></li>
+            <li class="c2"><a class="c3" @click="open6">官方开源</a></li>
+            <li class="c2"><a class="c3" @click="open7">项目前端</a></li>
+            <li class="c2"><a class="c3" @click="open8">项目后端</a></li>
           </ul>
         </ul>
         <ul class="c0">
           <h3 class="c1">自助服务</h3>
           <ul>
-            <li class="c2"><a class="c3" target="_blank" href="http://blog.exrick.cn">个人博客</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="http://blog.exrick.cn/intro/">个人简介</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="https://www.bilibili.com/video/av15860053/">个人视频</a></li>
+            <li class="c2"><a class="c3" target="_blank" @click="open9">个人博客</a></li>
+            <li class="c2"><a class="c3" target="_blank" @click="open10">个人简介</a></li>
+            <li class="c2"><a class="c3" target="_blank" @click="open11">个人视频</a></li>
           </ul>
         </ul>
         <ul class="c0">
           <h3 class="c1">其他项目</h3>
           <ul>
-            <li class="c2"><a class="c3" target="_blank" href="http://xpay.exrick.cn">XPay支付系统</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="http://shouji.baidu.com/software/11783429.html">数据共享</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="https://github.com/Exrick">待开发...</a></li>
+            <li class="c2"><a class="c3" target="_blank" >待开发...</a></li>
+            <li class="c2"><a class="c3" target="_blank" >待开发...</a></li>
+            <li class="c2"><a class="c3" target="_blank" >待开发...</a></li>
           </ul>
         </ul>
         <ul class="c0">
-          <h3 class="c1">友情链接</h3>
+          <h3 class="c1">参考的样式网站</h3>
           <ul>
-            <li class="c2"><a class="c3" target="_blank" href="http://yucccc.com/">宇cccc</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="http://www.smartisan.com">Smartisan</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="https://cn.vuejs.org/">Vue</a></li>
+            <li class="c2"><a class="c3" target="_blank" href="https://www.apple.com.cn/?afid=p238%7C2LYlmDRr_mtid_18707vxu38484&cid=aos-cn-kwba-brand-bz">Apple  (中国)</a></li>
+            <li class="c2"><a class="c3" target="_blank" href="https://www.opposhop.cn/products/487.html">OPPO</a></li>
+            <li class="c2"><a class="c3" target="_blank" href="https://shop.vivo.com.cn/">VIVO</a></li>
           </ul>
         </ul>
         <ul class="c0">
-          <h3 class="c1">关注我吧</h3>
+          <h3 class="c1">需要帮助?</h3>
           <ul>
-            <li class="c2"><a class="c3" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes">腾讯 QQ</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="http://weibo.com/2255094222/profile">新浪微博</a></li>
-            <li class="c2"><a class="c3" target="_blank" href="mailto:1012139570@qq.com">官方邮箱</a></li>
+            <li class="c2"><a class="c3" target="_blank" @click="open14">帮助</a></li>
           </ul>
         </ul>
 
         <ul class="c4">
-          <li class="tel"><a class="c5" href="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes" target="_blank">1012139570</a></li>
-          <li class="time">周一至周日 10:00-23:00（限Starrer或捐赠人联系）</li>
+          <li class="tel"><a class="c5" target="_blank">A17607100469</a></li>
+          <li class="time">需要帮助请微信联系</li>
           <li class="online">
           </li>
         </ul>
       </div>
 
       <div class="copyright">
-        <h4 class="content-c2">Copyright ©2017, exrick.cn Co., Ltd. All Rights Reserved.本网站设计内容大部分属锤子科技</h4>
+        <h4 class="content-c2">Copyright ©2017, exrick.cn Co., Ltd. All Rights Reserved</h4>
         <ul class="privacy">
           <li class="content-c1"><a class="content-c0" @click="open1">法律声明</a></li>
           <li class="content-c1"><a class="content-c0" @click="open2">隐私条款</a></li>
@@ -86,7 +84,7 @@
       open1 () {
         this.$notify.info({
           title: '法律声明',
-          message: '此仅为个人练习开源模仿项目，仅供学习参考，承担不起任何法律问题'
+          message: '此仅为个人项目，仅供学习参考，承担不起任何法律问题'
         })
       },
       open2 () {
@@ -105,22 +103,73 @@
       open4 () {
         this.$notify.info({
           title: '支付方式',
-          message: '支持支付宝、微信等方式捐赠'
+          message: '承蒙厚爱'
         })
       },
       open5 () {
         this.$notify({
           title: '送货政策',
-          message: '本网站所有商品购买后不会发货，将用作捐赠',
+          message: '我拿什么送你',
           type: 'warning'
         })
-      }
+      },
+      open6 () {
+        this.$notify({
+          title: '官方开源',
+          message: '暂不考虑开源呢',
+          type: 'warning'
+        })
+      },
+      open7 () {
+        this.$notify({
+          title: '项目前端',
+          message: '暂不考虑开源呢',
+          type: 'warning'
+        })
+      },
+      open8 () {
+        this.$notify({
+          title: '项目后端',
+          message: '暂不考虑开源呢',
+          type: 'warning'
+        })
+      },
+      open9 () {
+        this.$notify({
+          title: '个人博客',
+          message: '0.0',
+          type: 'warning'
+        })
+      },
+      open10 () {
+        this.$notify({
+          title: '个人简介',
+          message: '一个低调的祖安人',
+          type: 'warning'
+        })
+      },
+      open11 () {
+        this.$notify({
+          title: '个人视频',
+          message: '频视人个',
+          type: 'warning'
+        })
+      },
+
+      open14 () {
+        this.$notify({
+          title: '帮助',
+          message: '没人会帮助你，请自己靠自己',
+          type: 'warning'
+        })
+      },
+
     },
     components: {
     }
   }
 </script>
-<style>
+<style scoped>
   .footer {
     padding: 50px 0 20px;
     border-top: 1px solid #e6e6e6;
@@ -183,13 +232,13 @@
 
   .c5 {
     color: #646464;
-    right: -70px;
+    right: -20px;
     position: relative;
   }
 
   .time {
     margin-top: 5px;
-    right: -4px;
+    right: 0px;
     position: relative;
     clear: both;
     width: 241px;

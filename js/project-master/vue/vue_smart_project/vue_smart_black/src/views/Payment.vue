@@ -27,19 +27,18 @@
       <!--订单详情-->
       <div class="gray-box clear" style="position: relative;top: -20px;">
         <div style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto">
-          <div class="order-info" style="padding-top: 30px;text-align: left;
-          padding-left: 50px;font-family: OPPOfont1;display: flex">
+          <div class="order-info" style="padding-top: 30px;text-align: left;padding-left: 50px;font-family: OPPOfont1;display: flex">
             <label class="orders-content-title">订单详情</label>
             <ul class="address-decrypt">
               <li>
-                <label style="width: 120px">支付单号:</label>
-                <label style="width: 200px">{{orderInfo.order_num}}</label>
+                <label class="label01">支付单号:</label>
+                <label class="label02">{{orderInfo.order_num}}</label>
               </li>
               <li>
-                <label style="width: 120px">收货信息:</label>
-                <label style="width: 250px">{{orderInfo.addressinfo.addressName}}</label>
-                <label style="width: 130px">{{orderInfo.addressinfo.addressIpone}}</label>
-                <label style="width: 400px">
+                <label class="label01">收货信息:</label>
+                <label class="label02" >{{orderInfo.addressinfo.addressName}}</label>
+                <label class="label03" >{{orderInfo.addressinfo.addressIpone}}</label>
+                <label class="label04" >
                   {{orderInfo.addressinfo.addressProvince}}
                   {{orderInfo.addressinfo.addressCity}}
                   {{orderInfo.addressinfo.addressCounty}}
@@ -47,19 +46,19 @@
                 </label>
               </li>
               <li  v-for="(site,index) in orderInfo.goodsinfo">
-                <label style="width: 120px" v-if="index==0">商品信息:</label>
-                <label style="width: 120px;opacity: 0" v-if="index!=0">商品信息:</label>
-                <label style="width:250px">{{site.sub_title}} {{site.title}} {{site.spec_json.show_name}}</label>
-                <label style="width: 200px" v-if="site.complimentary.compName!=''">赠品：{{site.complimentary.compName}}</label>
+                <label class="label01" v-if="index==0">商品信息:</label>
+                <label class="label0131" v-if="index!=0">商品信息:</label>
+                <label class="label0132" >{{site.sub_title}} {{site.title}} {{site.spec_json.show_name}}</label>
+                <label class="label0133" v-if="site.complimentary.compName!=''">赠品：{{site.complimentary.compName}}</label>
               </li>
 
               <li>
-                <label style="width: 120px">交易金额:</label>
-                <label style="width: 200px">￥{{orderInfo.order_price}}.00</label>
+                <label class="label01">交易金额:</label>
+                <label class="label0133" >￥{{orderInfo.order_price}}.00</label>
               </li>
               <li>
-                <label style="width: 120px">交易时间:</label>
-                <label style="width: 200px">{{orderInfo.order_found}}</label>
+                <label class="label01">交易时间:</label>
+                <label class="label0133" >{{orderInfo.order_found}}</label>
               </li>
             </ul>
           </div>
@@ -68,7 +67,7 @@
 
       <!--支付方法-->
       <div class="gray-box clear" style="position: relative;top: -80px;">
-        <div style="width: 92%;height: 100px;border-bottom: 1px solid #EDEDED;margin: 0 auto;position: relative">
+        <div class="gray-box_div" style="width: 92%;border-bottom: 1px solid #EDEDED;margin: 0 auto;position: relative">
           <div class="order-info" style="padding-top: 30px;text-align: left;
           padding-left: 50px;font-family: OPPOfont1;display: flex">
             <label class="orders-content-title">支付平台</label>
@@ -81,7 +80,7 @@
                   <span>花呗分期</span>
                 </a>
                 <strong>
-                  <label class="oc-label">免息</label>
+                  <label class="oc-label">低息</label>
                 </strong>
                 <!--选中li的钩-->
                 <i class="yesi" :style="jiantouindex==0?activejiantou:activejiantousb"></i>
@@ -105,7 +104,7 @@
 
               <li @click="clickLi(2)" :style="jiantouindex==2?activeli:activelisb">
                 <b class="img01">
-                  <img src="../../static/images/shuchai/微信支付.png">
+                  <img src="../../static/images/shuchai/wexinpay.png">
                 </b>
                 <a style="margin-left: 0px">
                   <span>微信支付</span>
@@ -143,7 +142,9 @@
           <!--支付二维码-->
           <div class="payma">
             <img @click="gopay" src="../../static/images/shuchai/二维码.jpg">
-            <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
+            <label style="position: relative;top: 10px">点击上方的二维码图片使用
+              <label class="zfbsh" @click="zfbsh">支付宝沙盒</label>
+              进行支付</label>
           </div>
         </div>
       </div>
@@ -158,7 +159,9 @@
           <!--支付二维码-->
           <div class="payma">
             <img @click="gopay" src="../../static/images/shuchai/二维码.jpg">
-            <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
+            <label style="position: relative;top: 10px">点击上方的二维码图片使用
+              <label class="zfbsh" @click="zfbsh">支付宝沙盒</label>
+              进行支付</label>
           </div>
         </div>
       </div>
@@ -173,7 +176,9 @@
           <!--支付二维码-->
           <div class="payma">
             <img @click="gopay" src="../../static/images/shuchai/二维码.jpg">
-            <label style="position: relative;top: 10px">打开手机支付宝 扫一扫继续付款</label>
+            <label style="position: relative;top: 10px">点击上方的二维码图片使用
+              <label class="zfbsh" @click="zfbsh">支付宝沙盒</label>
+              进行支付</label>
           </div>
         </div>
       </div>
@@ -243,10 +248,10 @@
     mounted () {
       this.timer();
       $('html,body').animate({scrollTop: 0}, 10);
-
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
     },
     watch: {
-
       secondsb: {
         handler (newVal) {
          /* console.log(newVal+"==============")*/
@@ -277,6 +282,9 @@
             this.openFullScreen2();
           })
         })
+      },
+      zfbsh(){
+        window.open("https://opendocs.alipay.com/open/200/105311/", '_blank');
       },
       /*点击花呗*/
       clickLoans(index,loansprice){
@@ -310,12 +318,12 @@
             formDatas.append("id",res2.res.orderId)
             formDatas.append("type",1)
             f_updatePayType(formDatas).then(res => {
-              location.href='http://localhost:8088/goAlipay?price='+this.loanspricesb+"&ordernumsb="+this.order_num;
+              location.href='http://118.178.187.197:8088/goAlipay?price='+this.loanspricesb+"&ordernumsb="+this.order_num;
             })
           })
         } else {
           /*支付宝*/
-          location.href='http://localhost:8088/goAlipay?price='+this.orderInfo.order_price+"&ordernumsb="+this.order_num;
+          location.href='http://118.178.187.197:8088/goAlipay?price='+this.orderInfo.order_price+"&ordernumsb="+this.order_num;
         }
 
       },
@@ -329,7 +337,7 @@
       num(n) {
         /*如果分和秒都为0就修改此订单状态为取消，并且跳转到用户订单页面*/
         if (this.secondsb==0 && this.minutesb==0){
-          // this.getData();
+           this.getData();
         }
         return n < 10 ? '0' + n : '' + n
       },
@@ -369,7 +377,37 @@
   }
 </script>
 
-<style>
+<style scoped>
+  .zfbsh{
+    color: indianred;
+    cursor: pointer;
+  }
+  .gray-box_div{
+    height: 100px;
+  }
+  .label0133{
+    width: 200px
+  }
+  .label0132{
+    width: 400px
+  }
+  .label0131{
+    width: 120px;opacity: 0
+  }
+  .label04{
+   width: 400px
+  }
+  .label03{
+    width: 130px
+  }
+  .label02{
+    width: 250px
+  }
+
+  .label01{
+    width: 120px
+  }
+  /*响应性*/
   .payma img{
     width: 115px;
     height: 115px;
@@ -571,6 +609,7 @@
     padding: 60px 0 55px;
     color: #333;
     text-align: center;
+    font-size: 14px;
     /*font-family: OPPOfont2;*/
   }
   .page-order-payment .order-info h2{

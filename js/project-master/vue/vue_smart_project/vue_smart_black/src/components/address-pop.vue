@@ -236,7 +236,6 @@
           this.addressmem.addressId = this.receive.addressId;
           if (this.receive.default){
             defaddress = 0;
-
           } else {
             defaddress = 1;
           }
@@ -249,7 +248,20 @@
           if (this.receive.addressId==0||this.receive.addressId==undefined){
             let formDatas2 = new FormData();
             formDatas2.append("id",this.addressmem.memberId );
-            f_updateOtherdef(formDatas2).then(resb => {
+            if (defaddress==0){
+              f_updateOtherdef(formDatas2).then(resb => {
+                addAddress(formDatas).then(res => {
+                  if (res.res){
+                    this.$emit('close');
+                    // 触发父组件中的事件，并传递参数
+                    this.$emit('getDatasb',"");
+                    this.clearFrom();
+                  }else {
+                    this.$message.error('错了o1');
+                  }
+                })
+              })
+            }else {
               addAddress(formDatas).then(res => {
                 if (res.res){
                   this.$emit('close');
@@ -260,11 +272,14 @@
                   this.$message.error('错了o1');
                 }
               })
-            })
+            }
+
+
+
           }else{
             if (defaddress==0){
               let formDatas2 = new FormData();
-              formDatas2.append("id",this.addressmem.memberId );
+              formDatas2.append("id",this.addressmem.memberId);
               f_updateOtherdef(formDatas2).then(resb => {
                 updateAddress(formDatas).then(res => {
                   if (res.res){
@@ -340,7 +355,7 @@
     }
 </script>
 
-<style>
+<style scoped>
   .form-item-v3 input{
     font-family: OPPOfont5 !important;
     font-size: 14px !important;

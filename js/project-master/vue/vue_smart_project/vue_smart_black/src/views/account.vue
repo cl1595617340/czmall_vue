@@ -1,18 +1,39 @@
 <template>
-	<div id="main" style="background: #F5F5F5;padding-top: 40px">
+	<div id="main" style="background: #F5F5F5;padding-bottom: 100px">
 		<div class="content clear">
 			<div class="account-wrapper">
 				<div class="account-sidebar">
 					<div class="avatar gray-box clear">
 						<div class="js-account-sidebar-info">
-              <img :src="this.$store.state.memberinfo.avatar" style="border-radius: 50% 50%;width: 130px;height: 130px">
+              <img class="user_img" :src="this.$store.state.memberinfo.avatar">
+              <p class="member_p" style="padding-top: 10px">好久不见</p>
+              <p class="member_p">
+                <label>
+                  {{this.$store.state.memberinfo.memberName}}
+                  <label v-if="this.$store.state.memberinfo.sex=='f'">女士</label>
+                  <label v-if="this.$store.state.memberinfo.sex=='m'">先生</label>
+                </label>
+              </p>
 						</div>
 						<div class="box-inner">
 							<ul class="account-nav">
 						    <router-link :to="{name: 'Order'}" exact tag="li" activeClass="current">
 						        <a>我的订单</a>
 						    </router-link>
-								<router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                  <a>售后服务(待开发)</a>
+                </router-link>
+                <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                  <a>我的优惠(待开发)</a>
+                </router-link>
+                <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                  <a>账号资料(待开发)</a>
+                </router-link>
+                <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
+                  <a>收货地址(待开发)</a>
+                </router-link>
+
+							<!--	<router-link :to="{name: 'Address'}" tag="li" activeClass="current">
                     <a>配送地址</a>
                 </router-link>
                 <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
@@ -20,7 +41,7 @@
                 </router-link>
                 <router-link :to="{name: 'Address'}" tag="li" activeClass="current">
                   <a>账户管理</a>
-                </router-link>
+                </router-link>-->
 							</ul>
 						</div>
 					</div>
@@ -35,7 +56,19 @@
 	export default {}
 </script>
 
-<style>
+<style scoped>
+.user_img{
+  border-radius: 50% 50%;
+  width: 130px !important;
+  height: 130px !important;
+}
+  #main{
+    font-size: 14px;
+  }
+  .member_p{
+    font-family: OPPOfont2;
+  }
+
 .content{
 	clear: both;
     width: 1220px;
@@ -46,12 +79,14 @@
 .account-wrapper{
 	position: relative;
     min-height: 550px;
+  top: 40px;
 }
 .account-sidebar{
 	position: absolute;
     left: 0;
     top: 0;
     width: 210px;
+
 }
 .gray-box, .gray-btn-menu-on:hover{
 	background: #FFF;

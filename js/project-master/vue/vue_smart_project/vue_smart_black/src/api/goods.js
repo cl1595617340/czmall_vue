@@ -1,8 +1,8 @@
 import http from '../api/public'
 
-let hostUrl = "http://localhost:8088";
 
 
+let hostUrl = "http://118.178.187.197:8088";
 /*查询所有的手机信息*/
 export const f_getGoodsListToType = (params) => {
   return http.fetchPost(hostUrl+'/front/goods/goods/f_getGoodsListToType', params)
@@ -34,9 +34,7 @@ export const f_getParameterinfo = (params) => {
 }
 
 
-export const sbzfb = (params) => {
-  return http.fetchPost(hostUrl+'/sbzfb', params)
-}
+
 
 /*点击一级分类显示旗下的所有手机*/
 export const f_typeGoods = (params) => {

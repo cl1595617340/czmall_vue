@@ -323,16 +323,17 @@
     overflow: hidden;
 }
 .nav-cart-list .cart-item-inner{
-	height: 80px;
+	  height: 80px;
     padding: 20px;
     position: relative;
 }
 .nav-cart-list .item-thumb{
-	position: relative;
+	  position: relative;
     float: left;
-    width: 80px;
-    height: 80px;
+    width: 30px;
+    height: 30px;
     border-radius: 3px;
+
 }
 .nav-cart-list .item-thumb:before{
 	content: "";

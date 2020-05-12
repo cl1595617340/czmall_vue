@@ -3,7 +3,10 @@
       <!--第3个内容,专区,要循环的-->
       <div class="home_div_div03">
         <div class="home_div_div03_title">
-          <p>商品>{{typename}}</p>
+          <p>商品
+            <i class="el-icon-arrow-right"></i>{{typename}}
+            <span v-if="typename2!=undefined"><i class="el-icon-arrow-right"></i>{{typename2}}</span>
+          </p>
         </div>
         <div class="home_div_div03_content" v-if="goodsList.length!=0">
           <ul>
@@ -24,6 +27,7 @@
 
         <div class="home_div_div03_content_none" v-if="goodsList.length==0">
           <p>空空乳液</p>
+          <p>到别处看看吧...</p>
         </div>
       </div>
 
@@ -38,18 +42,21 @@
       return {
         typeid:-1,
         typename:"",
+        typename2:"",
         //数据
         goodsList:[],
+        type:-1,
 
       }
     },
     created(){
-
+      $('html,body').animate({scrollTop: 0}, 10);
     },
     methods:{
       getData(){
         let formDatas = new FormData();
         formDatas.append("id", this.typeid);
+        formDatas.append("type", this.type);
         f_typeGoods(formDatas).then(res => {
           this.goodsList = res.goodsList;
           console.log(res.goodsList)
@@ -65,11 +72,20 @@
     },
     mounted() {
       window.addEventListener('scroll', this.windowScroll);
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
       this.$store.commit('changNav');
       let id = this.$route.query.id;
       this.typeid = id;
       let name = this.$route.query.name;
       this.typename = name;
+      let name2 = this.$route.query.name2;
+      this.typename2 = name2;
+      if (this.typename2==undefined){
+        this.type = 0;
+      } else {
+        this.type = 1;
+      }
       this.getData();
       $('html,body').animate({scrollTop: 0}, 10);
     },
@@ -81,6 +97,7 @@
     font-size: 23px;
     position: relative;
     top: 150px;
+    font-family: OPPOfont5;
   }
   .home_div_div03_content_none{
     width: 91%;
@@ -88,6 +105,8 @@
     background: white;
     margin: 0 auto;
     text-align: center;
+    position: relative;
+    top: 20px;
   }
   /*-----------------------空--*/
   .sbpsb{

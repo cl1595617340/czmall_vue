@@ -14,7 +14,7 @@
     <div class="main_querdiv_div">
       <div>
         <input @keyup.enter="goQueryGoods($event)" value="" v-model="searchValue">
-        <i class="el-icon-search"></i>
+        <i class="el-icon-search" @click="getData"></i>
       </div>
 
       <!--分类的div-->
@@ -98,7 +98,10 @@
       }
     },
     created() {
+      $('html,body').animate({scrollTop: 0}, 10);
       this.$store.commit('changNav');
+      this.$store.commit('changheaderStyle',1);
+      this.$store.commit('changfooterStyle',1);
       this.openFullScreen1();
     },
     methods:{
@@ -197,6 +200,15 @@
         }else {
           this.isshowgoods=1;
           this.getData();
+        }
+
+        if (index==2||index==3){
+          this.$notify({
+            dangerouslyUseHTMLString: true,
+            title: '提示',
+            message: "服务和体验店这两个是装饰品",
+            iconClass:'el-icon-warning-outline',
+          });
         }
       },
     },

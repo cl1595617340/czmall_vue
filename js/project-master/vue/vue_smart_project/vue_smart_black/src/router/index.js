@@ -38,14 +38,17 @@ export default new Router({
     {
       path: '/',
       name:"homes",
-      component: homes
+      component: homes,
+      meta:{
+        title:'C-Z(中国)'
+      }
     },
     {
       path: '/Shop',
       name:"Shop",
       component: Shop,
       meta:{
-        title:'全部机型-ZH(中国大陆)'
+        title:'全部机型(中国大陆)'
       }
     },
     {
@@ -58,7 +61,7 @@ export default new Router({
       name:"QueryGoods",
       component: QueryGoods,
       meta:{
-        title:'搜索结果-ZH(中国大陆)'
+        title:'搜索结果(中国大陆)'
       }
     },
     {
@@ -183,6 +186,11 @@ export default new Router({
           component: Address
         }
       ]
+    },
+    {
+      path: "*",
+      redirect: "/"
     }
+
   ]
 })

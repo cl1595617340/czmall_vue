@@ -2,51 +2,51 @@
     <div id="main" v-loading.fullscreen.lock="fullscreenLoading">
       <div class="box_header">
         <ul class="box_header_ul">
-          <li>Mall官网</li>
-          <li>colorOS</li>
-          <li>云服务</li>
+          <li @click="gohomepage">Mall官网</li>
+          <li @click="Todevelop">colorOS</li>
+          <li @click="Todevelop">云服务</li>
         </ul>
         <ul class="box_header_ul2">
-          <li>帮助中心</li>
-          <li>简体中文</li>
+          <li @click="Todevelop">帮助中心</li>
+          <li @click="Todevelop">简体中文</li>
         </ul>
       </div>
 
       <div class="main_box">
         <div class="main_box_logo">
           <div class="main_box_logo_sb"></div>
-          <p>登录 Mall 帐号可享受更多的服务</p>
+          <p style="color: black;font-family: OPPOfont1">登录 Mall 帐号可享受更多的服务</p>
         </div>
       </div>
 
       <div class="box_content">
         <div class="index_content">
-          <div style="font-family: OPPOfont2;font-size: 23px">
+          <div class="index_content_div01" >
             账号登录
           </div>
-          <div style="font-family: OPPOfont4;font-size: 15px;margin-top: 10px">
+          <div class="index_content_div02" >
             密码登录
           </div>
-          <div style="font-family: OPPOfont4;font-size: 15px;margin-top: 20px">
+          <div class="index_content_div03">
             <input placeholder="请输入手机号" class="input_sb" v-model="ipone">
           </div>
-          <div style="font-family: OPPOfont4;font-size: 15px;margin-top: 20px">
-            <input placeholder="请输入密码" class="input_sb" v-model="pwd">
+          <div class="index_content_div04" >
+            <input placeholder="请输入密码" class="input_sb" v-model="pwd" type="password">
           </div>
-          <div style="font-family: OPPOfont4;font-size: 12px;margin-top: 10px;margin-left: -250px">
+          <div @click="Todevelop" class="zhnone index_content_div05"  >
             忘记密码
           </div>
-          <div style="font-family: OPPOfont4;margin-top: 10px">
+          <div class="index_content_div06" >
             <button class="login_btn" @click="submit">登陆</button>
           </div>
-          <div style="font-family: OPPOfont4;font-size: 12px;margin-top: 10px;margin-left: -250px">
-            <label style="margin-left: 70px">账号隐私声明</label>
-            <label style="position: relative;left: 180px;font-family: OPPOfont2">注册账号</label>
+          <div class="index_content_div07" >
+            <label @click="Todevelop"  class="zhnone index_content_div0701">账号隐私声明</label>
+            <label @click="registeruser" class="index_content_div0702" >注册账号</label>
           </div>
           <!--第三方登录-->
           <div style="font-family: OPPOfont4;margin-top: 20px">
             <fieldset class="sb_fieldset">
-              <legend>其他方式登录</legend>
+              <legend>第三方登陆</legend>
             </fieldset>
             <div>
               <img @click="loginsb" src="../../../static/images/shuchai/支付宝.png" class="zfbimg">
@@ -57,7 +57,7 @@
 
       <!--页脚-->
       <div class="box_footer">
-        <p class="box_footer_p">小米公司版权所有-京ICP备10046444-京公网安备11010802020134号-京ICP证110507号</p>
+        <p class="box_footer_p">mall公司版权所有-京ICP备10046444-京公网安备11010802020134号-京ICP证110507号</p>
       </div>
     </div>
 </template>
@@ -80,7 +80,29 @@
     },
     methods:{
       loginsb(){
-        location.href='http://localhost:8088/zhifubao';
+        location.href='http://118.178.187.197:8088/zhifubao';
+      },
+      /*通用的待开发*/
+      Todevelop(){
+        this.$toTop()
+      },
+      /*回到首页*/
+      gohomepage(){
+        this.show = false;
+        this.$store.commit('changNav2');
+        this.$router.push("/");
+        this.$router.go(0);
+      },
+      /*注册的按钮*/
+      registeruser(){
+        let arr = ['强烈建议使用第三方登陆!!!,如出现意料之外的错误请使用测试账号.', '测试的手机号2', '测试的密码1234'];
+        let str = arr.join(' <br/> ');
+        this.$notify({
+          dangerouslyUseHTMLString: true,
+          title: '看见我了吗',
+          message: str,
+          iconClass:'el-icon-warning-outline',
+        });
       },
       /*登录的按钮*/
       submit(){
@@ -98,7 +120,13 @@
               this.sbtime = 3000;
               this.$store.state.memberinfo = res.res;
               setTimeout(() => {
-                location.href=this.$store.state.memberloginUrl;
+               /* alert(this.$store.state.memberloginUrl)*/
+                if (this.$store.state.memberloginUrl=="http://localhost:8080/#/cart") {
+                  location.href="http://118.178.187.197:8088/front/index.html#/cart";
+                }else {
+                  location.href=this.$store.state.memberloginUrl;
+                }
+
               }, 2000);
               this.openFullScreen2();
             }
@@ -143,6 +171,53 @@
 </script>
 
 <style scoped>
+
+  .index_content_div0702{
+    position: relative;left: 180px;font-family: OPPOfont2
+
+  }
+
+  .index_content_div0701{
+    margin-left: 70px
+
+  }
+
+  .index_content_div07{
+    font-family: OPPOfont4;font-size: 12px;margin-top: 10px;margin-left: -250px
+
+  }
+
+  .index_content_div06{
+   font-family: OPPOfont4;margin-top: 10px
+
+  }
+
+  .index_content_div05{
+    font-family: OPPOfont4;font-size: 12px;margin-top: 10px;margin-left: -250px
+
+  }
+  .index_content_div04{
+   font-family: OPPOfont4;font-size: 15px;margin-top: 20px
+  }
+
+  .index_content_div03{
+   font-family: OPPOfont4;font-size: 15px;margin-top: 20px
+  }
+
+  .index_content_div02{
+   font-family: OPPOfont4;font-size: 15px;margin-top: 10px
+
+  }
+  .index_content_div01{
+    font-family: OPPOfont2;font-size: 23px;
+  }
+
+
+  .zhnone{
+    cursor: pointer;
+  }
+
+  /*上面是3.6写死的待开发样式*/
   .box_header_ul2 li{
     float: left;
     margin-left: 40px;
@@ -167,6 +242,7 @@
     width: 100%;
     height:40px;
     /*background: white;*/
+    color: black;
   }
   /*-------------------------------最上面的头--*/
 .box_footer_p{
@@ -220,7 +296,7 @@
     display: block;
     font-size: 14px;
     height: 48px;
-    line-height: 1x;
+    line-height: 1px;
     margin: 0 auto;
     text-indent: 16px;
     width: 80%;
@@ -276,7 +352,7 @@
   }
 #main{
   position: absolute;
-  background: url(../../../static/images/shuchai/背景图.jpg) no-repeat;
+  background: url(https://id.heytap.com/img/heytap_bg.1612deb5.png) no-repeat;
   background-size: 100% 100%;
   left:0;
   right:0;

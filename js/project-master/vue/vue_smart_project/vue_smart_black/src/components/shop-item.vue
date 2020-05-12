@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script>
+<script scoped>
     export default {
         //默认暴露一个模块
       data(){

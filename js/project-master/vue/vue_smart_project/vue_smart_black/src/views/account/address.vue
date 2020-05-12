@@ -156,7 +156,7 @@
   }
 </script>
 
-<style>
+<style scoped>
 .blue-btn, .gray-blue-btn, .gray-btn, .gray-icon-btn, .light-blue-btn, .light-gray-btn{
     display: inline-block;
     height: 38px;

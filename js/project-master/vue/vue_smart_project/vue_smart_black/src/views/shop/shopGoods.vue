@@ -11,7 +11,7 @@
 </script>
 
 <style scoped>
-#main_div{
+/*#main_div{
   width: 1220px;
   min-height: 600px;
   padding: 0 0 25px;
@@ -19,5 +19,5 @@
 
   background: whitesmoke;
   z-index: 1;
-}
+}*/
 </style>

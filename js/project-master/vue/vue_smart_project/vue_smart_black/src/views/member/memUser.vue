@@ -2,25 +2,25 @@
   <div id="main"   v-loading.fullscreen.lock="fullscreenLoading">
     <div class="main_content">
 
-        <div style="font-family: OPPOfont2;font-size: 16px;color: black;margin-top: 20px">
+        <div class="main_content_div" >
           <img :src="member.avatar">
-          <label style="position: relative;top: 10px">{{member.nickName}}</label>
+          <label class="main_content_div_label" >{{member.nickName}}</label>
           <br/>
         </div>
-        <div style="font-family: OPPOfont4;font-size: 15px;margin-top: 20px;color: black;">
+        <div class="main_content_div02" >
           绑定安全手机
         </div>
 
-        <div style="font-family: OPPOfont4;font-size: 15px;position: relative;top: 30px">
+        <div class="main_content_div03"  >
           <input placeholder="请输入手机号" class="input_sb" v-model="saveMembers.memberipone">
         </div>
-        <div style="font-family: OPPOfont4;font-size: 15px;position: relative;top: 50px;">
+        <div class="main_content_div04">
           <input type="password" placeholder="请输入密码" class="input_sb" v-model="saveMembers.memberpwd">
         </div>
-        <div style="font-family: OPPOfont4;" class="exitsb" @click="exitsb">
+        <div   class="exitsb fontsb" @click="exitsb">
           退出 <i class="el-icon-switch-button"></i>
         </div>
-        <div style="font-family: OPPOfont4;position: relative;top: 70px">
+        <div class="main_content_div05" >
           <button class="login_btn" @click="next">继续</button>
         </div>
 
@@ -30,10 +30,9 @@
 </template>
 
 <script>
-  import { sbzfb } from '../../api/goods'
+  import { sbzfb } from '../../api/member'
   import { saveMember } from '../../api/member'
   import { f_getMemByName } from '../../api/member'
-  import $ from 'jquery'
   export default {
     data(){
       return{
@@ -67,22 +66,30 @@
         /*获取支付宝登录的用户信息*/
         sbzfb().then(resb => {
           this.$store.state.memberinfo = resb.sb;
+          this.$store.state.memberinfo.memberName = resb.sb.nickName;
+          this.$store.state.memberinfo.sex = resb.sb.gender;
        /*   console.log(this.$store.state.memberinfo);*/
           this.member = this.$store.state.memberinfo;
-          alert(123)
-          console.log( this.member);
+          console.log(1111111);
+          console.log(this.$store.state.memberinfo);
+          console.log(22222222);
+          console.log(this.member);
           this.openFullScreen1();
 
           /*根基名字查询用户是否已经支付宝注册过了*/
           let formDatas = new FormData();
           formDatas.append("name",this.$store.state.memberinfo.nickName);
           f_getMemByName(formDatas).then(res => {
-            alert(1231)
+
             console.log(res.member);
             if (res.res){
               setTimeout(() => {
-                location.href=this.$store.state.memberloginUrl;
-              }, 1500);
+                if (this.$store.state.memberloginUrl=="http://localhost:8080/#/cart") {
+                  location.href="http://118.178.187.197:8088/front/index.html#/cart";
+                }else {
+                  location.href=this.$store.state.memberloginUrl;
+                }
+              }, 3000);
             }
           })
         })
@@ -90,16 +97,18 @@
       },
       /*继续的按钮*/
       next(){
+        console.log(this.member);
         /*添加用户端api*/
         this.saveMembers.memberName = this.member.nickName;
         this.saveMembers.sex = this.member.gender;
         this.saveMembers.email = "";
-        this.saveMembers.birthday = "1999-01-01";
+        this.saveMembers.birthday = "1999-03-07";
         this.saveMembers.memberProvince = this.member.province;
         this.saveMembers.membercity = this.member.city;
        /*  this.saveMembers.memberState = this.member.nickName;
          this.saveMembers.memberipone = this.member.nickName;*/
         this.saveMembers.avatar = this.member.avatar;
+
         let formDatas = new FormData();
         formDatas.append("obj", JSON.stringify(this.saveMembers));
         saveMember(formDatas).then(res => {
@@ -117,6 +126,7 @@
         })
       },
       exitsb(){
+        this.$store.state.memberinfo = "";
         this.$router.push({path: '/'});
         this.$router.go(0);
       },
@@ -150,6 +160,35 @@
 </script>
 
 <style scoped>
+
+  .main_content_div_label{
+    position: relative;top: 10px
+  }
+
+  .fontsb{
+    font-family: OPPOfont4;
+  }
+  .main_content_div05{
+    font-family: OPPOfont4;position: relative;top: 70px
+
+  }
+
+  .main_content_div04{
+    ont-family: OPPOfont4;font-size: 15px;position: relative;top: 50px;
+
+  }
+  .main_content_div03{
+    font-family: OPPOfont4;font-size: 15px;position: relative;top: 30px
+  }
+  .main_content_div02{
+   font-family: OPPOfont4;font-size: 15px;margin-top: 20px;color: black;
+
+  }
+  .main_content_div{
+    font-family: OPPOfont2;font-size: 16px;color: black;margin-top: 20px
+  }
+
+
   .exitsb{
     color: black;
     cursor: pointer;
@@ -198,7 +237,7 @@
     display: block;
     font-size: 14px;
     height: 40px;
-    line-height: 1x;
+    line-height: 1px;
     margin: 0 auto;
     text-indent: 16px;
     width: 80%;
