@@ -54,34 +54,23 @@ export default {
             collapse: false,
             items: [
                 {
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-s-home',
                     index: 'dashboard',
                     title: '系统首页'
                 },
                 {
-                    icon: 'el-icon-lx-copy',
+                    icon: 'el-icon-chat-dot-round',
                     index: 'tabs',
                     title: '消息'
                 },
                 {
-                    icon: 'el-icon-s-home',
+                    icon: 'el-icon-s-flag',
                     index: '100',
                     title: '推广管理',
                     subs: [
                         {
                             index: 'generalize',
                             title: '主页设置'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-shopping-bag-1',
-                    index: '10',
-                    title: '商品管理',
-                    subs: [
-                        {
-                            index: 'allgoods',
-                            title: '商品列表'
                         }
                     ]
                 },
@@ -94,6 +83,17 @@ export default {
                             index: 'goodstype',
                             title: '商品类目'
                         },
+                    ]
+                },
+                {
+                    icon: 'el-icon-shopping-bag-1',
+                    index: '10',
+                    title: '商品管理',
+                    subs: [
+                        {
+                            index: 'allgoods',
+                            title: '商品列表'
+                        }
                     ]
                 },
                 {
@@ -118,7 +118,17 @@ export default {
                         },
                     ]
                 },
-
+                {
+                    icon: 'el-icon-s-check',
+                    index: '14',
+                    title: '权限系统',
+                    subs: [
+                        {
+                            index: 'permission',
+                            title: '权限管理'
+                        },
+                    ]
+                },
                /* {
                     icon: 'el-icon-lx-calendar',
                     index: '3',
@@ -203,6 +213,11 @@ export default {
     },
     computed: {
         onRoutes() {
+            // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+            bus.$on('collapse', msg => {
+                this.collapse = msg;
+                bus.$emit('collapse-content', msg);
+            });
             return this.$route.path.replace('/', '');
         }
     },

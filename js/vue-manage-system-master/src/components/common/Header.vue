@@ -5,7 +5,7 @@
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div>
-        <div class="logo">MYVUE</div>
+        <div class="logo" style="position: relative;left: 18px">MYMall</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -29,12 +29,12 @@
                 </div>
                 <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../../assets/img/img.jpg" style="margin-top: -8px"/>
+                    <img :src="adminImg" style="margin-top: -8px"/>
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        {{username}}
+                       {{name}}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
@@ -50,26 +50,28 @@
 </template>
 <script>
 import bus from '../common/bus';
+
+
 export default {
     data() {
         return {
             collapse: false,
             fullscreen: false,
-            name: 'linxin',
+            name: localStorage.getItem('ms_username'),
+            adminImg: localStorage.getItem('ms_userimg'),
             message: 2
         };
     },
-    computed: {
-        username() {
-            let username = localStorage.getItem('ms_username');
-            return username ? username : this.name;
-        }
-    },
+
     methods: {
+
         // 用户名下拉菜单选择事件
         handleCommand(command) {
+            /*退出*/
             if (command == 'loginout') {
                 localStorage.removeItem('ms_username');
+                localStorage.removeItem('ms_roleName');
+                localStorage.removeItem('ms_token');
                 this.$router.push('/login');
             }
         },

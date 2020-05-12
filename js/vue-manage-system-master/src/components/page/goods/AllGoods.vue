@@ -48,7 +48,7 @@
                             :show-all-levels="false"
                             :options="options"
                             @change="handleChange"
-                            @keyup.enter.native="goPost()" v-model="goods.goodsType3Id" placeholder="请选择">
+                            @keyup.enter.native="goPost()" v-model="goods.goodsType3Id" placeholder="请选择分类">
                     </el-cascader>
                 </div>
                 <!---提交的按钮-->
@@ -65,6 +65,7 @@
                     :cell-style="rowClass"
                     :header-cell-style="headClass"
                     @selection-change="handleSelectionChange"
+                    :default-sort = "{prop: 'goods_create'}"
                     style="width: 97%;margin: 0 auto">
                 <el-table-column
                         type="selection"
@@ -82,7 +83,7 @@
                         <el-popover trigger="hover" placement="top">
                             <p>{{ scope.row.goodsDescribe }}</p>
                             <div slot="reference" class="name-wrapper" style="cursor: pointer">
-                                <el-tag size="medium">这里看商品简介</el-tag>
+                                <el-tag size="medium" type="success">这里看商品简介</el-tag>
                             </div>
                         </el-popover>
                     </template>
@@ -91,6 +92,8 @@
 
                 <el-table-column
                         label="创建时间"
+                        sortable
+                        :sort-method="sortChange1"
                         width="140">
                     <template slot-scope="scope">
                         <i class="el-icon-time"></i>
@@ -189,7 +192,7 @@
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="pageIndex"
-                        :page-sizes="[2, 10, 20]"
+                        :page-sizes="[7, 10, 20]"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="pageTotal">
@@ -323,6 +326,9 @@
             this.getInputSearch();
         },
         methods: {
+            sortChange1(a,b){
+                return a.name-b.name  //获取name上的数据进行排序
+            },
             // 获取数据
             getData(){
 

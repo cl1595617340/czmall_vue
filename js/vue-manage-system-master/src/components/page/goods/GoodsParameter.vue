@@ -48,7 +48,7 @@
                             <el-input @keyup.enter.native="submit()" style="width: 200px" v-model="form.parameterCpu" autocomplete="off"></el-input>
                         </el-form-item>
 
-                        <el-form-item class="form_item" label="CPU核心数:" :label-width="formLabelWidth" style="width: 280px;margin-left: 10px">
+                        <el-form-item class="form_item" label="CPU主频:" :label-width="formLabelWidth" style="width: 280px;margin-left: 10px">
                             <el-input @keyup.enter.native="submit()" style="width: 200px" v-model="form.parameterCpunum" autocomplete="off"></el-input>
                         </el-form-item>
                     </div>

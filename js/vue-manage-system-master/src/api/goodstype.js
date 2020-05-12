@@ -2,7 +2,7 @@ import http from '../api/public'
 
 /*3表查询分类信息*/
 export const getGoodsType = (params) => {
-    return http.fetchGet('/admin/type/goodstype/getGoodsType', params)
+    return http.fetchPost('/admin/type/goodstype/getGoodsType', params)
 }
 
 /*修改分类状态*/
@@ -45,6 +45,7 @@ export const getGoodstypeBy2 = (params) => {
 export const getGoodstype2By3 = (params) => {
     return http.fetchPost('/admin/type/goodstype/getGoodstype2By3', params)
 }
+
 /*修改分类信息*/
 export const updateType = (params) => {
     return http.fetchPost('/admin/type/goodstype/updateType', params)

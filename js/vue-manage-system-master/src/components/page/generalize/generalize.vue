@@ -516,7 +516,7 @@
                                 duration:2000
                             });
                             this.editVisible =false;
-                            this.switchGeneralize(this.generalizeid);
+                            this.switchGeneralize(this.generalizeid,this.generalizeName);
                         } else {
                             this.$message({
                                 type: 'error',

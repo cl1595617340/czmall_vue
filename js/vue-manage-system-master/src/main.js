@@ -19,9 +19,16 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
 Vue.prototype.$moment = moment;
 
+//与后端进行数据交换的时候带上cookie
+axios.defaults.withCredentials = true;
+let svsv = localStorage.getItem('ms_token');
+axios.defaults.headers.common['token'] = svsv;  // 在header中添加token
+
+
 Vue.filter("dateFilter", function(date, formatPattern){
     return moment(date).format(formatPattern || "YYYY-MM-DD");
 });
+
 
 
 Vue.config.productionTip = false;
@@ -38,9 +45,13 @@ const i18n = new VueI18n({
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
-    const role = localStorage.getItem('ms_username');
+    document.title = `${to.meta.title} | zh666`;
+    const role = localStorage.getItem('ms_username');//登录进来的名字
+  /*  alert(role)
+    alert(to.path)*/
+
     if (!role && to.path !== '/login') {
+        alert("回话过期，请重新登录")
         next('/login');
     } else if (to.meta.permission) {
         // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
@@ -56,6 +67,7 @@ router.beforeEach((to, from, next) => {
         }
     }
 });
+
 
 new Vue({
     router,

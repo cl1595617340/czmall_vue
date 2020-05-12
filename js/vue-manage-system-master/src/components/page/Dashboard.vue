@@ -4,14 +4,14 @@
             <el-col :span="8">
                 <el-card shadow="hover" class="mgb20" style="height:252px;">
                     <div class="user-info">
-                        <img src="../../assets/img/img.jpg" class="user-avator" alt="">
+                        <img :src="adminImg" class="user-avator" alt="">
                         <div class="user-info-cont">
                             <div class="user-info-name">{{name}}</div>
-                            <div>{{role}}</div>
+                            <div>{{roleName}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">上次登录时间：<span>2019-10-02</span></div>
                     <div class="user-info-list">上次登录地点：<span>广州</span></div>
+                       <div class="user-info-list" style="color: firebrick">把左边的侧边栏折叠,再访问数据会更舒服</div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
@@ -45,7 +45,7 @@
                             <div class="grid-content grid-con-2">
                                 <i class="el-icon-lx-notice grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
+                                    <div class="grid-num">3</div>
                                     <div>系统消息</div>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                             <div class="grid-content grid-con-3">
                                 <i class="el-icon-lx-goods grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">5000</div>
+                                    <div class="grid-num">14</div>
                                     <div>数量</div>
                                 </div>
                             </div>
@@ -112,6 +112,8 @@
         data() {
             return {
                 name: localStorage.getItem('ms_username'),
+                roleName: localStorage.getItem('ms_roleName'),
+                adminImg: localStorage.getItem('ms_userimg'),
                 todoList: [{
                         title: '今天要修复100个bug',
                         status: false,
@@ -194,6 +196,7 @@
         created(){
             this.handleListener();
             this.changeDate();
+
         },
         activated(){
             this.handleListener();
@@ -203,6 +206,7 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
+
             changeDate(){
                 const now = new Date().getTime();
                 this.data.forEach((item, index) => {

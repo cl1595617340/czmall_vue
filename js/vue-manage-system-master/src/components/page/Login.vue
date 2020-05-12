@@ -21,20 +21,21 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
+                <p class="login-tips">Tips : 用户名:瑟瑟青玄,密码:1234。</p>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
+    import { getAdmin } from '../../api/admin'
 
 export default {
     data: function() {
         return {
             param: {
-                name: 'libai',
-                pwd: '123',
+                name: '',
+                pwd: '',
             },
             rules: {
                 name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -44,7 +45,24 @@ export default {
     },
     methods: {
         submitForm() {
-            this.$refs.login.validate(valid => {
+            let formDatas = new FormData();
+            formDatas.append("adminName", this.param.name);
+            formDatas.append("adminPwd",  this.param.pwd);
+            getAdmin(formDatas).then(res => {
+               if (res.res!=undefined){
+                   this.$message.success('登录成功,欢迎您:'+this.param.name);
+                   localStorage.setItem('ms_username', this.param.name);
+                   localStorage.setItem('ms_roleName', res.res.role.roleName);
+                   localStorage.setItem('ms_userimg', res.res.admin_img);
+                   localStorage.setItem('ms_token', res.token);
+                  /* alert(res.token)*/
+                   console.log(res.res)
+                   this.$router.push('/');
+               } else {
+                   this.$message.success('登录失败');
+               };
+            })
+          /*  this.$refs.login.validate(valid => {
                 if (valid) {
                     this.$message.success('登录成功');
                     localStorage.setItem('ms_username', this.param.username);
@@ -54,7 +72,7 @@ export default {
                     console.log('error submit!!');
                     return false;
                 }
-            });
+            });*/
         },
     },
 };

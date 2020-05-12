@@ -6,11 +6,24 @@
                 <div style="width: 250px;margin-left: -18px">
                     <el-autocomplete
                             class="inline-input"
+                            v-model="order.orderNum"
+                            :fetch-suggestions="querySearch"
+                            placeholder="根据订单号搜索"
+                            :trigger-on-focus="false"
+                            suffix-icon="el-icon-news"
+                            @select="handleSelect"
+                            @keyup.enter.native="submit()"
+                    ></el-autocomplete>
+                </div>
+                <!--输入框-->
+                <div style="width: 250px;margin-left: -18px">
+                    <el-autocomplete
+                            class="inline-input"
                             v-model="order.memberName"
                             :fetch-suggestions="querySearch"
                             placeholder="根据会员名搜索"
                             :trigger-on-focus="false"
-                            suffix-icon="el-icon-edit el-input__icon"
+                            suffix-icon="el-icon-user"
                             @select="handleSelect"
                             @keyup.enter.native="submit()"
                     ></el-autocomplete>
@@ -40,6 +53,7 @@
                     border
                     :cell-style="rowClass"
                     :header-cell-style="headClass"
+                    :default-sort = "{prop: 'goods_create'}"
                     style="width: 100%;margin: 0 auto">
                 <el-table-column prop="orderId" label="订单id" width="60"></el-table-column>
 
@@ -76,29 +90,33 @@
                 </el-table-column>
 
 
-                <el-table-column  label="订单总金额" width="90px" show-overflow-tooltip align="center">
+                <el-table-column  label="订单总金额" width="100px" show-overflow-tooltip align="center">
                     <template scope="scope">
                         <p>￥{{scope.row.orderPrice}}.00</p>
                     </template>
                 </el-table-column>
 
-                <el-table-column  label="订单总数量" width="100px" show-overflow-tooltip align="center">
+                <el-table-column  label="订单总数量" width="90px" show-overflow-tooltip align="center">
                     <template scope="scope">
                         <p>{{scope.row.orderCount}}件</p>
                     </template>
                 </el-table-column>
 
                 <el-table-column
+                        sortable
+                        :sort-method="sortChange1"
                         label="创建时间"
-                        width="90">
+                        width="92">
                     <template slot-scope="scope">
                         <span >{{scope.row.orderFound}}</span>
                     </template>
                 </el-table-column>
 
                 <el-table-column
+                        sortable
+                        :sort-method="sortChange1"
                         label="支付时间"
-                        width="90">
+                        width="92">
                     <template slot-scope="scope">
                         <p v-if="scope.row.orderPaydate=='暂无'">
                             <span>暂无</span>
@@ -110,13 +128,15 @@
                 </el-table-column>
 
                 <el-table-column
+                        sortable
+                        :sort-method="sortChange1"
                         label="完成时间"
-                        width="90">
+                        width="92">
                     <template slot-scope="scope">
-                        <p v-if="scope.row.orderPayok=='暂无'">
+                        <p v-if="scope.row.orderpayok2=='暂无'">
                             <span>暂无</span>
                         </p>
-                        <p v-if="scope.row.orderPayok!='暂无'">
+                        <p v-if="scope.row.orderpayok2!='暂无'">
                             <span>{{scope.row.orderpayok2}}</span>
                         </p>
 
@@ -148,7 +168,7 @@
 
 
 
-                <el-table-column label="更多" width="230">
+                <el-table-column label="更多" width="224">
                     <template slot-scope="scope">
                         <span>
                             <el-button size="mini" type="warning" @click="handleEdit(scope.$index, scope.row)">
@@ -161,7 +181,7 @@
 
                             <el-button v-if="scope.row.orderState==1&&scope.row.order_send==0" size="mini" type="primary" @click="ordersend(scope.$index, scope.row)">
                                 <i class="el-icon-upload2"></i>
-                                发货</el-button>
+                                待发货</el-button>
 
                             <el-button v-if="scope.row.orderState==1&&scope.row.order_send==1" disabled size="mini" type="success" @click="ordersend(scope.$index, scope.row)">
                                 <i class="el-icon-circle-check"></i>
@@ -182,7 +202,7 @@
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="pageIndex"
-                        :page-sizes="[2, 10, 20]"
+                        :page-sizes="[6, 10, 20]"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="pageTotal">
@@ -223,11 +243,22 @@
                 <div style="display: flex;margin-left: 35px;text-align: left;margin-top: 10px">
                     <p style="width: 100px">支付方式：</p>
                     <p style="width: 140px" v-if="orderrelationData2.orderPaytype==0">
-                        <el-tag effect="dark">支付宝</el-tag>
+                        <el-tag>支付宝</el-tag>
                     </p>
                     <p style="width: 140px" v-if="orderrelationData2.orderPaytype==1">
-                        <el-tag effect="dark">花呗</el-tag>
+                        <el-tag >花呗</el-tag>
                     </p>
+                </div>
+            </div>
+
+            <div style="display: flex;">
+                <div style="display: flex;margin-left: 35px;text-align: left;margin-top: 10px">
+                    <p style="width: 100px">支付时间：</p>
+                    <p style="width: 140px">{{orderrelationData2.orderPaydate}}</p>
+                </div>
+                <div style="display: flex;margin-left: 35px;text-align: left;margin-top: 10px">
+                    <p style="width: 100px">完成时间：</p>
+                    <p style="width: 140px">{{orderrelationData2.orderpayok2}}</p>
                 </div>
             </div>
 
@@ -260,10 +291,10 @@
                 <div style="display: flex;margin-left: 35px;text-align: left;margin-top: 10px">
                     <p style="width: 100px">发票类型：</p>
                     <p style="width: 140px" v-if="orderrelationData2.orderInvoicetype==0">
-                        <el-tag effect="Plain">个人</el-tag>
+                        <el-tag>个人</el-tag>
                     </p>
                     <p style="width: 140px" v-if="orderrelationData2.orderInvoicetype==1">
-                        <el-tag effect="Plain">公司</el-tag>
+                        <el-tag>公司</el-tag>
                     </p>
                 </div>
                 <div style="display: flex;margin-left: 35px;text-align: left;margin-top: 10px">
@@ -411,13 +442,14 @@
                 gridData:{},
                 /*搜索*/
                 order:{
+                    orderNum:"",
                     memberName:"",
                     orderState:"",
                 },
                 //输入建议
                 InputSearch:[],
                 optionstype:[
-                    {value:"",text:"全部"},
+                    {value:"",text:"全部状态"},
                     {value:0,text:"待支付"},
                     {value:1,text:"待收货"},
                     {value:2,text:"完成"},
@@ -436,6 +468,9 @@
             this.getInputSearch();
         },
         methods: {
+            sortChange1(a,b){
+                return a.name-b.name  //获取name上的数据进行排序
+            },
             getData(){
                 let formDatas = new FormData();
                 formDatas.append("page", this.pageIndex);
@@ -525,6 +560,7 @@
 
             /*查询*/
             submit(){
+                this.pageIndex=1;
                 this.getData();
             },
 

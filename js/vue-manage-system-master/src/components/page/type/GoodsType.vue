@@ -519,6 +519,7 @@
                     /*alert(this.updateType01Id)*/
                     //如果级别下拉框处于禁用，就说明是修改1级分类操作
 
+                 /*   alert(this.optionvalue2)*/
                     if (this.optionvalue=="1级类目"){
                         formDatas.append("type", 1);
                         formDatas.append("name", this.formname);
@@ -538,7 +539,7 @@
                         formDatas.append("type", 3);
                         formDatas.append("name", this.formname);
                         formDatas.append("id", this.updateType01Id);
-                        formDatas.append("sid", this.updateGoodstype2IdTo3);
+                        formDatas.append("sid", this.optionvalue2);
 
                         //false就是没有修改图片
                         if (this.changeImg==false){
